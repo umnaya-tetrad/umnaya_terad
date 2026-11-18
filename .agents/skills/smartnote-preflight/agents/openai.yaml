@@ -1,0 +1,3 @@
+interface:
+  display_name: "SmartNote: ревью перед публикацией"
+  short_description: "Проверить код и документацию перед push или merge"

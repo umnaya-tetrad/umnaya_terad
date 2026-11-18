@@ -1,0 +1,25 @@
+{
+  "run_id": "2026-11-17T14-11-45Z",
+  "query": "ФСИ: победители 2025, усиление заявки SmartNote до 1 декабря 2026, доказательные артефакты от школ и конкурса; различить Студенческий стартап и Старт-1",
+  "mode": "full",
+  "citation_style": "inline",
+  "expect_report": true,
+  "created_at": "2026-11-17T14:11:45Z",
+  "budget_usd": null,
+  "max_waves": 2,
+  "status": "complete",
+  "completed_at": "2026-11-17T14:18:20Z",
+  "program": "Student Startup queue8 2026; confirmed by user",
+  "strands": [
+    "winners",
+    "criteria",
+    "evidence",
+    "verification"
+  ],
+  "audit": {
+    "source_rows": 22,
+    "claims": 40,
+    "main_report_source_ids": 16,
+    "errors": 0
+  }
+}

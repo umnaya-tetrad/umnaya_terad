@@ -1,0 +1,3 @@
+interface:
+  display_name: "SmartNote: обновление документации"
+  short_description: "Синхронизировать изменения и документацию проекта"

@@ -1,0 +1,32 @@
+{
+  "run_id": "2026-10-30T10-19-14Z",
+  "query": "Исследование SmartNote по 8 вопросам: изменение продукта, аналоги РФ и Москва, ценность ученику и учителю относительно ИИ-чата, действия в Перми, будущая бизнес-модель",
+  "mode": "full",
+  "citation_style": "inline",
+  "expect_report": true,
+  "created_at": "2026-10-30T10:19:14Z",
+  "budget_usd": null,
+  "max_waves": 3,
+  "status": "complete",
+  "method": "cc-research Codex",
+  "constraints": "Не отправлять письма, не проводить интервью; не менять исходное описание и библиотеку",
+  "completed_at": "2026-10-30T10:40:56Z",
+  "additional_scope": "User-requested deep agent research of tyutor-ai.ru and sokratai.ru",
+  "strands": [
+    "local",
+    "economics",
+    "market",
+    "value",
+    "perm",
+    "market-followup",
+    "tyutor-deep",
+    "sokrat-deep"
+  ],
+  "audit": {
+    "source_rows": 77,
+    "distinct_urls": 70,
+    "claims": 86,
+    "main_report_cited_ids": 45,
+    "errors": 0
+  }
+}

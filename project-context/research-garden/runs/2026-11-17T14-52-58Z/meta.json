@@ -1,0 +1,23 @@
+{
+  "run_id": "2026-11-17T14-52-58Z",
+  "query": "Воронка взаимодействия SmartNote со школами: одно письмо и две встречи; интервью, учительский и ученический пилоты, формы доказательных документов для ФСИ; адаптация методик продаж и переговоров",
+  "mode": "full",
+  "citation_style": "inline",
+  "expect_report": true,
+  "created_at": "2026-11-17T14:52:58Z",
+  "budget_usd": null,
+  "max_waves": 2,
+  "status": "complete",
+  "completed_at": "2026-11-17T14:59:31Z",
+  "strands": [
+    "sales-frameworks",
+    "school-pilot",
+    "school-docs"
+  ],
+  "audit": {
+    "source_rows": 20,
+    "claims": 26,
+    "main_report_source_ids": 14,
+    "errors": 0
+  }
+}

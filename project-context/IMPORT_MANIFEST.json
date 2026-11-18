@@ -1,0 +1,1293 @@
+{
+  "format_version": 1,
+  "packaged_on": "2026-11-18",
+  "repository": "https://github.com/umnaya-tetrad/umnaya_terad",
+  "context_folder": "project-context",
+  "purpose": "Portable documentation and offline reference bundle. Markdown links relocated or pinned to source revisions; repository entry points adapted. Hashes record initial publication; later editable-document changes are tracked by Git, not constrained by these hashes.",
+  "upstreams": [
+    {
+      "name": "product-kit",
+      "url": "https://github.com/svn-re7/smartnote-product-kit",
+      "commit": "d32870f32397eb63e9b2751bb7ab5738905c1b79"
+    },
+    {
+      "name": "SmartNoteLanding",
+      "url": "https://github.com/svn-re7/SmartNoteLanding",
+      "commit": "b8423b01a5eb56601539e83d14c382d23eea1a61"
+    }
+  ],
+  "imported_files": [
+    {
+      "source_path": "AGENTS.md",
+      "path": "project-context/AGENTS.md",
+      "source_sha256": "31c71a70e17fbec5966855a0df9f2fdd7d1d542fa5e14d1205277f6a0ebf9323",
+      "published_sha256": "ad2d706673899111caa9612b50adb0177131fb8c2dfca2e15632e10f1c267d3f",
+      "bytes": 2922,
+      "adapted": true
+    },
+    {
+      "source_path": "README.md",
+      "path": "project-context/README.md",
+      "source_sha256": "07449e713a850753a3a237c26384bc2caf118531d12655e924be3f818417ecbe",
+      "published_sha256": "e2594d179cf4bfccaa25ad30c38d9dc2f2ef5888e96ba26c6e72b51914b546e1",
+      "bytes": 3051,
+      "adapted": true
+    },
+    {
+      "source_path": "PROJECT_CONTEXT.md",
+      "path": "project-context/PROJECT_CONTEXT.md",
+      "source_sha256": "e526a213d59489f9d8ec65a3e4f241623b00d470f350600fa827fd3bf267ab88",
+      "published_sha256": "e526a213d59489f9d8ec65a3e4f241623b00d470f350600fa827fd3bf267ab88",
+      "bytes": 48040,
+      "adapted": false
+    },
+    {
+      "source_path": "PRODUCT_DESCRIPTION.md",
+      "path": "project-context/PRODUCT_DESCRIPTION.md",
+      "source_sha256": "c760b8664fb085355a3d107e6691af0be9f13e17d530680bca05d063ec9dcdbf",
+      "published_sha256": "7c00e44f1c9d13167b8454690ce0fce373990989ad6c2eb9ce88ce060203aefd",
+      "bytes": 42281,
+      "adapted": true
+    },
+    {
+      "source_path": "SCHOOL_PROCESS.md",
+      "path": "project-context/SCHOOL_PROCESS.md",
+      "source_sha256": "00378210f7c0cf1c2b1e11f40f39bf61f29740f626329df1fcb7b29ad8d34713",
+      "published_sha256": "00378210f7c0cf1c2b1e11f40f39bf61f29740f626329df1fcb7b29ad8d34713",
+      "bytes": 42879,
+      "adapted": false
+    },
+    {
+      "source_path": "docs/DECISIONS.md",
+      "path": "project-context/docs/DECISIONS.md",
+      "source_sha256": "7fd09b8a1a0728e708867710e3544ed084c36beec27dd1bde38d5da8067a56bb",
+      "published_sha256": "7fd09b8a1a0728e708867710e3544ed084c36beec27dd1bde38d5da8067a56bb",
+      "bytes": 4123,
+      "adapted": false
+    },
+    {
+      "source_path": "docs/INTEGRATION_AUDIT.md",
+      "path": "project-context/docs/INTEGRATION_AUDIT.md",
+      "source_sha256": "00ed9992c3b9ee6ff1bf76398dc1a029ed4f095a8885a153ce136c969df0cbe3",
+      "published_sha256": "4b624d180ca324576a003ab69958b3d9166c119eb4bc9ab28387b702588f36e7",
+      "bytes": 22816,
+      "adapted": true
+    },
+    {
+      "source_path": "docs/KNOWLEDGE_MAP.md",
+      "path": "project-context/docs/KNOWLEDGE_MAP.md",
+      "source_sha256": "f50f98576502bfb71dc8875a9f137c3c2bfda4a8971329238f7bf375bf7ed2c2",
+      "published_sha256": "0e884e0112bc6ac3aa0c6bac42dde1febe5ffadc4fe54e1fc3bccda7771a203e",
+      "bytes": 25391,
+      "adapted": true
+    },
+    {
+      "source_path": "docs/PILOT_PREPARATION.md",
+      "path": "project-context/docs/PILOT_PREPARATION.md",
+      "source_sha256": "de27f53579d22baf947be0eaf795535a3e85a3f8ce3f41ea0c9d8feb22abe423",
+      "published_sha256": "de27f53579d22baf947be0eaf795535a3e85a3f8ce3f41ea0c9d8feb22abe423",
+      "bytes": 4755,
+      "adapted": false
+    },
+    {
+      "source_path": "docs/SOURCE_SNAPSHOT.json",
+      "path": "project-context/docs/SOURCE_SNAPSHOT.json",
+      "source_sha256": "3e0c71f8c5d120f07cf63e88bc1360a9211ab23681201bc96a7e1f4af13e56a3",
+      "published_sha256": "3e3a6d64451ea9989fdd37dc8337ab88af600e50b115986206d33018b3d537d1",
+      "bytes": 34714,
+      "adapted": true
+    },
+    {
+      "source_path": "docs/history/DECISIONS_initial_2026-11-18.md",
+      "path": "project-context/docs/history/DECISIONS_initial_2026-11-18.md",
+      "source_sha256": "3356595594f854515568766b38e5c160740b607654899847ad501593bed6bb52",
+      "published_sha256": "3356595594f854515568766b38e5c160740b607654899847ad501593bed6bb52",
+      "bytes": 13413,
+      "adapted": false
+    },
+    {
+      "source_path": "docs/history/PILOT_PREPARATION_initial_2026-11-18.md",
+      "path": "project-context/docs/history/PILOT_PREPARATION_initial_2026-11-18.md",
+      "source_sha256": "11fe3c6346bebc49505bdcd0196896465b504cf840fc99bcd41df5d9718180a9",
+      "published_sha256": "11fe3c6346bebc49505bdcd0196896465b504cf840fc99bcd41df5d9718180a9",
+      "bytes": 19026,
+      "adapted": false
+    },
+    {
+      "source_path": "docs/history/PROJECT_CONTEXT_before_consolidation_2026-11-18.md",
+      "path": "project-context/docs/history/PROJECT_CONTEXT_before_consolidation_2026-11-18.md",
+      "source_sha256": "e2843c7259053365dd5079c6fff07317df7c692dc34c64b4735c036e8436b583",
+      "published_sha256": "e2843c7259053365dd5079c6fff07317df7c692dc34c64b4735c036e8436b583",
+      "bytes": 62936,
+      "adapted": false
+    },
+    {
+      "source_path": "pilot/AGENTS.md",
+      "path": "project-context/pilot/AGENTS.md",
+      "source_sha256": "87d1214c96c64ba900b4a92e63bbe91cdbd36661fdcb598f5e52f2f5ba6f3d77",
+      "published_sha256": "87d1214c96c64ba900b4a92e63bbe91cdbd36661fdcb598f5e52f2f5ba6f3d77",
+      "bytes": 7064,
+      "adapted": false
+    },
+    {
+      "source_path": "pilot/ANALYTICS.md",
+      "path": "project-context/pilot/ANALYTICS.md",
+      "source_sha256": "99aab245f437ce817b7ef8b864cffbc174f43901d26cae53a07421644c16e9c6",
+      "published_sha256": "0d8b0c68a0d481edb5beca2d9f90a52f223ae6e768419f19fc158172402d7ee8",
+      "bytes": 29877,
+      "adapted": true
+    },
+    {
+      "source_path": "pilot/CAPTURE_AND_IDENTIFICATION.md",
+      "path": "project-context/pilot/CAPTURE_AND_IDENTIFICATION.md",
+      "source_sha256": "2c28450e8423a5262c387f3fcf028631e3480f30b86af3ccc02f00bb79d4e52e",
+      "published_sha256": "58977ce7ba72ecc8c712cd638f27493ac6800799d1bee69cc8e513487920e4ed",
+      "bytes": 13917,
+      "adapted": true
+    },
+    {
+      "source_path": "pilot/DATA_AND_ACCESS.md",
+      "path": "project-context/pilot/DATA_AND_ACCESS.md",
+      "source_sha256": "adc0773dba98900c116857e819f77db074a16d28c4cde862d3500b6789f985ab",
+      "published_sha256": "cfe276defaf7d1badca609843d4780d002a82c2ae8e79465ebc107e1356107ef",
+      "bytes": 19010,
+      "adapted": true
+    },
+    {
+      "source_path": "pilot/DECISIONS.md",
+      "path": "project-context/pilot/DECISIONS.md",
+      "source_sha256": "99963037e9e7795d581747af215ceede1b3ec9d5eacecfbd84eb497c9ae72d49",
+      "published_sha256": "99963037e9e7795d581747af215ceede1b3ec9d5eacecfbd84eb497c9ae72d49",
+      "bytes": 38775,
+      "adapted": false
+    },
+    {
+      "source_path": "pilot/IMPLEMENTATION_PLAN.md",
+      "path": "project-context/pilot/IMPLEMENTATION_PLAN.md",
+      "source_sha256": "994f3f7bc017d1aac5e9dbea7ef44b6b8d82aa5da1f0adf4b1110353f220ab75",
+      "published_sha256": "994f3f7bc017d1aac5e9dbea7ef44b6b8d82aa5da1f0adf4b1110353f220ab75",
+      "bytes": 11383,
+      "adapted": false
+    },
+    {
+      "source_path": "pilot/PRODUCT.md",
+      "path": "project-context/pilot/PRODUCT.md",
+      "source_sha256": "cf625e4481eaf14a2b4a2845306e4e749adc6a5ec47446a5036063d62d2f6a5d",
+      "published_sha256": "be7c62131a2a3fe73e728c190ccf9a1e134a8b5718364ea44f21795a4cfe782e",
+      "bytes": 15382,
+      "adapted": true
+    },
+    {
+      "source_path": "pilot/QUESTIONS.md",
+      "path": "project-context/pilot/QUESTIONS.md",
+      "source_sha256": "a23fd3d48707748b363ac51080905632103c5fb342c4ffd4c3b86849ff303ed7",
+      "published_sha256": "a23fd3d48707748b363ac51080905632103c5fb342c4ffd4c3b86849ff303ed7",
+      "bytes": 12709,
+      "adapted": false
+    },
+    {
+      "source_path": "pilot/README.md",
+      "path": "project-context/pilot/README.md",
+      "source_sha256": "2d280036366138bc1cd69a793b49fc604b5a606396d96bcb458788692c204caa",
+      "published_sha256": "2d280036366138bc1cd69a793b49fc604b5a606396d96bcb458788692c204caa",
+      "bytes": 9722,
+      "adapted": false
+    },
+    {
+      "source_path": "pilot/SUMMARY_METRICS.md",
+      "path": "project-context/pilot/SUMMARY_METRICS.md",
+      "source_sha256": "6f97cfe511e50943aaedffc9d252a841031726d82ae241224392fdb94f02cf16",
+      "published_sha256": "772d84735f8283034a8b6c6d0bad3b1a0155f72115923cc2af1b9e92e7030f87",
+      "bytes": 18740,
+      "adapted": true
+    },
+    {
+      "source_path": "pilot/TEACHER_FLOW.md",
+      "path": "project-context/pilot/TEACHER_FLOW.md",
+      "source_sha256": "d93f449b73fdd10ce00e1ac33a7fa7bd350ce7176b3706df0bc864c87f1dc42b",
+      "published_sha256": "f075c9ceb79d46a42a0808b27ffb3d65214b57e70f57cf943c6a0001e515e154",
+      "bytes": 17667,
+      "adapted": true
+    },
+    {
+      "source_path": "pilot/TECHNICAL_PLAN.md",
+      "path": "project-context/pilot/TECHNICAL_PLAN.md",
+      "source_sha256": "e575dd60a3ab0a0947115525d8587b65b0bc1c8ccaa5ded3fb03ecc52d4fe26b",
+      "published_sha256": "049302c6a29f5b3298360dec7fbb3d5808a3c035e521dcd97d5c5de684a193f7",
+      "bytes": 31079,
+      "adapted": true
+    },
+    {
+      "source_path": "pilot/TRIAL_AND_ACCEPTANCE.md",
+      "path": "project-context/pilot/TRIAL_AND_ACCEPTANCE.md",
+      "source_sha256": "61bbc334f0ae0e049fa2aad6bcbbdef7a414d88410185dc9947d582a880fe476",
+      "published_sha256": "617ca5b39c048735bd7c39a163c935027a7febc687d52ae718befa7b50b8b183",
+      "bytes": 41579,
+      "adapted": true
+    },
+    {
+      "source_path": "pilot/dev-examples/README.md",
+      "path": "project-context/pilot/dev-examples/README.md",
+      "source_sha256": "9779923d297c3d117261203f53bce68a3f3271c6d6ad20e7d7f9f47d7e1fca10",
+      "published_sha256": "9779923d297c3d117261203f53bce68a3f3271c6d6ad20e7d7f9f47d7e1fca10",
+      "bytes": 9719,
+      "adapted": false
+    },
+    {
+      "source_path": "pilot/history/DECISIONS_working_2026-11-18.md",
+      "path": "project-context/pilot/history/DECISIONS_working_2026-11-18.md",
+      "source_sha256": "4cad87f4dc839a68a1a3fc3278bdfbe8782bc826e3acd9465a7d0ffdf59855f7",
+      "published_sha256": "4cad87f4dc839a68a1a3fc3278bdfbe8782bc826e3acd9465a7d0ffdf59855f7",
+      "bytes": 52806,
+      "adapted": false
+    },
+    {
+      "source_path": "pilot/history/QUESTIONS_2026-11-18.md",
+      "path": "project-context/pilot/history/QUESTIONS_2026-11-18.md",
+      "source_sha256": "12bd3a489d406f9f122deebc0003f59a7a64fba72c1be54e2c3fb563e62304f9",
+      "published_sha256": "f9f869ecec243a640fcf1b6199e578dedc3fee2541191073f2f2cfab1f34e3ae",
+      "bytes": 71691,
+      "adapted": true
+    },
+    {
+      "source_path": "pilot/prompts/teacher-error-classification-v1.md",
+      "path": "project-context/pilot/prompts/teacher-error-classification-v1.md",
+      "source_sha256": "981b6d4886a208a3dba9430dac4086e7926517d7707da282ee4d95e1a8fb336f",
+      "published_sha256": "981b6d4886a208a3dba9430dac4086e7926517d7707da282ee4d95e1a8fb336f",
+      "bytes": 9032,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/next-steps-2026-10-30.md",
+      "path": "project-context/research-garden/next-steps-2026-10-30.md",
+      "source_sha256": "7455a33048da4ffa5981d0375e13f4c85f24222aa83b9fc245b0ae5b002488cf",
+      "published_sha256": "7455a33048da4ffa5981d0375e13f4c85f24222aa83b9fc245b0ae5b002488cf",
+      "bytes": 10184,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/README.md",
+      "path": "project-context/research-garden/README.md",
+      "source_sha256": "3e886a291d4153d5c20903ba44a42081049a4aea53cfcf4771d3c5cb28cf6254",
+      "published_sha256": "3e886a291d4153d5c20903ba44a42081049a4aea53cfcf4771d3c5cb28cf6254",
+      "bytes": 4375,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/audit.md",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/audit.md",
+      "source_sha256": "ad574237414a878a2333d39b5e3bf87a12fa186cf6f5d65e7aed3a9643f18194",
+      "published_sha256": "ad574237414a878a2333d39b5e3bf87a12fa186cf6f5d65e7aed3a9643f18194",
+      "bytes": 4426,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/audit_research.py",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/audit_research.py",
+      "source_sha256": "91cdb1bad3bd1f55a77de19cc0ce1888d03b75b7c5d930c3bfc4e04d9943696b",
+      "published_sha256": "91cdb1bad3bd1f55a77de19cc0ce1888d03b75b7c5d930c3bfc4e04d9943696b",
+      "bytes": 2125,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/claims-economics.jsonl",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/claims-economics.jsonl",
+      "source_sha256": "b38c78bccf65cc875dad75c9d0c21771a367ed0c6869eea56202a8e840da3383",
+      "published_sha256": "c6eadc380a7fa5eaabc4c891dbeb22b385207513557158e70bdaa79a7f96ccc4",
+      "bytes": 1583,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/claims-local.jsonl",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/claims-local.jsonl",
+      "source_sha256": "7359732832780df0ca6a9b173035bcfa00669b969d89b7f91ddb46bccf974d6a",
+      "published_sha256": "a57fd6a15c78211d7f02f4582d757963c7be68f29494b0eaaea8935dada42981",
+      "bytes": 1357,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/claims-market-followup.jsonl",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/claims-market-followup.jsonl",
+      "source_sha256": "03135993c1757f788ce9c53198a4f08657f44dda440963afffbe0c8b6e613605",
+      "published_sha256": "03135993c1757f788ce9c53198a4f08657f44dda440963afffbe0c8b6e613605",
+      "bytes": 6026,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/claims-market.jsonl",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/claims-market.jsonl",
+      "source_sha256": "0b5dd1356a5ac2fb2cfae86ac4403d69d0748aa4b1c8f601d0eea4e37b80430a",
+      "published_sha256": "bd3b8a4c4e62c1d169bee1ec9775de494aa9affad5787409791ad18fe00d3af2",
+      "bytes": 8570,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/claims-perm.jsonl",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/claims-perm.jsonl",
+      "source_sha256": "8d1a5635bd018d6573375a75e277adc345f7cc5ccec1339b4986e61c87ecfba1",
+      "published_sha256": "55830cefe725ee3fa833733e5f1ea8291caac4677d4de48bafd1dfe991c52a99",
+      "bytes": 8580,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/claims-sokrat-deep.jsonl",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/claims-sokrat-deep.jsonl",
+      "source_sha256": "bd3f47e36783497aa9414dfc5f6d7e0fa54d4cc82149c2b0f7f6354cc7fa349c",
+      "published_sha256": "bd3f47e36783497aa9414dfc5f6d7e0fa54d4cc82149c2b0f7f6354cc7fa349c",
+      "bytes": 3387,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/claims-tyutor-deep.jsonl",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/claims-tyutor-deep.jsonl",
+      "source_sha256": "8723e0d3502efd3f7816c16153188952882129d0c4127595ba5579c92732d306",
+      "published_sha256": "8723e0d3502efd3f7816c16153188952882129d0c4127595ba5579c92732d306",
+      "bytes": 5339,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/claims-value.jsonl",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/claims-value.jsonl",
+      "source_sha256": "a6bf505dfc078539f7a9c9b7e5cec798a13b2d86ead60b3a61603e42b3589d89",
+      "published_sha256": "950be3d47f068f4083c59fdabb379977652805c9a1b4e5de01e2c6b6abd9c275",
+      "bytes": 5232,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/meta.json",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/meta.json",
+      "source_sha256": "65dc6c74ba85f7b97ae6c2e3102edf7c625606458e59ec4b3152b72f3b0df16b",
+      "published_sha256": "1c0219c5709394fb0cdb64cf3a94d779e660312ced923904e6b2191335e8ef13",
+      "bytes": 1154,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/plan.md",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/plan.md",
+      "source_sha256": "ab769eee5e11775a42474e8969026809e78bff809a9cc035f3c438634c4fdb8c",
+      "published_sha256": "ab769eee5e11775a42474e8969026809e78bff809a9cc035f3c438634c4fdb8c",
+      "bytes": 3634,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/report.md",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/report.md",
+      "source_sha256": "f23b34816f4e021cf4cd22ac7562293580086b079632538c811d52469342bd47",
+      "published_sha256": "ff2ecc243137438ebd9922ce2ba18338105217e5dadad0adb2baa38f023b1941",
+      "bytes": 52393,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/sources-economics.jsonl",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/sources-economics.jsonl",
+      "source_sha256": "4b601c39e77e0f86ac5623947a1d010f4e41c3d6435916a9ab93d0436026cb72",
+      "published_sha256": "d9d394c0b43dc4c91762db8e65bdc62cd3ac1e735936a24e08a92504b3918de4",
+      "bytes": 2823,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/sources-local.jsonl",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/sources-local.jsonl",
+      "source_sha256": "1ec3309f59a3ed78f3fff17bdbf2c9139e741d8d7087b8b4d8e5ecba08c3e716",
+      "published_sha256": "f21049e1cb8a66154465f75c826e401012da7d5d99dfd206d09600622ba29dee",
+      "bytes": 503,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/sources-market-followup.jsonl",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/sources-market-followup.jsonl",
+      "source_sha256": "8c937c9377fd8bac64815323e0fb6b59faa750b9fa1c2de7a219f90d86d8036a",
+      "published_sha256": "849946af0119ce1dfa946a13672ccc4cdad0037b8cd4959ac36d47117be2d64a",
+      "bytes": 7463,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/sources-market.jsonl",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/sources-market.jsonl",
+      "source_sha256": "122559f3de1fe59ef1e566f6d872d19b2edb90de00e2d1ecb05800a5d72b3e31",
+      "published_sha256": "3fead5ba2ec02a2418f3ab5281dcb3420ce9818d6c4517c956bfcef37fe29256",
+      "bytes": 9304,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/sources-perm.jsonl",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/sources-perm.jsonl",
+      "source_sha256": "96db7c076b83539f18aac4a60077c9f6a9d7df93a394a567b3f9e38c83275df1",
+      "published_sha256": "4a8beb9130e5313efcebf3fa49c417242084c8bed94af2ed943b395e3983164d",
+      "bytes": 7877,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/sources-sokrat-deep.jsonl",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/sources-sokrat-deep.jsonl",
+      "source_sha256": "232aa3892953ac95d99778497c8c2d8a875c29bf7817ed6b9db3bbde8e6e867a",
+      "published_sha256": "24247f2500550de19f866d499488bb8742ff27babadc9094661059ec340361da",
+      "bytes": 4401,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/sources-tyutor-deep.jsonl",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/sources-tyutor-deep.jsonl",
+      "source_sha256": "88a1d1b6185af068aae83d092f4ae0db4739b67e40c518eb498b2db9c2c6d30f",
+      "published_sha256": "88a1d1b6185af068aae83d092f4ae0db4739b67e40c518eb498b2db9c2c6d30f",
+      "bytes": 6686,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/sources-value.jsonl",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/sources-value.jsonl",
+      "source_sha256": "d5e67ee8e16e1256ff1a4931d9ca3472368f07fc46203ed8d1c26cf24a6a50e4",
+      "published_sha256": "c1f6a425aa3aaee8a262b0de4876fe509b48141a7a66475ce5a991ae4db8195b",
+      "bytes": 4302,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/appendices/business-model.md",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/appendices/business-model.md",
+      "source_sha256": "ee37e82cc5f470981ef7365957c87c0f26fe9fc6e3f77138a1f6e71a8874a63c",
+      "published_sha256": "ee37e82cc5f470981ef7365957c87c0f26fe9fc6e3f77138a1f6e71a8874a63c",
+      "bytes": 9430,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/appendices/competitors.md",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/appendices/competitors.md",
+      "source_sha256": "5957579942bb5074da0e55943d4650da0abed7819f292a076fb1019307ca99cb",
+      "published_sha256": "5957579942bb5074da0e55943d4650da0abed7819f292a076fb1019307ca99cb",
+      "bytes": 11102,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/appendices/interviews-and-outreach.md",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/appendices/interviews-and-outreach.md",
+      "source_sha256": "1b7b26abff7db08434ea3e769683b4e91674f16ee77e96301d1afce3446e0e58",
+      "published_sha256": "1b7b26abff7db08434ea3e769683b4e91674f16ee77e96301d1afce3446e0e58",
+      "bytes": 10884,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/appendices/manual-competitor-test.md",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/appendices/manual-competitor-test.md",
+      "source_sha256": "fb15952adea7047705988f8da7f305eea0604b66a0bdf683a004e0029d6ede55",
+      "published_sha256": "fb15952adea7047705988f8da7f305eea0604b66a0bdf683a004e0029d6ede55",
+      "bytes": 7816,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/appendices/perm-contacts.md",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/appendices/perm-contacts.md",
+      "source_sha256": "dc3a9a6350b57cbef33d016c3c252e90bb134e5ea8442a64f4d0627bd57a1b7e",
+      "published_sha256": "dc3a9a6350b57cbef33d016c3c252e90bb134e5ea8442a64f4d0627bd57a1b7e",
+      "bytes": 9721,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/appendices/pilot-protocol.md",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/appendices/pilot-protocol.md",
+      "source_sha256": "2c82ec60d4d6290c045cca28bb384dfd2e4702c48002f4d8b86dbdb775a1c886",
+      "published_sha256": "2c82ec60d4d6290c045cca28bb384dfd2e4702c48002f4d8b86dbdb775a1c886",
+      "bytes": 11518,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/appendices/sokrat-deep.md",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/appendices/sokrat-deep.md",
+      "source_sha256": "f95807cac6b3782290b74872ddf50c05fb1a5d527f4706ff1e2983115d11dd2e",
+      "published_sha256": "f95807cac6b3782290b74872ddf50c05fb1a5d527f4706ff1e2983115d11dd2e",
+      "bytes": 15151,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/appendices/tyutor-deep.md",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/appendices/tyutor-deep.md",
+      "source_sha256": "a5381d8e4f626974def5478edb8a13ced0996441a491314a698d832b430f4010",
+      "published_sha256": "a5381d8e4f626974def5478edb8a13ced0996441a491314a698d832b430f4010",
+      "bytes": 16562,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-10-30T10-19-14Z/appendices/value-comparison.md",
+      "path": "project-context/research-garden/runs/2026-10-30T10-19-14Z/appendices/value-comparison.md",
+      "source_sha256": "bda62d435eb4a2c8f5995b5ef667fb41d9c5c088fa7b028509822a4dcb8e2799",
+      "published_sha256": "39982d6207554b4ea6e9f81c8fc17d1c0ed5c59fbaef691565ec52500e8f5dba",
+      "bytes": 15747,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/audit.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/audit.md",
+      "source_sha256": "118fcf3c7547cc03f6b9382d95538d40979f469b5b91805f3e4f4d09fa96b56f",
+      "published_sha256": "118fcf3c7547cc03f6b9382d95538d40979f469b5b91805f3e4f4d09fa96b56f",
+      "bytes": 3919,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/audit_research.py",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/audit_research.py",
+      "source_sha256": "91cdb1bad3bd1f55a77de19cc0ce1888d03b75b7c5d930c3bfc4e04d9943696b",
+      "published_sha256": "91cdb1bad3bd1f55a77de19cc0ce1888d03b75b7c5d930c3bfc4e04d9943696b",
+      "bytes": 2125,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/claims-criteria.jsonl",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/claims-criteria.jsonl",
+      "source_sha256": "816ad020c0bf5e83843e08f0fa253cc35b7acbd806d305b6e6d0ab6bf43a505c",
+      "published_sha256": "163a387853ebd1999352f67e1aebbd438ae00c34f09f9dedeca11b9f327b2b24",
+      "bytes": 8457,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/claims-evidence.jsonl",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/claims-evidence.jsonl",
+      "source_sha256": "9e5cdab1b8cc7d192a6e6b5d1e71c66e4f425abc460eb8cc56327edc9774ef5f",
+      "published_sha256": "9e5cdab1b8cc7d192a6e6b5d1e71c66e4f425abc460eb8cc56327edc9774ef5f",
+      "bytes": 5206,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/claims-verification.jsonl",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/claims-verification.jsonl",
+      "source_sha256": "5e12de1cf8398d8ee01c6105b95d58616dd21c1f494f836224335f03e97dc7a1",
+      "published_sha256": "ca731da85159dad16b32114bc229300274725dbc024248592d2ec9eed869a21b",
+      "bytes": 756,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/claims-winners.jsonl",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/claims-winners.jsonl",
+      "source_sha256": "0d26b026892fc006482e175342c3becf28cf5fa09ae50d72d37e2f900c45a0c5",
+      "published_sha256": "0d26b026892fc006482e175342c3becf28cf5fa09ae50d72d37e2f900c45a0c5",
+      "bytes": 3833,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/meta.json",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/meta.json",
+      "source_sha256": "bb48bbba5039d19b4bb5e29762c76fe5fbd3a438a783a3f9ce36e7321c87d08b",
+      "published_sha256": "577ef10713693a51b5c123e0bb542a535c9efb1b694f2ea3e010b2eaa58d0eb1",
+      "bytes": 789,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/plan.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/plan.md",
+      "source_sha256": "c1ca6b348ae4b4590c31463882d7c42525b4377c4dd6e8ff96456d25f28005c1",
+      "published_sha256": "c1ca6b348ae4b4590c31463882d7c42525b4377c4dd6e8ff96456d25f28005c1",
+      "bytes": 2899,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/report.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/report.md",
+      "source_sha256": "3ed39fd371a8e70a8d50b1070442066423cf07063ea5f3e5bf6f97960fbc13d6",
+      "published_sha256": "8135f0991318c7bd4292e996fbaaaa2b6e1888a692dd2cdcaed650f924c68b11",
+      "bytes": 27338,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/sources-criteria.jsonl",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/sources-criteria.jsonl",
+      "source_sha256": "d30c45708847f59e6fc136d05f4c6489afef0ac906f6578b110ba1babdba2b70",
+      "published_sha256": "553eab4c819123afadd3a3c3adb4296285b03f051c6811b527f0dba08f68d658",
+      "bytes": 3222,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/sources-evidence.jsonl",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/sources-evidence.jsonl",
+      "source_sha256": "59253c97f9dafcc736ebff25c4ce5e09f85da14e09a78fdbade83ec17ea7e6f9",
+      "published_sha256": "8b9ea5c03b5dff49f5fbd159410d20bdaa300d08d5b290715612f7a71aa236a5",
+      "bytes": 5769,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/sources-verification.jsonl",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/sources-verification.jsonl",
+      "source_sha256": "fb8fe258ac57d2710b52c3bd39306a9d5667f6da092c12e0263ecd0934e9e9be",
+      "published_sha256": "3f691efd9e3fbcfe6a1d9f11e5703777485f7e7bb756e8a6b4d39b510c5a43e1",
+      "bytes": 1900,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/sources-winners.jsonl",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/sources-winners.jsonl",
+      "source_sha256": "f8dc12d25f364cb6f00acc86a6a55df1e73ca3ba065fcce3173e916aa79ea15c",
+      "published_sha256": "f8dc12d25f364cb6f00acc86a6a55df1e73ca3ba065fcce3173e916aa79ea15c",
+      "bytes": 4757,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/appendices/application-checklist.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/appendices/application-checklist.md",
+      "source_sha256": "1f82314bd339aee1808e179e9dc089b256113a8744b423cbaf64b49f1746d1dd",
+      "published_sha256": "1f77074d83f4a2d08c8502bb4b8cbc010e20e681ee23ffb3013517fac6b0fe3f",
+      "bytes": 16893,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/appendices/outreach-requests.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/appendices/outreach-requests.md",
+      "source_sha256": "2a8b3392e25376ce44dcf6614514cd1801161e9bf220049ddc2f46cb30311d90",
+      "published_sha256": "2a8b3392e25376ce44dcf6614514cd1801161e9bf220049ddc2f46cb30311d90",
+      "bytes": 8411,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/appendices/regulations-page-1.png",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/appendices/regulations-page-1.png",
+      "source_sha256": "af1e3bcf09420ab07ae4501610b4f289e089a2d58e0bed5c7e348e4f59395316",
+      "published_sha256": "af1e3bcf09420ab07ae4501610b4f289e089a2d58e0bed5c7e348e4f59395316",
+      "bytes": 30356,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/appendices/regulations-page-17.png",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/appendices/regulations-page-17.png",
+      "source_sha256": "ccf65ebecb9b12e567e9cf1bf789c39d1ad03abede718b5dbe97595fcea19adb",
+      "published_sha256": "ccf65ebecb9b12e567e9cf1bf789c39d1ad03abede718b5dbe97595fcea19adb",
+      "bytes": 197542,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/appendices/regulations-page-18.png",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/appendices/regulations-page-18.png",
+      "source_sha256": "6549b52eda8a27fcc8870271eade22e915fd8634bc486aabf8467446e9ed7dcc",
+      "published_sha256": "6549b52eda8a27fcc8870271eade22e915fd8634bc486aabf8467446e9ed7dcc",
+      "bytes": 169607,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/appendices/regulations-page-19.png",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/appendices/regulations-page-19.png",
+      "source_sha256": "56b177f74b9b712823b9254be928da6321d54756e4b84acdf5997d2d8c4a7b6e",
+      "published_sha256": "56b177f74b9b712823b9254be928da6321d54756e4b84acdf5997d2d8c4a7b6e",
+      "bytes": 79593,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/appendices/regulations-queue8-2026.pdf",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/appendices/regulations-queue8-2026.pdf",
+      "source_sha256": "68698dd8410984735b0790f1dfc967c36097a6769c778f8236ac72fb020f373d",
+      "published_sha256": "68698dd8410984735b0790f1dfc967c36097a6769c778f8236ac72fb020f373d",
+      "bytes": 929307,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/appendices/regulations-queue8-2026.txt",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/appendices/regulations-queue8-2026.txt",
+      "source_sha256": "77e60b3a9b40a0d9300f41d62f518a35c4e050a8b24a7378af3705fe10aeef62",
+      "published_sha256": "ed4ddc9082eae985560287b6b8cf67ce6512afb0cfe7df3e60643caf78fae26a",
+      "bytes": 253044,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/appendices/supporting-documents.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/appendices/supporting-documents.md",
+      "source_sha256": "55f7555d90fe758dbacce9275407057c2c308330a60066b82307a7156ecf24e5",
+      "published_sha256": "55f7555d90fe758dbacce9275407057c2c308330a60066b82307a7156ecf24e5",
+      "bytes": 25737,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/appendices/winners-2025.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/appendices/winners-2025.md",
+      "source_sha256": "9d858f263b58a5f9924f45a30570087410720c04660baf960965f1848d821de2",
+      "published_sha256": "e6eae26abdc44ee7a39522dd1a25c636078df93ef35a3680d63a10018bab5330",
+      "bytes": 14565,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-11-45Z/appendices/winners-after-grant.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-11-45Z/appendices/winners-after-grant.md",
+      "source_sha256": "103cba9cc48148665953fe53e646fbe830533cba90f80f5fd74c47bf1fa35422",
+      "published_sha256": "103cba9cc48148665953fe53e646fbe830533cba90f80f5fd74c47bf1fa35422",
+      "bytes": 10537,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/audit.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/audit.md",
+      "source_sha256": "5ea369466632dd6cd7de28aff236cbe59869354425ef01042535040d182b5c2a",
+      "published_sha256": "5ea369466632dd6cd7de28aff236cbe59869354425ef01042535040d182b5c2a",
+      "bytes": 4234,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/audit_research.py",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/audit_research.py",
+      "source_sha256": "91cdb1bad3bd1f55a77de19cc0ce1888d03b75b7c5d930c3bfc4e04d9943696b",
+      "published_sha256": "91cdb1bad3bd1f55a77de19cc0ce1888d03b75b7c5d930c3bfc4e04d9943696b",
+      "bytes": 2125,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/claims-sales-frameworks.jsonl",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/claims-sales-frameworks.jsonl",
+      "source_sha256": "91479286519f1d006eef94ad63f008c245d6c66b8e74233bfba95303d869699c",
+      "published_sha256": "f82b532ce02d120b6afc36810326c70e1da9d43de1964e177c47f22948d71c06",
+      "bytes": 3211,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/claims-school-docs.jsonl",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/claims-school-docs.jsonl",
+      "source_sha256": "58d01814e37b6910efcc48a74adad2d681108cba7bb101d136bb8b4c7c53ade2",
+      "published_sha256": "58d01814e37b6910efcc48a74adad2d681108cba7bb101d136bb8b4c7c53ade2",
+      "bytes": 4557,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/claims-school-pilot.jsonl",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/claims-school-pilot.jsonl",
+      "source_sha256": "64f6a590e013dd18529121e8671f4ce8efecdbc993dfa7f42c62ae748fe35e51",
+      "published_sha256": "b0f8a1721599818b94a98468e6689f9ff7bfd6fdaa7a3e23abc42f215fa63c4a",
+      "bytes": 4397,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/meta.json",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/meta.json",
+      "source_sha256": "c068804464fb0ec13adc9e18cb9a724f8a95eb1c62b6304817a0de70f2c34f41",
+      "published_sha256": "346caf7d3462b2433904dd00baeb024a28fd82c3bebc07879910c6373249162e",
+      "bytes": 814,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/plan.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/plan.md",
+      "source_sha256": "b39c0bd147dd3be7efa789de5a7614b5e19ad0e7c55cd30f5a947cd2bd457a81",
+      "published_sha256": "b39c0bd147dd3be7efa789de5a7614b5e19ad0e7c55cd30f5a947cd2bd457a81",
+      "bytes": 3343,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/report.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/report.md",
+      "source_sha256": "2d6529eb9d8a7c35e6e966c3068b86d73169b204220f805eb6fbbfdeea819833",
+      "published_sha256": "ada3055828b306a96f5e8da1e0bd7385dcb91d89b81bcfd8897ac287f1517567",
+      "bytes": 29198,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/sources-sales-frameworks.jsonl",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/sources-sales-frameworks.jsonl",
+      "source_sha256": "1c4ac13de7366d9cad30dd593a853566bac22fc7f4113e26a5965024093488cf",
+      "published_sha256": "7e1ab3ae7079eb9d24900b0b67c717eb28cfd52d83d24b131b816af0c72f55a8",
+      "bytes": 4642,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/sources-school-docs.jsonl",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/sources-school-docs.jsonl",
+      "source_sha256": "014926bb79a56317fba687a66c23ee715b2003ecb914e75277ed61043fb0fa97",
+      "published_sha256": "51dc396026dfcb6141a7d2e4ba8cdbf3987c744249b36ec37104e3dd9d2d1b28",
+      "bytes": 4609,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/sources-school-pilot.jsonl",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/sources-school-pilot.jsonl",
+      "source_sha256": "f99ed7b92a3282203e0cfff328b2c1a03851ec9c23a9e5be48ae97e00c9c7e87",
+      "published_sha256": "5f7a3173b5a701de0afd8b8d02baec8647d59ef93b9fd8e2db3607afec8dadaf",
+      "bytes": 4256,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/appendices/deputy-head-emails.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/appendices/deputy-head-emails.md",
+      "source_sha256": "0bbd4315b565f94406e21f1a69ad5116c7e42cff6fd7a82546304237448ac3b9",
+      "published_sha256": "0bbd4315b565f94406e21f1a69ad5116c7e42cff6fd7a82546304237448ac3b9",
+      "bytes": 17028,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/appendices/document-forms.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/appendices/document-forms.md",
+      "source_sha256": "1398a87323f7b04731071d254ebf81084c642f72e4f270306ef3e3cf66c25013",
+      "published_sha256": "c9bb15573b2663c4e9a39821577e8ad032303667ea05cdbd1fa187aba309a655",
+      "bytes": 23609,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/appendices/frameworks.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/appendices/frameworks.md",
+      "source_sha256": "07b4b2011bac4b067cde8fcec4c789329c136d31a7c1817f9504835fb7ba7b03",
+      "published_sha256": "07b4b2011bac4b067cde8fcec4c789329c136d31a7c1817f9504835fb7ba7b03",
+      "bytes": 20406,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/appendices/meeting-playbook.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/appendices/meeting-playbook.md",
+      "source_sha256": "40edf9a5ee96dbbf28bee94f06c990fb81c90027ccbe79ef582923044b7a8161",
+      "published_sha256": "40edf9a5ee96dbbf28bee94f06c990fb81c90027ccbe79ef582923044b7a8161",
+      "bytes": 17602,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/appendices/pilot-menu.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/appendices/pilot-menu.md",
+      "source_sha256": "384067953af9fd3680daab0cf1d5585282226180b7cdb2137baec1cf7570d3c8",
+      "published_sha256": "bae0e5fdf3ce779a2bf43ac869239c0b54141b00f1c74f19e001f9e820347792",
+      "bytes": 21866,
+      "adapted": true
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/appendices/school-funnel.md",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/appendices/school-funnel.md",
+      "source_sha256": "884a51ece5436e5727d0aa6bd58fbafdfdad3b4e0da51cc13a921b8142807799",
+      "published_sha256": "884a51ece5436e5727d0aa6bd58fbafdfdad3b4e0da51cc13a921b8142807799",
+      "bytes": 3391,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/runs/2026-11-17T14-52-58Z/appendices/school-funnel.mmd",
+      "path": "project-context/research-garden/runs/2026-11-17T14-52-58Z/appendices/school-funnel.mmd",
+      "source_sha256": "c6863e83346d4af367e33f6dd9e499019a1abb9149d7360f7f2934005a86c149",
+      "published_sha256": "c6863e83346d4af367e33f6dd9e499019a1abb9149d7360f7f2934005a86c149",
+      "bytes": 2535,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/visuals/render_school_process.py",
+      "path": "project-context/research-garden/visuals/render_school_process.py",
+      "source_sha256": "2514ec3960b82ed8728b1ac8474a6a58f5ba403be90315fd32575d33415ed6cf",
+      "published_sha256": "2514ec3960b82ed8728b1ac8474a6a58f5ba403be90315fd32575d33415ed6cf",
+      "bytes": 14301,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/visuals/school-process-2026-11-17.png",
+      "path": "project-context/research-garden/visuals/school-process-2026-11-17.png",
+      "source_sha256": "deedce75d78b326a1e341cafca37bdb73b96d0e7e5cdb6dc9eb5ecde813e4bb5",
+      "published_sha256": "deedce75d78b326a1e341cafca37bdb73b96d0e7e5cdb6dc9eb5ecde813e4bb5",
+      "bytes": 1115777,
+      "adapted": false
+    },
+    {
+      "source_path": "research-garden/visuals/school-process-preview.png",
+      "path": "project-context/research-garden/visuals/school-process-preview.png",
+      "source_sha256": "3edd3329af7d2cc1f1b1fed641a449a4cd26f6578668f035010aca323e81e7ac",
+      "published_sha256": "3edd3329af7d2cc1f1b1fed641a449a4cd26f6578668f035010aca323e81e7ac",
+      "bytes": 569137,
+      "adapted": false
+    },
+    {
+      "source_path": "product-kit/AGENTS.md",
+      "path": "project-context/references/product-kit/AGENTS.source.md",
+      "source_sha256": "ae791994c4eb77f6e17952a4b0671455abfe15d8f71697e8e36f78b25711a090",
+      "published_sha256": "ae791994c4eb77f6e17952a4b0671455abfe15d8f71697e8e36f78b25711a090",
+      "bytes": 1999,
+      "adapted": false
+    },
+    {
+      "source_path": "product-kit/docs/IMPLEMENTATION.md",
+      "path": "project-context/references/product-kit/docs/IMPLEMENTATION.md",
+      "source_sha256": "047d3458176b118b46d4456711d04f8fd650f7882d392ebe855c97a64d423945",
+      "published_sha256": "047d3458176b118b46d4456711d04f8fd650f7882d392ebe855c97a64d423945",
+      "bytes": 7488,
+      "adapted": false
+    },
+    {
+      "source_path": "product-kit/docs/INTERFACE_GUIDE.md",
+      "path": "project-context/references/product-kit/docs/INTERFACE_GUIDE.md",
+      "source_sha256": "3fa559c12ccb79bfc135d49d79266f91204525bd10693e15e98390b778fb989c",
+      "published_sha256": "3fa559c12ccb79bfc135d49d79266f91204525bd10693e15e98390b778fb989c",
+      "bytes": 12427,
+      "adapted": false
+    },
+    {
+      "source_path": "product-kit/docs/PRODUCT_DESCRIPTION.md",
+      "path": "project-context/references/product-kit/docs/PRODUCT_DESCRIPTION.md",
+      "source_sha256": "6827f96348072682536530442255840f9d7d4ff74576f98d268169f85f814e9a",
+      "published_sha256": "6827f96348072682536530442255840f9d7d4ff74576f98d268169f85f814e9a",
+      "bytes": 42261,
+      "adapted": false
+    },
+    {
+      "source_path": "product-kit/docs/PROJECT_CONTEXT.md",
+      "path": "project-context/references/product-kit/docs/PROJECT_CONTEXT.md",
+      "source_sha256": "1350f2d16bfc7307ac386bd2a0e5eaec5dfcc7f696ea0fd6c27b4f73ae12edba",
+      "published_sha256": "88277fe85fa859dadde34509fab636b90d9032dd47d1d2666d8316e1014c4105",
+      "bytes": 42283,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/docs/SCHOOL_PROCESS.md",
+      "path": "project-context/references/product-kit/docs/SCHOOL_PROCESS.md",
+      "source_sha256": "7e659114231a4c20514c5c467fe81f50acc45aa3458c0707927d7b39bc08a98a",
+      "published_sha256": "6ebddc6045c89913ac985d6c99822a2bb222c1c3f75929cd494219bf71f010ab",
+      "bytes": 38377,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/docs/STATUS.md",
+      "path": "project-context/references/product-kit/docs/STATUS.md",
+      "source_sha256": "570e3b3e376b07794f72dd8e7b068713ae60e9001b3c1b2f92f51338c68422c7",
+      "published_sha256": "570e3b3e376b07794f72dd8e7b068713ae60e9001b3c1b2f92f51338c68422c7",
+      "bytes": 5616,
+      "adapted": false
+    },
+    {
+      "source_path": "product-kit/docs/VIDEO_V6.md",
+      "path": "project-context/references/product-kit/docs/VIDEO_V6.md",
+      "source_sha256": "38c326dd98c3fa7ea62848b810411f14259bbf4a95b6777e1f04c5242e1def83",
+      "published_sha256": "38c326dd98c3fa7ea62848b810411f14259bbf4a95b6777e1f04c5242e1def83",
+      "bytes": 2801,
+      "adapted": false
+    },
+    {
+      "source_path": "product-kit/README.md",
+      "path": "project-context/references/product-kit/README.md",
+      "source_sha256": "5c835552f523cf7294324f460310079e133b5e15a5063d86861dccba3203b60f",
+      "published_sha256": "5c835552f523cf7294324f460310079e133b5e15a5063d86861dccba3203b60f",
+      "bytes": 8819,
+      "adapted": false
+    },
+    {
+      "source_path": "product-kit/START_HERE.html",
+      "path": "project-context/references/product-kit/START_HERE.html",
+      "source_sha256": "96ab91f057fb2cbf21a7c10cedcc2e73fc17cc74c12b5f7550dbdfd973cd4ff3",
+      "published_sha256": "96ab91f057fb2cbf21a7c10cedcc2e73fc17cc74c12b5f7550dbdfd973cd4ff3",
+      "bytes": 1198,
+      "adapted": false
+    },
+    {
+      "source_path": "product-kit/preview/app.html",
+      "path": "project-context/references/product-kit/preview/app.html",
+      "source_sha256": "8d1382e699c29e8245b0f9f68c1c284e9329a1294e45ed93f099e369df02203d",
+      "published_sha256": "afaa8a7c48de11333e5f383af9527f2bbbbc061cc30345bfd05124ff024618d4",
+      "bytes": 534961,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/index.html",
+      "path": "project-context/references/product-kit/preview/index.html",
+      "source_sha256": "f366766e20bae002fc1a31161da1f1df8558fa3875b02e83a834184117fae4de",
+      "published_sha256": "1b430984f3f5629f2077693f161cd944ce82bc2d4ec84d41f54f17ae839a1500",
+      "bytes": 5149,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/manifest.json",
+      "path": "project-context/references/product-kit/preview/manifest.json",
+      "source_sha256": "306ec26aec4858ba05fec5a13bbb984915fb6afb2747ed36c38b34d22ca6658a",
+      "published_sha256": "306ec26aec4858ba05fec5a13bbb984915fb6afb2747ed36c38b34d22ca6658a",
+      "bytes": 3229,
+      "adapted": false
+    },
+    {
+      "source_path": "product-kit/preview/screens/Analytics.html",
+      "path": "project-context/references/product-kit/preview/screens/Analytics.html",
+      "source_sha256": "4dac073593d11fbbdeec71cbb3759f7dee03966e7410b35d5a585976bad0678a",
+      "published_sha256": "0948009a108c52fff13c30419b8bae5d7d987e659cdbdaf5197119cde824369c",
+      "bytes": 24817,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Attention.html",
+      "path": "project-context/references/product-kit/preview/screens/Attention.html",
+      "source_sha256": "33160cb8fd0b55afe437fa9ae002ece746db39ffac7819c2f992f6afeb3a192f",
+      "published_sha256": "24c064f9ee51da01520892e48665b22134ce0c5fa73acc54481188c6a12026d0",
+      "bytes": 24673,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/CameraCapture.html",
+      "path": "project-context/references/product-kit/preview/screens/CameraCapture.html",
+      "source_sha256": "ed5d724f2d5b98ab82548a98d343de1602fef4f351583788841ad6050d1e16f2",
+      "published_sha256": "382da8afae202195a7d45606cb56c30329e4cfaecca1419ab4b722ca398a6dfb",
+      "bytes": 24098,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/CameraRetry.html",
+      "path": "project-context/references/product-kit/preview/screens/CameraRetry.html",
+      "source_sha256": "479f1639e191a803c2cd45e0e505cc6811baa0069a5a95ed23e732e487a3234e",
+      "published_sha256": "f856831f9de304a42ba07da5efdaa42283309f294260a0571a1d732a6955df12",
+      "bytes": 24100,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Class.html",
+      "path": "project-context/references/product-kit/preview/screens/Class.html",
+      "source_sha256": "a3bfaeb6af265a3b74d9890abeb4db773fc5b81e24d35e1ce0f3c3340db49812",
+      "published_sha256": "cd72d2329646a42a1a5bb847a09e133913f512d534358854ea113ddaba04605f",
+      "bytes": 24376,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Confirmed.html",
+      "path": "project-context/references/product-kit/preview/screens/Confirmed.html",
+      "source_sha256": "3e6ea5aa2b63db52e7c00a74b37c11043d93439d892661f08a57e252e98418bf",
+      "published_sha256": "7d0fb3f1b65d1849d4ee117456634eebad42a693f776b59df6f3ab4173919086",
+      "bytes": 24210,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Create.html",
+      "path": "project-context/references/product-kit/preview/screens/Create.html",
+      "source_sha256": "f40565fd4d9a1da2600006c527e1ce6278d5d21acd9fa6986a37d35683686f13",
+      "published_sha256": "0cc3c2bba6c5f3327017b54e64f600cd4353076e6b263e18da321a6d8c603108",
+      "bytes": 24166,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Error.html",
+      "path": "project-context/references/product-kit/preview/screens/Error.html",
+      "source_sha256": "94c2e51ed6cce7aa206e713b84b56781d0c5426a39e39729f5f6e0bf71b3484a",
+      "published_sha256": "41509aac0253425b86b5ab58f21213b7963aff28b1aed5ac6621ac99dce29bda",
+      "bytes": 24550,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/ErrorWorks.html",
+      "path": "project-context/references/product-kit/preview/screens/ErrorWorks.html",
+      "source_sha256": "b955cf282b6a25cd4e65321e9a52cedf2ca45a7357d3fe52b1de705878f46ed5",
+      "published_sha256": "bb01c451a439d9c032521e230faaf71a6d8839a371ae38d7ce58f742d045f5db",
+      "bytes": 25688,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Manual.html",
+      "path": "project-context/references/product-kit/preview/screens/Manual.html",
+      "source_sha256": "e472d3d7df6185611ea0529ffabba50e98bd928d9e0464dabfc11d36b4c5a9c4",
+      "published_sha256": "2b4109401b5567dc88a377ea8078ae2dd844ce07650cee324249e0af889b9ee3",
+      "bytes": 24641,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/NewClass.html",
+      "path": "project-context/references/product-kit/preview/screens/NewClass.html",
+      "source_sha256": "6671fba1733b1f816a7afc52e2c86bbbe67a52889ec9897b107e7cac87c1c686",
+      "published_sha256": "9117d7315a772e8353da31589784852222d8b62298e5cc1723605c0f5e4b1d2c",
+      "bytes": 23826,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/NewTopic.html",
+      "path": "project-context/references/product-kit/preview/screens/NewTopic.html",
+      "source_sha256": "ff216fbc0f6538682932b7aeb36a402fa5d7287c7654da8385bc87cd85873896",
+      "published_sha256": "43b49c334e7c4dd5072f8cd3c1827c34bdf93f74e270eab7e1a512dd6b2d56df",
+      "bytes": 23838,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Photo.html",
+      "path": "project-context/references/product-kit/preview/screens/Photo.html",
+      "source_sha256": "36ac22655cba51b94790ad0d44771c3eaae54edea8dfc98b99f7dc6dfbf0db99",
+      "published_sha256": "1a6dfeb834f80e8e7c8f15447346a5cf594d5eb4b18376197946b23e28fce86f",
+      "bytes": 24281,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/PhotoPreview.html",
+      "path": "project-context/references/product-kit/preview/screens/PhotoPreview.html",
+      "source_sha256": "79f358675241a33c6683429aa7a1e16679d1346c46d043737bbc4aae6de10888",
+      "published_sha256": "5575af809e30b2d40ad2c30c99f4983cf8bb8b0d526d749e8d5e5abb2073de36",
+      "bytes": 24054,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Processing.html",
+      "path": "project-context/references/product-kit/preview/screens/Processing.html",
+      "source_sha256": "ffc706882cdf68cb1c9d282bf879741e8a3d00ccd65eff2c1dfb6686dca914a4",
+      "published_sha256": "04e9616158d2925c449c79071b7fb3fb5f9647bd6778e51265027ff774e7378a",
+      "bytes": 24115,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Queue.html",
+      "path": "project-context/references/product-kit/preview/screens/Queue.html",
+      "source_sha256": "649e9a55be8e559a3489e91a056c5f50e8604dd2796907539216a5fc943d8c27",
+      "published_sha256": "aaa8ec2774590d4a10e8ef4d217fd42ebcbaa632bb65887cec1c1be9e1c682ae",
+      "bytes": 25655,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Report.html",
+      "path": "project-context/references/product-kit/preview/screens/Report.html",
+      "source_sha256": "8c2a114046cd20b78101cee752be7bf7acd2a105d7ec1f34a53dfb543c1ffa45",
+      "published_sha256": "56745804f8486f17631b5d364fd0d1ec74060e754873d20349d907625b19143c",
+      "bytes": 26100,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Retry.html",
+      "path": "project-context/references/product-kit/preview/screens/Retry.html",
+      "source_sha256": "8079589124cf3fbf9a7c2cff80ae0a8619a1e94740d9d18d8527a8b3fc14c4d2",
+      "published_sha256": "a4e758be93916217ed591586eeb7c881408f5dda3eedbff1b1e7a7d340d893d5",
+      "bytes": 24308,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/RetryPreview.html",
+      "path": "project-context/references/product-kit/preview/screens/RetryPreview.html",
+      "source_sha256": "3d6d4ffc94d24ea657c83b96d76775243cb08483187d912ce58a6f56a408d61d",
+      "published_sha256": "4f05497c6dc061a19b76ce5ec89dfdb0a0aa7572f451dde2ec52cf2186a34707",
+      "bytes": 24071,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Review.html",
+      "path": "project-context/references/product-kit/preview/screens/Review.html",
+      "source_sha256": "0fc4348236a3dd91b20f6b6e3c027a99c9872e295491cbb5848987bdc3939915",
+      "published_sha256": "b284cf31ee5ee14a72de4389c3a576e75ee4ea9a842fe166d71250ffe8556a56",
+      "bytes": 24718,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Roles.html",
+      "path": "project-context/references/product-kit/preview/screens/Roles.html",
+      "source_sha256": "9497d10ee1b1188bacb47d2d316460e47d6666d9b37f2a76d426c2b217e391c6",
+      "published_sha256": "8ad1a17f9082c228efd5f1f90b99da75d40c012d49d53a1302244bdcc233d5b4",
+      "bytes": 24510,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Scan.html",
+      "path": "project-context/references/product-kit/preview/screens/Scan.html",
+      "source_sha256": "b550054361808c13c7b6e5ddc1027aa0206b278d8cfb8e8ffb84119b39b59540",
+      "published_sha256": "3f039fe5adf5bfcff27cbf3452ab3f716dfcf82c892ee5578afa89e7d7f765df",
+      "bytes": 24003,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Student.html",
+      "path": "project-context/references/product-kit/preview/screens/Student.html",
+      "source_sha256": "6d69e129a2855844db2fbfa17aa572134197efb4f1dbfa310aba1d3fe5fe358b",
+      "published_sha256": "fb0ec2389221615d851bb94f7238461306c6ff3aa321240c982c85bb4ea0d566",
+      "bytes": 24414,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Success.html",
+      "path": "project-context/references/product-kit/preview/screens/Success.html",
+      "source_sha256": "e905209ed3acb226da8673e25f616a86208b56e7f178dfc214979df1b296b55b",
+      "published_sha256": "593a410018dc729739a12388dea9fda01b8cac58ad2016d63abb4efa79c83440",
+      "bytes": 24235,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Teacher.html",
+      "path": "project-context/references/product-kit/preview/screens/Teacher.html",
+      "source_sha256": "c7eb67641c399359904d28f638b0c1cffe8f5147977190d9612e83b8509dd354",
+      "published_sha256": "294cf200f41ad79f32c37b27008ee843ca515967e47dd4fe605f7bccff639610",
+      "bytes": 25597,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Topic.html",
+      "path": "project-context/references/product-kit/preview/screens/Topic.html",
+      "source_sha256": "2cb43fec7d1949a0887b33088695f9a08f7984b03d120d68578495073cf6ec89",
+      "published_sha256": "9c8f7d4b128b8689be7ddf077dfd4694fd386a61215f81fdc47257c3dc8d511f",
+      "bytes": 24320,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/Upload.html",
+      "path": "project-context/references/product-kit/preview/screens/Upload.html",
+      "source_sha256": "e638381d5868cf4d00a0bb96dccf4f53857adc7de5fe92fb75b61649268e7165",
+      "published_sha256": "92a7703a3e6aeb08cd4ff3356f6569bdbbfa5696f3d8a86ed7072394725272da",
+      "bytes": 27615,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/preview/screens/UploadEmpty.html",
+      "path": "project-context/references/product-kit/preview/screens/UploadEmpty.html",
+      "source_sha256": "783d67ac855237b48bd1e39ff9ac995976d0f8d7d532899a57f87d87df95cbbf",
+      "published_sha256": "795a3f5282c67eebd0ad797a4e5736c2a8c900a86c790bd27c0c3e447a678bbc",
+      "bytes": 24227,
+      "adapted": true
+    },
+    {
+      "source_path": "product-kit/media/smart-notebook-v6.mp4",
+      "path": "project-context/references/product-kit/media/smart-notebook-v6.mp4",
+      "source_sha256": "d0d863fede4422b19a9c6a0fb67d56ca12fac8625bdd2059340fcbc975dd8a36",
+      "published_sha256": "d0d863fede4422b19a9c6a0fb67d56ca12fac8625bdd2059340fcbc975dd8a36",
+      "bytes": 29313439,
+      "adapted": false
+    },
+    {
+      "source_path": "product-kit/references/contest-project.docx",
+      "path": "project-context/references/product-kit/references/contest-project.docx",
+      "source_sha256": "4ec3847479c33453641c1917c7541ea3ab66cef0cc79fb762dbb4a197d453dee",
+      "published_sha256": "4ec3847479c33453641c1917c7541ea3ab66cef0cc79fb762dbb4a197d453dee",
+      "bytes": 2143848,
+      "adapted": false
+    },
+    {
+      "source_path": "SmartNoteLanding/AGENTS.md",
+      "path": "project-context/references/SmartNoteLanding/AGENTS.source.md",
+      "source_sha256": "86eff0681db1b4ebbeeff3fb9bdf5d5ab8387d9c5a62c10244cedfc767fcbd9c",
+      "published_sha256": "f9e16f8fec8bf74a9dbae0c315776ed56d7f18f68f5060199e9372094b9d5333",
+      "bytes": 8918,
+      "adapted": true
+    },
+    {
+      "source_path": "SmartNoteLanding/docs/architecture.md",
+      "path": "project-context/references/SmartNoteLanding/docs/architecture.md",
+      "source_sha256": "60b14d3aa16a7b4c5c6d056191a5d27e0b9595330ccd25d4582bfb6a248d9270",
+      "published_sha256": "dcb767c67fef5814bcdec8ed62ce10fe2f2bc832c8e11c804f88bf95b00d0552",
+      "bytes": 13253,
+      "adapted": true
+    },
+    {
+      "source_path": "SmartNoteLanding/docs/backend-integration.md",
+      "path": "project-context/references/SmartNoteLanding/docs/backend-integration.md",
+      "source_sha256": "56e9f1f9a50782f8e9518377ef44504fe1d9e0ba9cffbdf42b99b93e7644b9f1",
+      "published_sha256": "6b3da9b8246fec491c73430c3d2bef05880fd6ae4b97228b813805af61fec325",
+      "bytes": 8545,
+      "adapted": true
+    },
+    {
+      "source_path": "SmartNoteLanding/docs/benchmark-run-history.md",
+      "path": "project-context/references/SmartNoteLanding/docs/benchmark-run-history.md",
+      "source_sha256": "16a823a402e9cf3797ec56bfce757a01f04a61350cd5258fae809ab5640cd7b9",
+      "published_sha256": "3ce092da6d8df9ed14f08767a614cd180d6f918bb617350051f199b1dec5ab8b",
+      "bytes": 11893,
+      "adapted": true
+    },
+    {
+      "source_path": "SmartNoteLanding/docs/frontend-demo.md",
+      "path": "project-context/references/SmartNoteLanding/docs/frontend-demo.md",
+      "source_sha256": "34a94cb7348327745b883bc88b4258ff76c60fd5d2a6c89a040433fac754e8cb",
+      "published_sha256": "79deb8e181402960ab5a00376ffd742ce1e55dbdb963ff374bd34503ee4d3445",
+      "bytes": 4631,
+      "adapted": true
+    },
+    {
+      "source_path": "SmartNoteLanding/docs/llm-contract.md",
+      "path": "project-context/references/SmartNoteLanding/docs/llm-contract.md",
+      "source_sha256": "cbc4e8ad6c4a902f4c9140d1a5a08c2490ce09701cc1af60e131f740e8323eac",
+      "published_sha256": "d7e16c5c2249e619daaf1481e6435ed669664fd15730b23ca1fed8e7423e8d5e",
+      "bytes": 15157,
+      "adapted": true
+    },
+    {
+      "source_path": "SmartNoteLanding/docs/model-benchmark.md",
+      "path": "project-context/references/SmartNoteLanding/docs/model-benchmark.md",
+      "source_sha256": "baa07fe9f2dfd2939c06dac0c1fecf2c2108b343147a54e162b62f4969897d81",
+      "published_sha256": "16a57e6d511e89b797444baf89bf341ca49c8a37bf3556cce9bc2fdfa411f653",
+      "bytes": 20335,
+      "adapted": true
+    },
+    {
+      "source_path": "SmartNoteLanding/docs/model-math-assessment.md",
+      "path": "project-context/references/SmartNoteLanding/docs/model-math-assessment.md",
+      "source_sha256": "19035a5d419cb8bfdcc465b2a152991282fe7d797fd28b83a7feca7b5af3e820",
+      "published_sha256": "229a214ca5acb6016151c589d226990d2866527fb6d90e7db50664e4d6cc2666",
+      "bytes": 5522,
+      "adapted": true
+    },
+    {
+      "source_path": "SmartNoteLanding/examples/analysis-response-example.json",
+      "path": "project-context/references/SmartNoteLanding/examples/analysis-response-example.json",
+      "source_sha256": "3bf33ea78efc2e9fdb8627718da5944ac252a80185a0a6ef23bef8067f06135e",
+      "published_sha256": "a0ac9ab9a9098a1446ecca6248a54f9b8ac72013ba46fc11d25af23e803000f9",
+      "bytes": 916,
+      "adapted": true
+    }
+  ]
+}

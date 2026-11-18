@@ -1,0 +1,142 @@
+[
+  {
+    "id": "Roles",
+    "title": "Выбор роли",
+    "path": "screens/Roles.html"
+  },
+  {
+    "id": "Teacher",
+    "title": "Кабинет учителя",
+    "path": "screens/Teacher.html"
+  },
+  {
+    "id": "Class",
+    "title": "Темы класса",
+    "path": "screens/Class.html"
+  },
+  {
+    "id": "NewClass",
+    "title": "Добавить класс",
+    "path": "screens/NewClass.html"
+  },
+  {
+    "id": "NewTopic",
+    "title": "Добавить тему",
+    "path": "screens/NewTopic.html"
+  },
+  {
+    "id": "Topic",
+    "title": "Домашние работы",
+    "path": "screens/Topic.html"
+  },
+  {
+    "id": "Create",
+    "title": "Новая домашняя работа",
+    "path": "screens/Create.html"
+  },
+  {
+    "id": "Upload",
+    "title": "Загрузка комплекта",
+    "path": "screens/Upload.html"
+  },
+  {
+    "id": "UploadEmpty",
+    "title": "Комплект ещё не выбран",
+    "path": "screens/UploadEmpty.html"
+  },
+  {
+    "id": "Processing",
+    "title": "Проверка комплекта",
+    "path": "screens/Processing.html"
+  },
+  {
+    "id": "Report",
+    "title": "Отчёт",
+    "path": "screens/Report.html"
+  },
+  {
+    "id": "Queue",
+    "title": "Очередь подтверждения",
+    "path": "screens/Queue.html"
+  },
+  {
+    "id": "Review",
+    "title": "Просмотр работы",
+    "path": "screens/Review.html"
+  },
+  {
+    "id": "Confirmed",
+    "title": "Работа подтверждена",
+    "path": "screens/Confirmed.html"
+  },
+  {
+    "id": "Attention",
+    "title": "Требуют внимания",
+    "path": "screens/Attention.html"
+  },
+  {
+    "id": "Manual",
+    "title": "Ручная проверка",
+    "path": "screens/Manual.html"
+  },
+  {
+    "id": "Analytics",
+    "title": "Частые ошибки",
+    "path": "screens/Analytics.html"
+  },
+  {
+    "id": "ErrorWorks",
+    "title": "Работы с ошибкой",
+    "path": "screens/ErrorWorks.html"
+  },
+  {
+    "id": "Student",
+    "title": "Кабинет ученика",
+    "path": "screens/Student.html"
+  },
+  {
+    "id": "Photo",
+    "title": "Загрузка решения",
+    "path": "screens/Photo.html"
+  },
+  {
+    "id": "PhotoPreview",
+    "title": "Просмотр фотографии",
+    "path": "screens/PhotoPreview.html"
+  },
+  {
+    "id": "RetryPreview",
+    "title": "Просмотр исправленного решения",
+    "path": "screens/RetryPreview.html"
+  },
+  {
+    "id": "Scan",
+    "title": "Проверка решения",
+    "path": "screens/Scan.html"
+  },
+  {
+    "id": "Error",
+    "title": "Найдена ошибка",
+    "path": "screens/Error.html"
+  },
+  {
+    "id": "Retry",
+    "title": "Повторная фотография",
+    "path": "screens/Retry.html"
+  },
+  {
+    "id": "Success",
+    "title": "Решение верно",
+    "path": "screens/Success.html"
+  },
+  {
+    "id": "CameraCapture",
+    "title": "Камера · первый снимок",
+    "path": "screens/CameraCapture.html"
+  },
+  {
+    "id": "CameraRetry",
+    "title": "Камера · повторный снимок",
+    "path": "screens/CameraRetry.html"
+  }
+]
