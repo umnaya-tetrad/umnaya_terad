@@ -25,10 +25,12 @@
 - [Что разрабатываем](project-context/pilot/PRODUCT.md), [сценарий учителя](project-context/pilot/TEACHER_FLOW.md), [формулы сводки](project-context/pilot/SUMMARY_METRICS.md).
 - [Решения владельца](project-context/pilot/DECISIONS.md), [итоговые статусы вопросов](project-context/pilot/QUESTIONS.md).
 - [Архитектура и API](project-context/pilot/TECHNICAL_PLAN.md), [этапы реализации](project-context/pilot/IMPLEMENTATION_PLAN.md), [приемка](project-context/pilot/TRIAL_AND_ACCEPTANCE.md).
+- [AI-интеграция: проверенный промпт и контракт](project-context/pilot/AI_INTEGRATION.md), [reference-адаптер и поток съемки](project-context/pilot/ai/README.md).
+- [Направление AI-сводки класса](project-context/pilot/AI_ANALYTICS.md): детали отложены в Q49.
 - [Роли/данные](project-context/pilot/DATA_AND_ACCESS.md), [логи и время](project-context/pilot/ANALYTICS.md).
 - [Макеты, интерактивное демо и ролик](project-context/references/product-kit/START_HERE.html), [источники и ревизии](project-context/SOURCES.md).
 
-Текущее состояние: спецификация 1.0 согласована по R01–R79. Рабочий учительский пилот в этом репозитории еще не реализован; HTML-демо не является приложением с ИИ. Формат письменного итога апробации пока отложен. Проверки окружения и фактической модели предстоят при реализации.
+Текущее состояние: спецификация 1.1 согласована по R01–R83. Рабочий учительский пилот в этом репозитории еще не реализован; HTML-демо не является приложением с ИИ. Формат письменного итога апробации пока отложен. Локальный модельный эксперимент описан отдельно; интеграция с рабочим приложением и проверки окружения предстоят при реализации.
 
 ## Проверка комплекта
 

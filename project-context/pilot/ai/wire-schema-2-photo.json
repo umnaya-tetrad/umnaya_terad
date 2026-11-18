@@ -1,0 +1,177 @@
+{
+  "$defs": {
+    "Error": {
+      "additionalProperties": false,
+      "properties": {
+        "photo_index": {
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
+        },
+        "wrong_latex": {
+          "type": "string"
+        },
+        "rule": {
+          "type": "string"
+        },
+        "explanation": {
+          "type": "string"
+        },
+        "corrected_latex": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "photo_index",
+        "wrong_latex",
+        "rule",
+        "explanation",
+        "corrected_latex"
+      ],
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "photo_index": {
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
+        },
+        "latex": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "photo_index",
+        "latex"
+      ],
+      "type": "object"
+    },
+    "Task": {
+      "additionalProperties": false,
+      "properties": {
+        "task_id": {
+          "type": "string"
+        },
+        "locator": {
+          "type": "string"
+        },
+        "photo_indices": {
+          "items": {
+            "type": "integer",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "type": "array"
+        },
+        "condition": {
+          "type": "string"
+        },
+        "result": {
+          "enum": [
+            "all_steps_correct",
+            "first_error_found",
+            "not_assessed"
+          ],
+          "type": "string"
+        },
+        "completeness": {
+          "enum": [
+            "complete",
+            "incomplete",
+            "unknown"
+          ],
+          "type": "string"
+        },
+        "detail_level": {
+          "enum": [
+            "sufficient",
+            "omitted_steps",
+            "partial",
+            "unknown"
+          ],
+          "type": "string"
+        },
+        "omitted_steps_note": {
+          "type": "string"
+        },
+        "completeness_note": {
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "type": "array"
+        },
+        "first_error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Error"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "uncheckable_reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "task_id",
+        "locator",
+        "photo_indices",
+        "condition",
+        "result",
+        "completeness",
+        "detail_level",
+        "omitted_steps_note",
+        "completeness_note",
+        "evidence",
+        "first_error",
+        "uncheckable_reason"
+      ],
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "page-check/1.2"
+      ]
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "uncheckable"
+      ],
+      "type": "string"
+    },
+    "tasks": {
+      "items": {
+        "$ref": "#/$defs/Task"
+      },
+      "type": "array"
+    },
+    "message": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "status",
+    "tasks",
+    "message"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,55 @@
+{
+  "artifact_version": "teacher-page-check/1.2",
+  "recorded_date": "2026-11-19",
+  "status": "Frozen exact benchmark prompt and validation schema; recommended25k production profile not validated with live calls.",
+  "prompt": {
+    "file": "checker-v2.txt",
+    "sha256": "791c9c7ed3df1678f7b9a777191f6ff6c3661b8e86cec04115c6e6f90f544eec",
+    "source": "pilot_benchmark_v1/results/v2/checker.txt; identical direct_v2/checker.txt",
+    "exact_bytes_preserved": true,
+    "text_sha256": "7a44b3006e88680d88ced741ec65896930fa180c39ba95405200da7aecbf3aec",
+    "newline_policy": "Exact source file bytes retained. Python read_text normalizes CRLF toLF; text_sha256 matches actual system-message string sent in the benchmark."
+  },
+  "schema": {
+    "file": "response-schema-v1.2.json",
+    "sha256": "622318c350906c9d9f66f6d8286bae665083be95ab96992736688021329d49d5",
+    "schema_version": "page-check/1.2"
+  },
+  "tested_profile": {
+    "model": "google/gemini-3.8-flash",
+    "provider": "google-ai-studio/flex",
+    "reasoning_effort": "medium",
+    "temperature_sent": 0,
+    "media_resolution": "MEDIA_RESOLUTION_HIGH",
+    "max_completion_tokens_initial": 12000,
+    "max_completion_tokens_retry": 24000,
+    "read_timeout_seconds": 180,
+    "connect_timeout_seconds": 15,
+    "image_detail": "high"
+  },
+  "recommended_profile": {
+    "status": "developer_recommendation_not_a_new_live_benchmark",
+    "max_completion_tokens": 25000,
+    "read_timeout_seconds": 300,
+    "connect_timeout_seconds": 15,
+    "automatic_retries_in_adapter": 0
+  },
+  "wire_schema_policy": "Simplify provider schema and enumerate1-based photo indices; enforce full schema and cross-field invariants locally.",
+  "output_scope": "Up to4selected evidence lines per task, not full transcription. Rule is free text, not stable mathematical rule code.",
+  "scenario_evidence": {
+    "one_photo_one_task_inputs": 20,
+    "one_photo_multiple_tasks_inputs": 48,
+    "one_task_two_photos_inputs": 4,
+    "whole_and_continued_task_two_photos_inputs": 4,
+    "reference_units": 178,
+    "quality_eligible_units": 175,
+    "method": "Explicit AI review on GDZ/FIPI and synthetic modifications; no independent teacher validation."
+  },
+  "not_independently_measured": [
+    "two completely independent photos without any continuation in the new76-suite",
+    "three or more photos in a request",
+    "overlapping/duplicate capture robust handling",
+    "full step transcription output",
+    "25000 cap versus12000 cap controlled comparison"
+  ]
+}

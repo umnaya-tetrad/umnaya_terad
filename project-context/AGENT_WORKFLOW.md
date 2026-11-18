@@ -20,7 +20,7 @@ AGENTS и skills — инструкции работающему агенту. �
 1. CURRENT_STATE и README этой папки.
 2. PRODUCT и DECISIONS: что и почему принято.
 3. TEACHER_FLOW и SUMMARY_METRICS: реальное действие и математические определения.
-4. Для реализации — TECHNICAL_PLAN, IMPLEMENTATION_PLAN и TRIAL_AND_ACCEPTANCE.
+4. Для AI — pilot/AI_INTEGRATION.md и pilot/ai/README.md (точный проверенный промпт/контракт/адаптер); для приложения — TECHNICAL_PLAN, IMPLEMENTATION_PLAN и TRIAL_AND_ACCEPTANCE.
 5. По затронутой функции — DATA_AND_ACCESS, ANALYTICS, дополнение к промпту, дев-примеры и нужные источники. В историю/исследования переходить по реальной потребности.
 
 Так новый агент получает весь необходимый продуктовый контекст; детали кода/окружения устанавливаются по настоящим исходникам и проверке, а не из обещаний документации.
@@ -32,9 +32,9 @@ AGENTS и skills — инструкции работающему агенту. �
 | Изменение | Что проверить и обновить |
 |---|---|
 | Ценность, обязательные функции, границы пилота | pilot/PRODUCT.md; при новом ответе владельца pilot/DECISIONS.md и pilot/QUESTIONS.md; CURRENT_STATE при изменении этапа |
-| Съемка, группировка, очередь готовых, навигация | pilot/TEACHER_FLOW.md, pilot/TECHNICAL_PLAN.md, pilot/TRIAL_AND_ACCEPTANCE.md; соответствующие события в ANALYTICS |
-| Схема анализа, модель, промпт, математические правила | Реальный серверный/клиентский контракт и код; pilot/TECHNICAL_PLAN.md, pilot/prompts/teacher-error-classification-v1.md, дев-примеры, приемка; формулы при изменении семантики |
-| Сводка, знаменатели, незавершенность, подтверждение | pilot/SUMMARY_METRICS.md, TEACHER_FLOW, TECHNICAL_PLAN и приемка; не менять смысл R-решения без основания |
+| Съемка, группировка, очередь готовых, навигация | pilot/TEACHER_FLOW.md, pilot/CAPTURE_AND_IDENTIFICATION.md, pilot/AI_INTEGRATION.md, pilot/ai/capture-flow.puml, pilot/TECHNICAL_PLAN.md, pilot/TRIAL_AND_ACCEPTANCE.md; соответствующие события в ANALYTICS |
+| Схема анализа, модель, промпт, математические правила | Реальный серверный/клиентский контракт и код; pilot/AI_INTEGRATION.md, pilot/ai/README.md и версионированные AI-артефакты; pilot/TECHNICAL_PLAN.md, pilot/prompts/teacher-error-classification-v1.md, дев-примеры, приемка; формулы при изменении семантики |
+| Сводка, знаменатели, незавершенность, подтверждение | pilot/AI_ANALYTICS.md, pilot/SUMMARY_METRICS.md, TEACHER_FLOW, TECHNICAL_PLAN и приемка; не менять смысл R-решения без основания |
 | Фото, версии, отзывы, добавление/удаление | PRODUCT, TEACHER_FLOW, TECHNICAL_PLAN, DATA_AND_ACCESS, SUMMARY_METRICS, ANALYTICS и затронутые строки приемки |
 | Роли/вход/доступ/командный раздел/хранение | pilot/DATA_AND_ACCESS.md, TECHNICAL_PLAN, TEACHER_FLOW, аудит в ANALYTICS и приемка |
 | Очередь, автоповтор, финансы, конкурентность | pilot/TECHNICAL_PLAN.md, ANALYTICS, DATA_AND_ACCESS при изменении хранения, приемка, фактический статус |
@@ -42,6 +42,8 @@ AGENTS и skills — инструкции работающему агенту. �
 | Реализованный этап, реальные тесты/развертывание | CURRENT_STATE.md; технический план/приемка по факту; ссылки на результат без секретов и неподтвержденных обещаний |
 | Школьная встреча/апробация/письменный итог | SCHOOL_PROCESS.md, PROJECT_CONTEXT.md, CURRENT_STATE и организационная часть приемки; отражать только факты |
 | Пути, источники, новый модуль, изменение структуры | README/AGENTS, SOURCES, docs/KNOWLEDGE_MAP.md и ссылки; проверить check_context.py |
+
+Проверять, что фото/запрос не считаются учебной задачей, продолжения объединяются, отзыв связан с актуальной версией и изменение комплекта снимает все затронутые согласия. Временный task_id модели не постоянный ID БД; свободный rule сохраняется. R83 направляет групповую аналитику в отдельный LLM-запрос; его проработка Q49 отложена, обязательный rule_id в checker не вводится.
 
 Обновлять именно затронутые документы, а не все перечисленные файлы без смысловой причины. Архивы и snapshots не переписывать как актуальную спецификацию. Выявленное расхождение устраняется в текущем изменении, если это входит в задачу; незакрытое существенное расхождение явно отражается в ревью.
 

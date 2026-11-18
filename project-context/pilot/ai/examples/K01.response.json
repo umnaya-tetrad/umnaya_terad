@@ -1,0 +1,38 @@
+{
+  "schema_version": "page-check/1.2",
+  "status": "ok",
+  "tasks": [
+    {
+      "task_id": "task_1",
+      "locator": "Вверху страницы, номер 21, уравнение 1/(x-1)^2 + 3/(x-1) - 10 = 0",
+      "photo_indices": [1],
+      "condition": "\\frac{1}{(x-1)^2} + \\frac{3}{x-1} - 10 = 0",
+      "result": "all_steps_correct",
+      "completeness": "complete",
+      "detail_level": "sufficient",
+      "omitted_steps_note": "",
+      "completeness_note": "",
+      "evidence": [
+        {
+          "photo_index": 1,
+          "latex": "\\frac{1+3(x-1)}{(x-1)^2} = 10"
+        },
+        {
+          "photo_index": 1,
+          "latex": "10x^2-23x+12=0"
+        },
+        {
+          "photo_index": 1,
+          "latex": "D = b^2 - 4ac = 529 - 480 = 49"
+        },
+        {
+          "photo_index": 1,
+          "latex": "x_1 = 0{,}8; \\quad x_2 = 1{,}5"
+        }
+      ],
+      "first_error": null,
+      "uncheckable_reason": ""
+    }
+  ],
+  "message": "Проверка успешно завершена. Решение выполнено полностью и верно."
+}

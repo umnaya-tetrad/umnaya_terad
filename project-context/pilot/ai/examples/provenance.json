@@ -1,0 +1,31 @@
+{
+  "status": "real recorded development responses, not synthetic mock responses",
+  "examples": [
+    {
+      "case_id": "E_C01",
+      "file": "E_C01.response.json",
+      "sha256": "ba2a51b941c022ac6a0bb47c99988859baee642ef7e8b9b570db4a033af98956",
+      "origin": "Actual Gemini response from pilot_benchmark_v1/v2 onepass; no changes to the content text.",
+      "dataset": "public GDZ/FIPI source or synthetic dev variant; not a real teacher/student production upload",
+      "reference_units": 2
+    },
+    {
+      "case_id": "K01",
+      "file": "K01.response.json",
+      "sha256": "25d8a8f82fbc51b5ff4840346952725b1720f3f295b3248b64885cf76163514d",
+      "origin": "Actual Gemini response from pilot_benchmark_v1/v2 onepass; no changes to the content text.",
+      "dataset": "public GDZ/FIPI source or synthetic dev variant; not a real teacher/student production upload",
+      "reference_units": 1
+    },
+    {
+      "case_id": "M06",
+      "file": "M06.response.json",
+      "sha256": "2e33b494b9d2c026f0ae7181d945a6faaa0f6a343eccddbd7317241674499736",
+      "origin": "Actual Gemini response from pilot_benchmark_v1/v2 onepass; no changes to the content text.",
+      "dataset": "public GDZ/FIPI source or synthetic dev variant; not a real teacher/student production upload",
+      "reference_units": 2
+    }
+  ],
+  "images_not_included": true,
+  "transport_headers_and_secrets_not_included": true
+}

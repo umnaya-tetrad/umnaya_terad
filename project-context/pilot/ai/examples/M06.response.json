@@ -1,0 +1,75 @@
+{
+  "schema_version": "page-check/1.2",
+  "status": "ok",
+  "tasks": [
+    {
+      "task_id": "1",
+      "locator": "Фото 1, верхняя часть, задание 1",
+      "photo_indices": [1],
+      "condition": "\\frac{1}{(x-1)^2} + \\frac{3}{x-1} - 10 = 0",
+      "result": "all_steps_correct",
+      "completeness": "complete",
+      "detail_level": "sufficient",
+      "omitted_steps_note": "",
+      "completeness_note": "",
+      "evidence": [
+        {
+          "photo_index": 1,
+          "latex": "\\frac{1}{(x-1)^2} + \\frac{3}{x-1} - 10 = 0"
+        },
+        {
+          "photo_index": 1,
+          "latex": "10x^2 - 23x + 12 = 0"
+        },
+        {
+          "photo_index": 1,
+          "latex": "D = 529 - 480 = 49 = 7^2"
+        },
+        {
+          "photo_index": 1,
+          "latex": "\\text{ОТВЕТ: } 0{,}8; \\; 1{,}5."
+        }
+      ],
+      "first_error": null,
+      "uncheckable_reason": ""
+    },
+    {
+      "task_id": "2",
+      "locator": "Фото 1 (нижняя часть) и Фото 2",
+      "photo_indices": [1, 2],
+      "condition": "\\frac{1}{x^2} + \\frac{3}{x} - 10 = 0",
+      "result": "first_error_found",
+      "completeness": "complete",
+      "detail_level": "sufficient",
+      "omitted_steps_note": "",
+      "completeness_note": "",
+      "evidence": [
+        {
+          "photo_index": 1,
+          "latex": "10x^2 - 3x - 1 = 0"
+        },
+        {
+          "photo_index": 2,
+          "latex": "x_{1,2} = \\frac{3 \\pm 7}{20}"
+        },
+        {
+          "photo_index": 2,
+          "latex": "x_2 = \\frac{4}{20} = \\frac{1}{5} = 0{,}2"
+        },
+        {
+          "photo_index": 2,
+          "latex": "\\text{Ответ } x_1 = 0{,}5, \\; x_2 = 0{,}2"
+        }
+      ],
+      "first_error": {
+        "photo_index": 2,
+        "wrong_latex": "x_2 = \\frac{4}{20} = \\frac{1}{5} = 0{,}2",
+        "rule": "При вычитании большего числа из меньшего результат отрицателен: $3 - 7 = -4$.",
+        "explanation": "При вычислении второго корня потерян знак «минус»: $3 - 7 = -4$, поэтому дробь равна $-\\frac{4}{20} = -0{,}2$, а не $0{,}2$.",
+        "corrected_latex": "x_2 = -\\frac{4}{20} = -\\frac{1}{5} = -0{,}2"
+      },
+      "uncheckable_reason": ""
+    }
+  ],
+  "message": "Проверено 2 задания: в первом все шаги выполнены верно, во втором найдена ошибка в знаке при вычислении второго корня."
+}

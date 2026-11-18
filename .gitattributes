@@ -8,6 +8,10 @@
 *.html text eol=lf
 *.mmd text eol=lf
 *.txt text eol=lf
+# Exact benchmark artifact: keep source bytes and provenance checksum on clone.
+project-context/pilot/ai/checker-v2.txt -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+project-context/pilot/ai/response-schema-v1.2.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+project-context/pilot/ai/examples/*.response.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 .gitignore text eol=lf
 .gitattributes text eol=lf
 *.mp4 binary
