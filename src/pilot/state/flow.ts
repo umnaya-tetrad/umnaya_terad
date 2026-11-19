@@ -2,7 +2,8 @@ import type { Action } from '../api/client'
 import type { Bundle, Check, Mutation, Notebook, TaskAnalysis } from '../api/contract'
 
 export type Mutate = (action: Action, reload?: boolean) => Promise<Mutation>
-export type Run = (work: () => Promise<void>) => Promise<boolean>
+export type RefreshRevision = (compatible: (check: Check) => boolean) => Promise<Check>
+export type Run = (work: (refreshRevision: RefreshRevision) => Promise<void>) => Promise<boolean>
 export type TaskLocation = { notebook: Notebook; bundle: Bundle; task: TaskAnalysis; number: number }
 
 export function tasksIn(notebook: Notebook): TaskLocation[] {

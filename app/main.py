@@ -1,4 +1,3 @@
-import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -13,19 +12,17 @@ from pilot.router import router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    transport = os.getenv("PILOT_TRANSPORT", "polza")
-    if transport not in {"fixture", "polza"}:
-        raise RuntimeError("PILOT_TRANSPORT must be polza or fixture.")
-    # Validate secrets and mode before Pydantic parses the rest of the settings.
-    if transport == "polza" and not os.getenv("POLZA_API_KEY", "").strip():
-        raise RuntimeError("POLZA_API_KEY is required in polza mode.")
-    if len(os.getenv("VISITOR_COOKIE_SECRET", "").strip()) < 32:
-        raise RuntimeError("Set a local VISITOR_COOKIE_SECRET of at least 32 characters.")
     settings = get_settings()
+    if settings.pilot_transport not in {"fixture", "polza"}:
+        raise RuntimeError("PILOT_TRANSPORT must be polza or fixture.")
+    if settings.pilot_transport == "polza" and not settings.polza_api_key.strip():
+        raise RuntimeError("POLZA_API_KEY is required in polza mode.")
+    if len(settings.visitor_cookie_secret.strip()) < 32 or settings.visitor_cookie_secret == "local-development-only-change-me":
+        raise RuntimeError("Set a local VISITOR_COOKIE_SECRET of at least 32 characters.")
     origins = frozenset(value.strip() for value in settings.allowed_browser_origins.split(",") if value.strip())
     if not origins or "*" in origins:
         raise RuntimeError("Configure explicit allowed browser origins.")
-    storage_root = Path(os.getenv("PILOT_STORAGE_ROOT", "/var/lib/smartnote/photos"))
+    storage_root = Path(settings.pilot_storage_root)
     storage_root.mkdir(parents=True, exist_ok=True)
     async with asyncpg.create_pool(settings.database_url, min_size=1, max_size=10) as pool:
         app.state.pilot_settings = settings

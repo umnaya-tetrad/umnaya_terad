@@ -11,9 +11,8 @@ import { movePhoto } from '../photos'
 import { skippable, tasksIn, type Mutate, type Run, type TaskLocation } from '../state/flow'
 import type { Event } from '../api/contract'
 
-export function NotebookScreen({ api, check, notebook, initialBundle, busy, run, mutate, refresh, back, next, review, emit }: {
+export function NotebookScreen({ api, check, notebook, initialBundle, busy, run, mutate, back, next, review, emit }: {
   api: PilotApi; check: Check; notebook: Notebook; initialBundle?: string; busy: boolean; run: Run; mutate: Mutate;
-  refresh: () => Promise<Check | null>;
   back: () => void; next: () => Promise<void>; review: (entry: TaskLocation) => void;
   emit: (name: Event['name'], entityId?: string) => void
 }) {
@@ -33,20 +32,32 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
   const photos = draft?.photos ?? []
   const photoIds = photos.map(photo => photo.id)
 
+  function sameDraft(current: Check) {
+    const active = current.notebooks.find(item => item.id === notebook.id)
+    if (!active || current.phase === 'finalized') return false
+    if (!draft) return !active.bundles.some(bundle => bundle.draft && !bundle.current_input)
+    const actual = active.bundles.find(bundle => bundle.id === draftBundle?.id)?.draft
+    return actual?.id === draft.id && actual.photos.length === photoIds.length &&
+      actual.photos.every((photo, index) => photo.id === photoIds[index])
+  }
+
   function select(files: File[]) {
     emit('photo_selected', draftBundle?.id)
-    void run(async () => {
+    void run(async refreshRevision => {
       setUploading(true)
       setAccepted(false)
       try {
+        await refreshRevision(sameDraft)
         let draftId = draft?.id
         if (!draftId) {
           const made = await mutate(actions.createBundle(notebook.id), false)
           if (!made.entity_id) throw new Error('Missing bundle')
           setBundleId(made.entity_id)
           // createBundle returns the Bundle id; its draft comes from getCheck.
-          const current = await refresh()
-          draftId = current?.notebooks.find(item => item.id === notebook.id)?.bundles.find(item => item.id === made.entity_id)?.draft?.id
+          const created = (current: Check) => current.notebooks.find(item => item.id === notebook.id)
+            ?.bundles.find(item => item.id === made.entity_id)?.draft
+          const current = await refreshRevision(value => value.phase !== 'finalized' && created(value)?.photos.length === 0)
+          draftId = created(current)?.id
           if (!draftId) throw new Error('Missing draft')
         }
         if (replace) {
@@ -84,14 +95,20 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
 
   function submit(goNext: boolean) {
     if (!draft || !draftBundle || !photos.length || uploading) return
-    void run(async () => {
-      await mutate(actions.submitBundle(draftBundle.id, { input_version_id: draft.id }))
+    void run(async refreshRevision => {
+      await refreshRevision(sameDraft)
+      await mutate(actions.submitBundle(draftBundle.id, { input_version_id: draft.id }), false)
       setAccepted(true)
       setUnsent(false)
       setBundleId(undefined)
+      const current = await refreshRevision(value => value.phase !== 'finalized' &&
+        !!value.notebooks.find(item => item.id === notebook.id)?.bundles.some(bundle =>
+          bundle.id === draftBundle.id && bundle.current_input?.id === draft.id && !bundle.skipped,
+        ))
       if (goNext) {
         await next()
       } else {
+        if (current.notebooks.find(item => item.id === notebook.id)?.bundles.some(bundle => bundle.draft && !bundle.current_input)) return
         const made = await mutate(actions.createBundle(notebook.id))
         if (made.entity_id) setBundleId(made.entity_id)
       }

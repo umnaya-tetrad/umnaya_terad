@@ -32,7 +32,10 @@ async def list_checks(
 async def create_check(
     payload: TitleBody, svc: Service, ctx: Annotated[MutationContext, Depends(new_check_mutation)],
 ) -> Mutation:
-    return await mutations.create_check(svc, ctx, payload)
+    title = payload["title"].strip()
+    if not title:
+        raise DomainError(422, "invalid_input", "Введите название проверки.")
+    return await mutations.create_check(svc, ctx, {"title": title})
 
 
 @router.get("/checks/{check_id}", operation_id="getCheck")

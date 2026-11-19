@@ -1,62 +1,45 @@
 # Состояние и передача processing
 
-status: **planned**
+status: **ready**
 
-Обновлено: 19.11.2026, Asia/Yekaterinburg. Это состояние подготовки ТЗ; часы B1/B3/B4 относятся к согласованной сессии, ее календарная дата здесь не назначена.
+19.11.2026. Готов backend-пакет для интеграции application/release. Полная локальная сборка UI/Compose, сервер и школьная апробация этим статусом не объявляются.
 
 | Поле | Факт |
 |---|---|
-| Ветка/commit реализации | Не созданы этой задачей; записать при старте |
-| Git base при подготовке ТЗ | `c4eed9a7b62b4e7b90fb77004d87fff75544aad4`; рабочая копия содержит незакоммиченные контекст/планирование, это не кодовый baseline будущей сборки |
-| Integration baseline / remote / PR | Не назначены; зафиксировать перед реализацией согласно HANDOFF_PROTOCOL, не подменять HEAD неизвестной веткой |
-| Исходный source | SmartNoteLanding `d62f5ecb8c1c53b1c97faf06530b8d84e691f88d`, проверен read-only/clean при подготовке ТЗ; приложение не запускалось |
-| Общий контракт | shared v1 / OpenAPI1.0.0, page-check/1.2, summary-input/1, class-summary/1; contract commit записать после фиксации координатором |
-| Правила и файлы | [TASKS](TASKS.md), [ACCEPTANCE](ACCEPTANCE.md), [API](../shared/API_CONTRACT.md), [LOCAL_ENV](../shared/LOCAL_ENV.md), [границы](../shared/MODULE_BOUNDARIES.md), [передача](../shared/HANDOFF_PROTOCOL.md) |
+| Ветка / проверенный code commit | `processing` / `9d788953a298ff03b7e7903a6b3015cc83f3045d` |
+| База реализации | `1144c498b4aba1e4e4fe118abe7c3f6f1b940198` |
+| Source | SmartNoteLanding `d62f5ecb8c1c53b1c97faf06530b8d84e691f88d`; SQL 001–007 точные pinned bytes |
+| SQL | `app/migrations/001–015`, checksum registry и upgrade проверены; примененный SQL неизменяем |
+| Контракты | shared v1 / OpenAPI1.0.0; page-check/1.2; summary-input/1; class-summary/1 |
+| Canonical run | `cbc35dd744f541238ce847df507546d4`, 2026-11-19T11:35:43Z–11:37:56Z, чистый HEAD start=end |
+| Runtime | Python3.12.10 / PostgreSQL16.15 / Windows10;99 PASS/133,01 с;32/32 PROC-Cxx PASS |
+| Доказательство | [RUNTIME_REPORT.md](RUNTIME_REPORT.md), [runtime-results.json](runtime-results.json):12 задач/32 случая, точная команда, assertions и ограничения |
+| Независимое code review | Собственный 99 PASS на 746504c и C01/C32 на 9d78895; no open P1/P2; документальное ревью перед публикацией отдельно |
 
-## Подготовлено сейчас
+## Готовые порты и эксплуатация
 
-- Индивидуальные PROC-01–PROC-12 и приемка PROC-C01–PROC-C32; публичные domain/операционные порты согласованы с направлениями application/release.
-- Shared пакет с OpenAPI, строгими schemas, generated types, fixtures и аналитическим prompt/validator существует и прошел отдельное независимое ревью. Это не реализация processing.
-- Прочитаны source auth/experiment/Polza и SQL001–007; установлен asyncpg задел. Секреты, реальные работы и production ответы не читались/не переносились.
-
-## Еще не готово
-
-Все программные PROC-01–PROC-12: миграции/сервисы/routers/worker/storage/финансы/events/finalize/analytics/tests. Runtime PROC-C01–PROC-C32 – **not_run**. Нет подтверждения живого Polza, мобильной камеры, внешнего выпуска или школьной апробации. Наличие этого HANDOFF не означает ready.
-
-## Что заполнить на B1b
-
-Кодовый commit/branch, source и contract SHA; SQL registry/upgrade result; generated files checksum; импортируемые Services/Actor/MutationContext/DomainError/auth/storage/mutations/queries; router hooks без /api; worker/migrate/health entrypoints; выполняемый fixture create/read/photo/submit queue и точные команды PROC-C01–C09. Application до B4 сохраняет main/router/Compose; текущие владельцы и параметры запуска должны совпасть с MODULE_BOUNDARIES/LOCAL_ENV.
-
-## Что передать на B3/B4
-
-- B3 к 17: полный API smoke PROC-C32 с сохраненной summary и случаями failed/retry/stale/refresh; backend/PG результаты всех Cxx. Аналитика не остается функцией для дописывания после 18.
-- B4 до 18: commit(ы) для интеграции и порядок SQL, миграционный registry, mode/profile, команды/отчеты и known limitations; safe операционные порты pause/funds/reconcile для CLI release, без SQL-альтернативы.
-- `PILOT_TRANSPORT`, `DATABASE_URL`, `PILOT_TEST_DATABASE_URL`, auth/storage/Polza имена из LOCAL_ENV без значений секретов. Fixture mode явный/изолированный, polza без ключа/verified funds fail closed. Нельзя отметить 400 как фактический остаток.
-- Диагностика unknown: Attempt/job/input/snapshot/lease IDs и состояние hold, ссылка на безопасный evidence/report; что делать при crash/неизвестном исходе. Никакого ручного resend без сверки или обнуления ledger.
-
-## Выполненные проверки подготовки ТЗ
-
-19.11.2026 при подготовке этих файлов выполнено:
-
-- `python project-context/pilot/planning/shared/check_shared.py` отдельным Python3.12 venv – PASS:34HTTP операции,44HTTP fixtures,25lifecycle snapshots,4analytics пары,73теста,158UX строк, frozen hashes и generated drift. Сеть/LLM не использовались.
-- `python scripts/check_context.py` – PASS:265файлов/903локальные ссылки на момент запуска; только структура, не runtime.
-- `git diff --check` и `git diff --cached --check` – PASS.
-- `python project-context/pilot/planning/check_tasks.py` – processing PASS:12задач/32связанных случая; общий результат перепроверяется после готовности остальных направлений. Это полнота ссылок ТЗ, не исполнение кейсов.
-
-Runtime-команды ACCEPTANCE пока не выполнены и не объявляются существующими. Offline gate и структурная проверка не подтверждают SQL/runtime/математическое качество. Doc-impact текущего этапа ограничен этими четырьмя MD: поведение приложения не реализовано, общий контракт не расширен; сводный статус/продуктовые документы ведет координатор.
-
-## Шаблон обновления при реализации
+Services/auth/access/revision/errors/storage/mutations/queries, processing/events routers, snapshot/validator/LLM builders, SQL/worker/events/diagnostics реализованы. Router paths без `/api`; application подключает prefix один раз. Factory не запускает сеть или миграции. Entrypoints из `app`/PYTHONPATH app:
 
 ```text
-status: in_progress | ready | blocked
-branch / code commit / contract commit / baseline commit:
-source SHA / migration registry:
-готовые PROC-ID / пройденные PROC-Cxx / Axx:
-точная команда / cwd / transport / PG version / результат / report:
-непройденное и влияние:
-полный API finalize/analytics smoke / commit / report:
-для live только при отдельном разрешении: режим / расход / ограничения:
-интегратору: commit order / порты / миграции / диагностика / known conflicts:
+python -m pilot.domain.migrate
+python -m pilot.processing.worker
+python -m pilot.processing.worker --healthcheck
+python -m pilot.processing.budget status
+python -m pilot.processing.budget set-limit --rub 500
 ```
 
-Блокер `BLK-processing-NN`: severity, commit/контракт, команда/fixture, фактический и ожидаемый результат, affected PROC/A, следующий шаг и владелец. Сейчас программных запусков не было, поэтому выдуманных блокеров среды/успехов нет. Ready только после фактической передачи кода и доказательств, не по обещанию/списку заголовков. Push, приложение и платные вызовы этой задачей не выполняются.
+Одна PostgreSQL очередь с 2 global slots для обоих kind/всех teacher; lease60 с, heartbeat10 с, stale health30 с. Фото original/normalized долговечны и приватны; общий storage root передается API/worker. Поколения, отзывы и двухэтапное завершение не меняются из-за результата старого worker. Safe usage/time/error diagnostics сохраняются отдельно от private raw material.
+
+R87: общий накопительный cap 500 RUB в PostgreSQL, без walletinitialize/topup/pricing-file prerequisite; hot-change CLI без restart. Встроенный conservative model/route profile – `processing/pricing.py`. `spent_rub` и active holds не обнуляются изменением cap; fixture/polza изолированы. Валидный ответ при cost=null публикуется, slot освобождается, billing hold сохраняется до trusted сверки. Execution unknown не resend; late evidence не подменяет current generation. Ручная pause и reconciliation вызывают общий service, без HTTP admin/SQL-дубликата.
+
+`PILOT_TRANSPORT=polza` обычный; без ключа fail-closed, fixture fallback отсутствует. Explicit fixture дает mock technical cycle для синтетических входов; арифметический mock и literal-rule grouping не проверяют смысловую группировку LLM. Настройки и ограничения – [LOCAL_ENV](../shared/LOCAL_ENV.md).
+
+## Живой text-only smoke
+
+Два сохраненных результата аналитики проверены по числам и смысловым Task groups; третий первый ответ потерян в private bridge и финансово сверился по finalized history. Всего 6,54385092 RUB/3 paid calls, unknown/holds0; class30=120 повторенных benchmark dev Task,81,832 с/5,06564076 RUB. Promptv1 unchanged, новых paid photo checks0. Подробности/ограничения – RUNTIME_REPORT. Новых paid calls передача не разрешает.
+
+## Дальше и ограничения
+
+PROC-01–PROC-12 и матрица принятого объема представлены в отчете. Push/merge этой записью не выполнены; публикация после отдельного ревью doc-sync по уже полученному разрешению владельца. Точные commit публикации/интеграции фиксируются фактом после операции.
+
+UI, полный application bootstrap, Compose/container restart, настоящие мобильные устройства, HTTPS/deploy и самостоятельная апробация – **not_run**. Auth/CRUD в приемке подключались через test-only ASGI adapter; production processing/events/domain/PG/OS worker проверены. Прежний статус planned относится к подготовке ТЗ и заменен этим handoff; старый план часов B1–B4 не является новым результатом измерений.

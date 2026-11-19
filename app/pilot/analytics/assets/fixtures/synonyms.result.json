@@ -1,0 +1,23 @@
+{
+  "schema_version": "class-summary/1",
+  "notebooks": {
+    "total": 1,
+    "with_errors": 1,
+    "without_errors": 0,
+    "partial": 0,
+    "empty": 0
+  },
+  "average_errors_per_notebook": 2,
+  "incomplete_tasks": 0,
+  "disputed_tasks": 0,
+  "unassessed_tasks": 0,
+  "top_errors": [
+    {
+      "rule": "Разложение на множители группировкой",
+      "task_ids": [
+        "c2cb5bf9-4754-5ee5-99c8-924617640774",
+        "ce841697-22cd-5683-9a5c-31cff1e51e14"
+      ]
+    }
+  ]
+}

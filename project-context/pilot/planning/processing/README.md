@@ -1,12 +1,12 @@
 # ТЗ processing: домен, обработка и AI-сводка
 
-19.11.2026. Статус исполнения – **planned**. Это индивидуальное ТЗ, не реализация и не отчет о готовом пилоте. HTTP и данные задает [shared v1](../shared/README.md), получивший [два независимых PASS](../shared/SHARED_REVIEW.md): [API_CONTRACT](../shared/API_CONTRACT.md), [OpenAPI](../shared/api/openapi.json), [схемы/типы](../shared/api/README.md), [аналитика](../shared/analytics/README.md). Основание – R01–R86 и [A01–A25](../../TRIAL_AND_ACCEPTANCE.md). Q49 заново не проектируется: snapshot, prompt, результат и lifecycle определены shared v1.
+19.11.2026. Статус исполнения – **ready для backend-интеграции**. Код processing реализован; канонический чистый прогон 99 PASS/32 случая PASS на `9d788953a298ff03b7e7903a6b3015cc83f3045d` описан в [RUNTIME_REPORT](RUNTIME_REPORT.md). UI/Compose/сервер и школьная апробация этим пакетом не проверены. HTTP и данные задает [shared v1](../shared/README.md), получивший [два независимых PASS](../shared/SHARED_REVIEW.md): [API_CONTRACT](../shared/API_CONTRACT.md), [OpenAPI](../shared/api/openapi.json), [схемы/типы](../shared/api/README.md), [аналитика](../shared/analytics/README.md). Основание – R01–R86 и [A01–A25](../../TRIAL_AND_ACCEPTANCE.md). Q49 заново не проектируется: snapshot, prompt, результат и lifecycle определены shared v1.
 
 Прочитать [TASKS](TASKS.md), [ACCEPTANCE](ACCEPTANCE.md), [HANDOFF](HANDOFF.md), [границы файлов](../shared/MODULE_BOUNDARIES.md), [передачу](../shared/HANDOFF_PROTOCOL.md), [совместимость](../shared/COMPATIBILITY.md), [формат ТЗ](../TASK_FORMAT.md), [матрицу Axx](../COVERAGE_MATRIX.md), frozen [AI-пакет](../../ai/README.md) и весь `shared/analytics/`, включая prompt/schema/validator/fixtures. CONTRACT_DRAFT не альтернативный контракт.
 
 ## Обязательный результат и сроки
 
-Постоянные данные и доступ, общая библиотека операций для CRUD, приватные фото, долговечная очередь двух типов Job, защищенная публикация поколений, отдельные отзывы/пропуски, атомарный двухэтапный финал, сохраненная LLM-сводка, stale/refresh/retry, общий резерв средств, сверка unknown, ручная пауза и безопасные события. Путь проверяется без UI через fixture transport и PostgreSQL 16.
+Постоянные данные и доступ, общая библиотека операций для CRUD, приватные фото, долговечная очередь двух типов Job, защищенная публикация поколений, отдельные отзывы/пропуски, атомарный двухэтапный финал, сохраненная LLM-сводка, stale/refresh/retry, общий накопительный cap 500 RUB и резервы, сверка unknown, ручная пауза и безопасные события. Путь проверяется без UI через fixture transport и PostgreSQL 16.
 
 | Gate согласованной сессии | Выход processing |
 |---|---|
@@ -24,7 +24,7 @@ Processing: `app/migrations/**`, `app/pilot/domain/**`, `processing/**`, `analyt
 
 `main.py`, общий `pilot/router.py`, Compose, Dockerfiles, frontend и общие конфиги до B4 – application. Processing дает готовые импорты/команды, эти файлы не меняет. Application предоставляет pinned bootstrap, pool/settings, подключение HTTP и ранний seed через общий auth. Release делает оболочки локальных CLI и независимую приемку; это не зависимость разработки ядра до 17. Staff HTTP/UI read-only – release через общие query/access/audit порты.
 
-При подготовке ТЗ read-only проверен чистый source SmartNoteLanding SHA `d62f5ecb8c1c53b1c97faf06530b8d84e691f88d`: asyncpg/FastAPI/httpx/Pillow, salted scrypt и hashed opaque sessions в auth, PostgreSQL reserve/unknown в experiment, Polza client, SQL001–007. Это задел, не готовая очередь. Не переносить register, visitor/daily/hourly/send_limit квоты, несохранение оригиналов или `RESERVE_RUB=100` как правила пилота. После bootstrap повторно сверить manifest/реальные исходные тесты, сохранить происхождение.
+При подготовке ТЗ read-only проверен чистый source SmartNoteLanding SHA `d62f5ecb8c1c53b1c97faf06530b8d84e691f88d`: asyncpg/FastAPI/httpx/Pillow, salted scrypt и hashed opaque sessions в auth, PostgreSQL reserve/unknown в experiment, Polza client, SQL 001–007. Это задел, не готовая очередь. Не переносить register, visitor/daily/hourly/send_limit квоты, несохранение оригиналов или `RESERVE_RUB=100` как правила пилота. После bootstrap повторно сверить manifest/реальные исходные тесты, сохранить происхождение.
 
 ## Режимы и проверки
 
@@ -39,4 +39,4 @@ git diff --check
 git diff --cached --check
 ```
 
-Зависимости gate – `shared/requirements.txt`, проверено отдельным Python3.12 venv. Runtime-команды ACCEPTANCE **требуется создать**, сейчас они не выполнены. По умолчанию они используют PG16 и явный fixture без платных вызовов.
+Зависимости gate – `shared/requirements.txt`, проверено отдельным Python3.12 venv. Runtime-команды созданы и выполнены локально на PostgreSQL16.15, настоящем ASGI и дочерних OS worker с явным fixture. Точная команда/версия/матрица – [RUNTIME_REPORT](RUNTIME_REPORT.md); Compose-команды остаются приемкой release и здесь not_run.

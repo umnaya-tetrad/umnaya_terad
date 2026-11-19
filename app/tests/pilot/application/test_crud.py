@@ -11,7 +11,8 @@ def test_app_c04_create_list_check_and_etag(adapter):
     adapter.teacher()
     client = adapter.client
     assert client.post("/api/checks", json={"title": "ДЗ", "class": "7"}, headers=mutation_headers()).status_code == 422
-    result = client.post("/api/checks", json={"title": "ДЗ"}, headers=mutation_headers(None))
+    assert client.post("/api/checks", json={"title": "   "}, headers=mutation_headers(None)).status_code == 422
+    result = client.post("/api/checks", json={"title": "  ДЗ  "}, headers=mutation_headers(None))
     assert result.status_code == 201
     ctx, payload = adapter.mutations.create_check.await_args.args[1:]
     assert ctx.expected_revision is None

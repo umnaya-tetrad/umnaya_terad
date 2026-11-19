@@ -18,5 +18,3 @@ src/**/*.test.tsx
 docs
 project-context/**
 !project-context/pilot/planning/shared/ux-copy.json
-!project-context/pilot/planning/shared/api/contracts.ts
-!project-context/pilot/planning/shared/api/schemas/domain.schema.json

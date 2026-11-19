@@ -45,6 +45,7 @@ try {
   let submitted = 0
   let finalized = 0
   let rejectedDelete = false
+  let rejectedReviewKey
   const replyMutation = (route, status, entity_id, job = null) => {
     const headers = route.request().headers()
     assert.equal(headers['if-match'], '"' + check.revision + '"')
@@ -94,6 +95,14 @@ try {
     }
     if (path.startsWith('/api/assets/') && method === 'GET') return route.fulfill({ contentType: 'image/png', body: photo })
     if (path.includes('/review') && method === 'PUT') {
+      if (!rejectedReviewKey) {
+        rejectedReviewKey = request.headers()['idempotency-key']
+        check.revision++
+        return route.fulfill({ status: 409, json: {
+          error: { code: 'revision_conflict', message: 'Synthetic conflict', current_revision: check.revision },
+        } })
+      }
+      assert.notEqual(request.headers()['idempotency-key'], rejectedReviewKey)
       mutations.push(path)
       const body = request.postDataJSON()
       const task = check.notebooks.flatMap(book => book.bundles).flatMap(bundle => bundle.tasks)
@@ -171,6 +180,10 @@ try {
   await page.getByRole('button', { name: 'Закрыть', exact: true }).click()
   await page.getByLabel('Комментарий – необязательно').fill('Синтетический отзыв')
   await page.getByRole('button', { name: /Согласен с проверкой/ }).click()
+  await page.getByText('Данные проверки изменились.', { exact: false }).waitFor()
+  assert.equal(await page.getByLabel('Комментарий – необязательно').inputValue(), 'Синтетический отзыв')
+  assert.equal(await page.getByText('Отзыв сохранен', { exact: true }).count(), 0)
+  await page.getByRole('button', { name: /Согласен с проверкой/ }).click()
   await page.getByText('Отзыв сохранен').waitFor()
   assert.equal(mutations.length, 1)
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), 320)
@@ -192,6 +205,10 @@ try {
   await page.getByRole('heading', { name: 'Тетрадь ' + (number + 1) }).waitFor()
   assert.equal(submitted, 1)
   await page.getByRole('button', { name: /Назад$/ }).click()
+  await page.getByRole('button', { name: 'Удалить тетрадь', exact: true }).last().click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Отмена', exact: true }).click()
+  assert.equal(await page.getByRole('dialog').count(), 0)
+  assert.equal(rejectedDelete, false)
   await page.getByRole('button', { name: 'Удалить тетрадь', exact: true }).last().click()
   check.revision++
   await page.waitForResponse(response =>

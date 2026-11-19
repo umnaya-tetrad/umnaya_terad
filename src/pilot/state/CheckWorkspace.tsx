@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { actions, type PilotApi } from '../api/client'
 import type { Check, Notebook, Summary } from '../api/contract'
-import { errorText } from '../api/errors'
+import { ApiError, errorText } from '../api/errors'
 import type { Intents } from '../api/intents'
 import { ConfirmDialog, type Confirmation } from '../components/ConfirmDialog'
 import { copy } from '../copy'
@@ -70,7 +70,13 @@ export function CheckWorkspace({ id, api, intents, setup, done, deleted, emit }:
     setBusy(true)
     setError('')
     try {
-      await work()
+      await work(async compatible => {
+        const current = await refresh()
+        if (!current) throw new Error('Unable to refresh the active check')
+        if (!compatible(current)) throw new ApiError(409)
+        pendingRevision.current = current.revision
+        return current
+      })
       return true
     } catch (failure) {
       setError(errorText(failure))
@@ -183,7 +189,7 @@ export function CheckWorkspace({ id, api, intents, setup, done, deleted, emit }:
   } else if (activeView.page === 'notebook') {
     const notebook = check.notebooks.find(item => item.id === activeView.notebook)
     content = notebook ? <NotebookScreen key={notebook.id + (activeView.bundle ?? '')} api={api} check={check}
-      notebook={notebook} initialBundle={activeView.bundle} busy={busy} run={run} mutate={mutate} refresh={refresh}
+      notebook={notebook} initialBundle={activeView.bundle} busy={busy} run={run} mutate={mutate}
       back={() => setView({ page: 'check' })} next={() => nextNotebook(notebook)}
       review={entry => review(entry, activeView)} emit={(name, entityId) => onEvent.current(name, id, entityId)} />
       : <Unavailable back={() => setView({ page: 'check' })} />

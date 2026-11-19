@@ -66,14 +66,14 @@ npm ci
 npm test
 npm run build
 npm run test:browser
-python -m pip install -c infra/pilot-python-constraints.txt -r app/requirements.txt jsonschema
+python -m pip install -c infra/pilot-python-constraints.txt -r app/requirements.txt
 cd app
-python -m pytest tests/pilot/application -q
+python -m pytest --confcutdir tests/pilot/application tests/pilot/application -q
 ```
 
-test:browser использует установленный Chrome и перехват API с синтетическими fixtures. HTTP-тесты используют ASGI и явные processing doubles. Они запускаются до передачи домена. В локальном Docker Desktop BuildKit не принял кириллицу в исходном пути, а backend и frontend успешно собраны из временной копии файлов с ASCII-путём.
+Короткий test:browser использует установленный Chrome и перехват API с синтетическими fixtures. HTTP unit-тесты используют общий валидатор, настоящие обработчики ошибок и явные двойники сервисов. В локальном Docker Desktop BuildKit не принял кириллицу в исходном пути. Совместный стек собран и проверен из временной копии с ASCII-путём.
 
-## Старт совместного стека после B1b
+## Старт совместного стека
 
 Скопировать [.env.example](../../.env.example) в локальный .env. Выставить PILOT_TRANSPORT=fixture, случайный URL-safe POSTGRES_PASSWORD, VISITOR_COOKIE_SECRET длиной от 32 символов и отдельные реквизиты всех трёх fixture аккаунтов. Файлы с рабочими реквизитами хранить вне Git. Проверить, что ALLOWED_BROWSER_ORIGINS содержит точный origin браузера. Compose связывает PILOT_TRANSPORT и VITE_PILOT_TRANSPORT. Браузер открывает http://127.0.0.1:5173.
 
@@ -85,4 +85,8 @@ docker compose -f compose.yaml exec backend python -m pilot.operations.create_fi
 docker compose -f compose.yaml ps
 ```
 
-После B3 [smoke_application.py](../../scripts/pilot/smoke_application.py) создаёт синтетическую проверку с двумя тетрадями. Он загружает общий PNG, проверяет повтор submit и finalize, повторный вход, отзывы, сохранённую сводку и обновление после изменения отзыва. Перед началом он проверяет fixture-режим целевого backend через Compose. Передать PILOT_FIXTURE_TEACHER_1_LOGIN и PILOT_FIXTURE_TEACHER_1_PASSWORD в окружение процесса, затем выполнить python scripts/pilot/smoke_application.py. Фактические результаты и недостающие порты описаны в [HANDOFF](../../project-context/pilot/planning/application/HANDOFF.md).
+Для [API smoke](../../scripts/pilot/smoke_application.py) передать в окружение процесса шесть переменных PILOT_FIXTURE_* из .env и выполнить python scripts/pilot/smoke_application.py. Он проверяет вход и приватность, пять форматов фото, ошибки загрузки, сортировку, замену, повторы submit и finalize, сводку и обновление после изменения отзыва. В изолированном проекте флаг --retry временно останавливает обычный worker и запускает одну ошибочную fixture-попытку, затем проверяет повтор для того же snapshot.
+
+Для браузерного прогона выполнить npm run test:browser:compose с PILOT_FIXTURE_TEACHER_1_LOGIN и PILOT_FIXTURE_TEACHER_1_PASSWORD в окружении. Вариант npm run test:browser:compose -- --restart проверяет сохранность заданий при остановке worker и перезапуске backend и worker. Этот вариант предназначен для отдельного fixture-проекта Compose. Оба прогона проверяют режим backend через Compose. Если тестовый стек создан с отдельным COMPOSE_PROJECT_NAME, передать то же значение при прогоне.
+
+Фактические результаты и оставшиеся проверки описаны в [HANDOFF](../../project-context/pilot/planning/application/HANDOFF.md).

@@ -29,8 +29,6 @@ def fixture_credentials():
 
 
 async def run() -> None:
-    if os.getenv("PILOT_TRANSPORT") != "fixture":
-        raise SystemExit("Fixture accounts require PILOT_TRANSPORT=fixture.")
     from pilot.domain.auth import ensure_account
     from pilot.domain.errors import DomainError
     from pilot.domain.services import create_services
@@ -42,8 +40,10 @@ async def run() -> None:
 
     try:
         settings = get_settings()
+        if settings.pilot_transport != "fixture":
+            raise SystemExit("Fixture accounts require PILOT_TRANSPORT=fixture.")
         async with asyncpg.create_pool(settings.database_url) as pool:
-            root = Path(os.environ["PILOT_STORAGE_ROOT"])
+            root = Path(settings.pilot_storage_root)
             services = create_services(pool, root, settings)
             for login, password, role in entries:
                 await ensure_account(services, login, password, role)

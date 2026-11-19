@@ -1,0 +1,28 @@
+{
+  "schema_version": "class-summary/1",
+  "notebooks": {
+    "total": 4,
+    "with_errors": 1,
+    "without_errors": 1,
+    "partial": 1,
+    "empty": 1
+  },
+  "average_errors_per_notebook": 0.5,
+  "incomplete_tasks": 1,
+  "disputed_tasks": 1,
+  "unassessed_tasks": 0,
+  "top_errors": [
+    {
+      "rule": "Разложение на множители группировкой",
+      "task_ids": [
+        "9346fbb2-a34f-5726-8508-8e172302db9f"
+      ]
+    },
+    {
+      "rule": "Вычитание целых чисел",
+      "task_ids": [
+        "002e5fa4-00db-5f43-8c0d-ee2487c606dc"
+      ]
+    }
+  ]
+}

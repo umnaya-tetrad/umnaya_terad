@@ -1,0 +1,26 @@
+{
+  "status": "offline development fixtures; not live analytics responses",
+  "provenance": "Task examples reused from saved public/synthetic checker dev responses; incomplete/unassessed/synonym variants are explicit contract fixtures, not claimed new model output. No photos or production data.",
+  "cases": [
+    {
+      "id": "oracle",
+      "input": "oracle.input.json",
+      "result": "oracle.result.json"
+    },
+    {
+      "id": "zero-denominator",
+      "input": "zero-denominator.input.json",
+      "result": "zero-denominator.result.json"
+    },
+    {
+      "id": "mixed",
+      "input": "mixed.input.json",
+      "result": "mixed.result.json"
+    },
+    {
+      "id": "synonyms",
+      "input": "synonyms.input.json",
+      "result": "synonyms.result.json"
+    }
+  ]
+}

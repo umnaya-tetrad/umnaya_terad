@@ -1,0 +1,119 @@
+{
+  "scope": "Authorized text-only development experiment; not school trial or production application test",
+  "prompt_version": "class-summary-prompt/1",
+  "model": "google/gemini-3.8-flash",
+  "provider_only": [
+    "google-ai-studio/flex"
+  ],
+  "allow_fallbacks": false,
+  "max_completion_tokens": 25000,
+  "reasoning": "medium",
+  "phase_timeout_seconds": 300,
+  "connect_timeout_seconds": 15,
+  "budget_limit_rub": "150",
+  "spent_rub": "6.54385092",
+  "held_rub": "0",
+  "all_provider_costs_finalized": true,
+  "new_paid_photo_calls": 0,
+  "source": "Saved onepass v2/direct_v2 public/synthetic benchmark responses; repeated tasks, explicitly simulated refusals; no staged input",
+  "calls": [
+    {
+      "attempt_id": "20261119T110303Z_small_041982b5",
+      "case": "small",
+      "reserved_rub": "7.44160000",
+      "actual_cost_rub": "0.78419458",
+      "state": "settled",
+      "provider_request_id": "gen_2234650439763890177",
+      "elapsed_seconds": 20.55212389997905,
+      "outcome": "unknown",
+      "quality": {
+        "status": "unknown: content lost by private bridge; cost reconciled from finalized provider history"
+      }
+    },
+    {
+      "attempt_id": "20261119T110433Z_small_1db7282a",
+      "case": "small",
+      "reserved_rub": "7.44160000",
+      "actual_cost_rub": "0.69401558",
+      "state": "settled",
+      "provider_request_id": "gen_2234650819908866049",
+      "elapsed_seconds": 21.946371399972122,
+      "outcome": "success",
+      "quality": {
+        "arithmetic_and_refs": "PASS",
+        "exact_semantic_task_groups": "PASS",
+        "expected_group_sizes": [
+          1,
+          1
+        ],
+        "actual_groups": [
+          {
+            "rule": "Вычитание чисел со знаком",
+            "task_count": 1
+          },
+          {
+            "rule": "Свойства квадратного корня",
+            "task_count": 1
+          }
+        ],
+        "counts": {
+          "total": 6,
+          "with_errors": 1,
+          "without_errors": 1,
+          "partial": 3,
+          "empty": 1
+        },
+        "average": 0.5,
+        "incomplete": 1,
+        "disputed": 1,
+        "unassessed": 1
+      }
+    },
+    {
+      "attempt_id": "20261119T110510Z_class30_696462f4",
+      "case": "class30",
+      "reserved_rub": "13.32165000",
+      "actual_cost_rub": "5.06564076",
+      "state": "settled",
+      "provider_request_id": "gen_2234650972872118273",
+      "elapsed_seconds": 81.83220810000785,
+      "outcome": "success",
+      "quality": {
+        "arithmetic_and_refs": "PASS",
+        "exact_semantic_task_groups": "PASS",
+        "expected_group_sizes": [
+          17,
+          11,
+          6
+        ],
+        "actual_groups": [
+          {
+            "rule": "Вычитание большего числа из меньшего",
+            "task_count": 17
+          },
+          {
+            "rule": "Формула квадрата разности",
+            "task_count": 11
+          },
+          {
+            "rule": "Квадратный корень суммы и разности",
+            "task_count": 6
+          }
+        ],
+        "counts": {
+          "total": 30,
+          "with_errors": 14,
+          "without_errors": 6,
+          "partial": 10,
+          "empty": 0
+        },
+        "average": 1.4,
+        "incomplete": 10,
+        "disputed": 10,
+        "unassessed": 6
+      }
+    }
+  ],
+  "live_code_reference_commit": "13b72bdcb70d2a07830a651f74cb05384c480832",
+  "code_scope": "Consolidated analytics/provider increment; no new paid network run after final cumulative-cap/backend fixes at9d78895."
+}

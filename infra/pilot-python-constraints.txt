@@ -18,12 +18,14 @@ jsonschema-specifications==2025.9.1
 opentelemetry-api==1.45.2
 packaging==26.3
 pillow==11.3.0
+pillow-heif==1.1.1
 pluggy==1.7.0
 pydantic==2.14.3
 pydantic-core==2.50.4
 pydantic-settings==2.16.3
 pygments==2.21.0
 pytest==8.4.2
+pytest-asyncio==1.2.0
 python-dotenv==1.2.4
 python-multipart==0.0.34
 pyyaml==6.0.3
