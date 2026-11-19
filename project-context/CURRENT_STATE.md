@@ -23,7 +23,7 @@
 
 19.11.2026: shared gate — 73 офлайн-теста PASS, schemas/fixtures/types/UX/frozen hashes PASS; check_tasks — 39/95/A01–A25/34 operation consumers PASS; check_context и оба diff check PASS. Проверки не обращаются к платной модели и не являются тестом реализованного HTTP/БД/worker/UI. В CI добавлены те же общие gates; удаленный результат проверяется по фактическому запуску, не по наличию YAML.
 
-В work/application исходный SmartNoteLanding прошёл npm test, сборку и 120 pytest на отдельной PostgreSQL 16. Учительский UI проверен в headless Chrome 320 CSS px с перехватом HTTP. ASGI-тесты application проверяют HTTP-адаптеры с явными doubles. Контейнерные образы frontend/backend собраны; запуск общего стека и Job остаются впереди.
+В work/application исходный SmartNoteLanding прошёл npm test, сборку и 120 pytest на отдельной PostgreSQL 16. Учительский UI проверен в headless Chrome 320 CSS px с перехватом HTTP, включая конфликт ревизии и двухэтапный финал. Карточка разбора прошла проверку при увеличении текста до 200%. ASGI-тесты application сверяют HTTP-адаптеры с контрактными fixtures и явными doubles. Контейнерные образы frontend/backend собраны; запуск общего стека и Job остаются впереди.
 
 ## Следующий шаг
 

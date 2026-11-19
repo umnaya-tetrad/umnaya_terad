@@ -27,7 +27,7 @@ export function CheckWorkspace({ id, api, intents, setup, done, deleted, emit }:
   const [error, setError] = useState('')
   const [summaryRead, setSummaryRead] = useState<{ value: Summary; source: Check }>()
   const [confirm, setConfirm] = useState<Confirmation>()
-  const lock = useRef(false)
+  const pendingRevision = useRef<number | null>(null)
   const attemptedSetup = useRef(false)
   const onEvent = useRef(emit)
   onEvent.current = emit
@@ -53,15 +53,20 @@ export function CheckWorkspace({ id, api, intents, setup, done, deleted, emit }:
   }, [focusKey])
 
   const mutate: Mutate = async (action, reload = true) => {
-    const result = await intents.send(action, id, store.revision)
+    const expectedRevision = pendingRevision.current
+    if (expectedRevision === null) throw new Error('Check mutation outside an active action')
+    const result = await intents.send(action, id, expectedRevision)
     store.acknowledge(result.check_revision)
+    pendingRevision.current = Math.max(expectedRevision, result.check_revision)
     if (reload) await refresh()
     return result
   }
 
   const run: Run = async work => {
-    if (lock.current) return false
-    lock.current = true
+    if (!check || pendingRevision.current !== null) return false
+    // Polling updates the view, but must not silently rebase a choice that
+    // started from an older revision. Follow-up writes use the last receipt.
+    pendingRevision.current = check.revision
     setBusy(true)
     setError('')
     try {
@@ -72,7 +77,7 @@ export function CheckWorkspace({ id, api, intents, setup, done, deleted, emit }:
       await refresh()
       return false
     } finally {
-      lock.current = false
+      pendingRevision.current = null
       setBusy(false)
     }
   }

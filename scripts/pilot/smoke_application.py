@@ -69,21 +69,39 @@ def main():
     call("POST", "/auth/login", 200, {"login": login, "password": password})
     created = call("POST", "/checks", 201, {"title": "Приёмка fixture"}, mutate=True)
     check = f"/checks/{created['check_id']}"
-    notebook = call("POST", f"{check}/notebooks", 201, revision=created["check_revision"], mutate=True)
-    bundle = call("POST", f"/notebooks/{notebook['entity_id']}/bundles", 201, revision=notebook["check_revision"], mutate=True)
-    current = call("GET", check, 200)
-    draft = current["notebooks"][0]["bundles"][0]["draft"]
-    uploaded = call("POST", f"/input-versions/{draft['id']}/photos", 201,
-                    revision=current["revision"], mutate=True, photo=True)
-    submitted = call("POST", f"/bundles/{bundle['entity_id']}/submit", 202, {"input_version_id": draft["id"]},
-                     revision=uploaded["check_revision"], mutate=True)
-    job_id = submitted["job"]["id"]
-    wait_for(lambda: call("GET", f"/jobs/{job_id}", 200), lambda value: value["state"] == "succeeded", "fixture checker")
+    for _ in range(2):
+        current = call("GET", check, 200)
+        notebook = call("POST", f"{check}/notebooks", 201, revision=current["revision"], mutate=True)
+        notebook_id = notebook["entity_id"]
+        bundle = call("POST", f"/notebooks/{notebook_id}/bundles", 201, revision=notebook["check_revision"], mutate=True)
+        current = call("GET", check, 200)
+        book = next(item for item in current["notebooks"] if item["id"] == notebook_id)
+        draft = book["bundles"][0]["draft"]
+        uploaded = call("POST", f"/input-versions/{draft['id']}/photos", 201,
+                        revision=current["revision"], mutate=True, photo=True)
+        submit_path = f"/bundles/{bundle['entity_id']}/submit"
+        submit_payload = {"input_version_id": draft["id"]}
+        submit_key = str(uuid4())
+        submitted = call("POST", submit_path, 202, submit_payload,
+                         revision=uploaded["check_revision"], mutate=True, key=submit_key)
+        repeated = call("POST", submit_path, 202, submit_payload,
+                        revision=uploaded["check_revision"], mutate=True, key=submit_key)
+        if repeated != submitted:
+            raise RuntimeError("Submit did not replay the original checker Job.")
+        job_id = submitted["job"]["id"]
+        wait_for(lambda: call("GET", f"/jobs/{job_id}", 200),
+                 lambda value: value["state"] == "succeeded", "fixture checker")
 
+    call("POST", "/auth/logout", 204)
+    call("GET", "/auth/session", 401)
+    call("POST", "/auth/login", 200, {"login": login, "password": password})
     current = call("GET", check, 200)
-    task_list = current["notebooks"][0]["bundles"][0]["tasks"]
-    if not task_list:
-        raise RuntimeError("The successful fixture worker must have saved task results.")
+    if len(current["notebooks"]) != 2 or any(not book["bundles"][0]["tasks"] for book in current["notebooks"]):
+        raise RuntimeError("Both saved fixture reports must survive a new login.")
+    task_list = [task for book in current["notebooks"] for task in book["bundles"][0]["tasks"]]
+    assessable = next((task for task in task_list if task["analysis"]["result"] != "not_assessed"), None)
+    if not assessable:
+        raise RuntimeError("The fixture must yield a task suitable for testing review changes.")
     began = call("POST", f"{check}/begin-completion", 200, revision=current["revision"], mutate=True)
     revision = began["check_revision"]
     for task in task_list:
@@ -107,8 +125,27 @@ def main():
                        lambda value: value["state"] == "succeeded", "saved fixture summary")
     if summary["result"] is None or summary["job_id"] != finalized["job"]["id"]:
         raise RuntimeError("The saved summary does not match the accepted AnalyticsJob.")
+
+    current = call("GET", check, 200)
+    review_path = f"/tasks/{assessable['task_id']}/review"
+    review = {"analysis_id": assessable["analysis_id"], "state": "confirmed", "comment": "Fixture smoke"}
+    commented = call("PUT", review_path, 200, review, revision=current["revision"], mutate=True)
+    after_comment = call("GET", f"{check}/summary", 200)
+    if after_comment["stale"] or after_comment["snapshot_id"] != summary["snapshot_id"]:
+        raise RuntimeError("A comment-only change altered the current summary.")
+
+    changed = call("PUT", review_path, 200, {**review, "state": "system_error"},
+                   revision=commented["check_revision"], mutate=True)
+    stale = call("GET", f"{check}/summary", 200)
+    if not stale["stale"] or not stale["can_refresh"]:
+        raise RuntimeError("The changed review did not allow refreshing the stale summary.")
+    refreshed = call("POST", f"{check}/summary/refresh", 202, revision=changed["check_revision"], mutate=True)
+    updated = wait_for(lambda: call("GET", f"{check}/summary", 200),
+                       lambda value: value["state"] == "succeeded" and not value["stale"], "refreshed summary")
+    if updated["snapshot_id"] == summary["snapshot_id"] or updated["job_id"] != refreshed["job"]["id"]:
+        raise RuntimeError("Refresh did not create and publish a new summary snapshot.")
     call("POST", "/auth/logout", 204)
-    print("PASS: local fixture authentication, photo, Job, review, finalization replay, saved summary.")
+    print("PASS: two notebooks, submit replay, login recovery, finalize replay, saved summary, comment and state changes, refresh.")
 
 
 if __name__ == "__main__":

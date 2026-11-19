@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import oracle from '../../../project-context/pilot/planning/shared/analytics/fixtures/oracle.result.json'
 import type { Check, CheckerTask, Summary } from '../api/contract'
 import { fixtureByName } from '../__fixtures__/transport'
+import { lifecycleCheck } from '../__fixtures__/ui-scenarios'
 import { TaskCard } from '../components/TaskCard'
 import { movePhoto } from '../photos'
 import { SummaryScreen } from '../screens/SummaryScreen'
@@ -63,4 +64,16 @@ test('APP-C25 APP-C26 renders oracle denominator, frequency and stale guard', ()
   expect(stale).not.toContain('Тетрадей в проверке: 4')
   expect(stale).toContain('Обновить сводку')
   expect(stale).not.toContain('Повторить подготовку сводки')
+})
+
+test('APP-C25 uses lifecycle capabilities for fresh failure and stale in-flight states', () => {
+  const failed = renderSummary(lifecycleCheck('fresh-failed-analytics-can-retry').summary)
+  const queued = renderSummary(lifecycleCheck('stale-analytics-queued').summary)
+  const running = renderSummary(lifecycleCheck('stale-analytics-running').summary)
+  const unknown = renderSummary(lifecycleCheck('stale-analytics-unknown').summary)
+  expect(failed).toContain('Повторить подготовку сводки')
+  expect(queued).toContain('Обновить сводку')
+  expect(running).not.toContain('Обновить сводку')
+  expect(unknown).not.toContain('Обновить сводку')
+  expect(unknown).not.toContain('Повторить подготовку сводки')
 })

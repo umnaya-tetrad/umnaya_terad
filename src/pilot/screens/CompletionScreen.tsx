@@ -10,7 +10,7 @@ export function CompletionScreen({ check, busy, finalized, materials, ready, unr
   check: Check; busy: boolean; finalized: () => void; materials: () => void; ready?: () => void;
   unresolved?: () => void; draft?: () => void; photo: (files: File[]) => void; cameraOpened: () => void;
 }) {
-  const [confirm, setConfirm] = useState(false)
+  const [confirm, setConfirm] = useState<{ revision: number; finalize: () => void }>()
   const completion = check.completion
   const bundles = check.notebooks.flatMap(notebook => notebook.bundles)
   const empty = !completion.can_finalize && !completion.pending_jobs && !completion.unreviewed_tasks &&
@@ -41,12 +41,13 @@ export function CompletionScreen({ check, busy, finalized, materials, ready, unr
         <PhotoCapture busy={busy} opened={cameraOpened} select={photo} />
       </>}
       <button onClick={materials}>{copy('finish.open_materials')}</button>
-      {completion.can_finalize && <button className="primary" disabled={busy} onClick={() => setConfirm(true)}>
+      {completion.can_finalize && <button className="primary" disabled={busy}
+        onClick={() => setConfirm({ revision: check.revision, finalize: finalized })}>
         {copy(busy ? 'finish.finalizing' : 'finish.finalize')}
       </button>}
     </div>
-    {confirm && completion.can_finalize && <ConfirmDialog close={() => setConfirm(false)} value={{
-      title: copy('finish.confirm_title'), label: copy('finish.confirm'), confirm: finalized,
+    {confirm?.revision === check.revision && completion.can_finalize && <ConfirmDialog close={() => setConfirm(undefined)} value={{
+      title: copy('finish.confirm_title'), label: copy('finish.confirm'), confirm: confirm.finalize,
       body: <><p>{copy('finish.confirm_body')}</p><p>{copy('finish.excluded', skippedCounts(check))}</p></>,
     }} />}
   </section>

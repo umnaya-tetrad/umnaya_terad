@@ -86,7 +86,7 @@ textarea { resize: vertical; }
   padding: clamp(12px, 4vw, 24px);
   padding-bottom: max(24px, env(safe-area-inset-bottom));
 }
-.stack { display: grid; gap: 12px; min-width: 0; }
+.stack { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; min-width: 0; }
 .sheet {
   padding: clamp(14px, 3vw, 22px);
   border: 2px solid var(--ink);
@@ -129,7 +129,7 @@ textarea { resize: vertical; }
 .thumbnail img { width: 100%; height: 112px; object-fit: contain; }
 .compact { gap: 8px; }
 .compact > button { flex: 1; }
-.evidence, .metrics { display: grid; gap: 5px; }
+.evidence, .metrics { display: grid; grid-template-columns: minmax(0, 1fr); gap: 5px; }
 .evidence { margin: 6px 0 0; padding-inline-start: 1.4em; }
 .first-error { padding: 12px; border-left: 4px solid #ef4147; background: #fff6eb; }
 .math-text { white-space: pre-wrap; }

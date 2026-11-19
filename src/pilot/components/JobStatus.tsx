@@ -15,7 +15,12 @@ export function bundleStatus(bundle: Bundle): CopyKey | undefined {
 
 export function JobStatus({ bundle }: { bundle: Bundle }) {
   const label = bundleStatus(bundle)
-  return label && <p className="notice" role="status">{copy(label)}</p>
+  if (!label) return null
+  const reason = label === 'job.uncheckable' ? bundle.result?.report.message : undefined
+  return <div className="notice" role="status">
+    <p>{copy(label)}</p>
+    {reason && <p>{reason}</p>}
+  </div>
 }
 
 export function summaryStatus(summary: Summary): CopyKey | undefined {

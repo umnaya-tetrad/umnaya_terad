@@ -179,6 +179,7 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
         </li>
       })}</ol>}
       {replace && <button disabled={busy} onClick={() => setReplace(undefined)}>{copy('common.cancel')}</button>}
+      {!!photos.length && !replace && <h3>{copy('capture.add')}</h3>}
       <PhotoCapture select={select} opened={() => emit('capture_opened', draftBundle?.id)} busy={busy} single={!!replace} />
       {uploading && <p role="status">{copy('capture.uploading')}</p>}
       {unsent && !!photos.length && <p className="notice" role="alert">{copy('capture.unsent')}</p>}
