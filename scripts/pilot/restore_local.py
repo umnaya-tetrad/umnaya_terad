@@ -99,6 +99,48 @@ def _safe_extract(archive: tarfile.TarFile, destination: Path) -> None:
     archive.extractall(path=root, members=members)
 
 
+def check_restore_mounts(project: str, config: dict) -> None:
+    """Permit only the pilot's expected isolated stateful mounts.
+
+    A project-scoped volume name alone is insufficient: service overrides can
+    bind a source database or use local driver options to alias another path.
+    Validate the effective configuration before starting any target service.
+    """
+    volumes = config.get("volumes", {})
+    for name, volume in volumes.items():
+        if (
+            volume.get("external")
+            or volume.get("name") != f"{project}_{name}"
+            or volume.get("driver", "local") != "local"
+            or volume.get("driver_opts")
+        ):
+            raise RestoreError("Restore requires ordinary new project-scoped local volumes.")
+
+    expected_mounts = {
+        "postgres": [("postgres_data", "/var/lib/postgresql/data")],
+        "backend": [("pilot_photos", "/var/lib/smartnote/photos")],
+        "worker": [("pilot_photos", "/var/lib/smartnote/photos")],
+        "migrate": [],
+    }
+    services = config.get("services", {})
+    for service, expected in expected_mounts.items():
+        settings = services.get(service)
+        if settings is None or settings.get("volumes_from") or settings.get("tmpfs"):
+            raise RestoreError("Restore requires explicit isolated mounts for every stateful service.")
+        mounts = settings.get("volumes", [])
+        if len(mounts) != len(expected):
+            raise RestoreError("Restore refuses additional or missing stateful mounts.")
+        for mount, (source, target) in zip(mounts, expected):
+            if (
+                not isinstance(mount, dict)
+                or mount.get("type") != "volume"
+                or mount.get("source") != source
+                or mount.get("target") != target
+                or source not in volumes
+            ):
+                raise RestoreError("Restore refuses bind, shared or redirected stateful mounts.")
+
+
 def target_has_data(project: str) -> bool:
     """Detect any pre-existing target resources, including stopped containers.
 
@@ -108,9 +150,7 @@ def target_has_data(project: str) -> bool:
     A failed inventory is an error, never permission to create or overwrite.
     """
     config = json.loads(compose(project, "config", "--format", "json", check=False).stdout)
-    for name, volume in config.get("volumes", {}).items():
-        if volume.get("external") or volume.get("name") != f"{project}_{name}":
-            raise RestoreError("Restore requires new project-scoped volumes; shared volumes refused.")
+    check_restore_mounts(project, config)
     label = f"label=com.docker.compose.project={project}"
     probes = (
         ["ps", "--all", "--filter", label, "--format", "{{.ID}}"],

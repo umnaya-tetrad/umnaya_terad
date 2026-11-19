@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import copy
 import json
 import os
 import subprocess
@@ -44,9 +45,103 @@ def successful_result(argv, stdout="", returncode=0):
 
 
 def compose_config():
-    return json.dumps({"volumes": {
-        key: {"name": f"{PROJECT}_{key}"} for key in ("postgres_data", "pilot_photos")
-    }})
+    return json.dumps({
+        "volumes": {
+            key: {"name": f"{PROJECT}_{key}"} for key in ("postgres_data", "pilot_photos")
+        },
+        "services": {
+            "postgres": {"volumes": [{"type": "volume", "source": "postgres_data", "target": "/var/lib/postgresql/data"}]},
+            "backend": {"volumes": [{"type": "volume", "source": "pilot_photos", "target": "/var/lib/smartnote/photos"}]},
+            "worker": {"volumes": [{"type": "volume", "source": "pilot_photos", "target": "/var/lib/smartnote/photos"}]},
+            "migrate": {},
+        },
+    })
+
+
+def unsafe_mount_configurations():
+    """Top-level names stay valid while effective storage redirects to old data."""
+    base = json.loads(compose_config())
+    for service in ("postgres", "backend", "worker", "migrate"):
+        for unsafe_type in ("bind", "shared-volume", "extra-mount", "volumes-from", "tmpfs"):
+            config = copy.deepcopy(base)
+            settings = config["services"][service]
+            target = "/var/lib/postgresql/data" if service == "postgres" else "/var/lib/smartnote/photos"
+            if unsafe_type == "volumes-from":
+                settings["volumes_from"] = ["container:synthetic-source"]
+            elif unsafe_type == "tmpfs":
+                settings["tmpfs"] = [target]
+            elif unsafe_type == "extra-mount":
+                settings.setdefault("volumes", []).append({
+                    "type": "volume", "source": "postgres_data", "target": "/synthetic/extra",
+                })
+            else:
+                settings["volumes"] = [{
+                    "type": "bind" if unsafe_type == "bind" else "volume",
+                    "source": "/synthetic/source-data" if unsafe_type == "bind" else "sharedphotos",
+                    "target": target,
+                }]
+            yield pytest.param(config, id=f"{service}-{unsafe_type}")
+    for change, value in (
+        ("driver_opts", {"type": "none", "o": "bind", "device": "/synthetic/source-pgdata"}),
+        ("driver", "synthetic-remote-driver"),
+    ):
+        config = copy.deepcopy(base)
+        config["volumes"]["postgres_data"][change] = value
+        yield pytest.param(config, id=change)
+    for service in ("postgres", "backend", "worker"):
+        config = copy.deepcopy(base)
+        config["services"][service]["volumes"][0]["target"] = "/synthetic/redirected"
+        yield pytest.param(config, id=f"{service}-wrong-target")
+
+
+@pytest.mark.parametrize("config", list(unsafe_mount_configurations()))
+def test_restore_refuses_unsafe_effective_mounts_before_any_mutation(monkeypatch, bundle, capsys, config):
+    restore = load_script("restore_local")
+    calls = []
+
+    def docker(argv, **kwargs):
+        calls.append(argv)
+        assert argv[1] == "compose" and "config" in argv, "No target creation, copy or restore is allowed"
+        return successful_result(argv, json.dumps(config))
+
+    monkeypatch.setattr(restore.subprocess, "run", docker)
+    assert restore.main(["--bundle", str(bundle), "--project", PROJECT]) == 2
+    assert len(calls) == 1
+    assert capsys.readouterr().out == ""
+
+
+@pytest.mark.parametrize("with_override", [False, True], ids=["base-compose", "image-env-override"])
+def test_real_resolved_compose_preserves_allowed_isolated_mounts(tmp_path, with_override):
+    """Compose config is read-only and requires no running Docker daemon/model."""
+    restore = load_script("restore_local")
+    env_file = tmp_path / "synthetic-compose.env"
+    env_file.write_text("POSTGRES_PASSWORD=SyntheticOnly\nVISITOR_COOKIE_SECRET=" + "x" * 48 + "\n")
+    command = ["docker", "compose", "-p", PROJECT, "-f", str(ROOT / "compose.yaml")]
+    if with_override:
+        override = tmp_path / "image-env-override.yaml"
+        override.write_text(
+            "services:\n  worker:\n    image: synthetic-test-only:local\n"
+            "    environment:\n      PILOT_TRANSPORT: fixture\n"
+        )
+        command.extend(["-f", str(override)])
+    result = subprocess.run(
+        [*command, "--env-file", str(env_file), "config", "--format", "json"],
+        cwd=ROOT, capture_output=True, text=True, check=False,
+        env={**os.environ, "POSTGRES_PASSWORD": "SyntheticOnly", "VISITOR_COOKIE_SECRET": "x" * 48,
+             "POLZA_API_KEY": "", "COMPOSE_PROJECT_NAME": PROJECT},
+    )
+    assert result.returncode == 0, "Read-only Docker Compose configuration resolution failed"
+    config = json.loads(result.stdout)
+    restore.check_restore_mounts(PROJECT, config)
+    assert config["services"]["postgres"]["volumes"][0]["source"] == "postgres_data"
+    assert config["volumes"]["postgres_data"]["name"] == f"{PROJECT}_postgres_data"
+
+
+def test_explicit_ordinary_local_driver_without_options_is_allowed():
+    restore = load_script("restore_local")
+    config = json.loads(compose_config())
+    config["volumes"]["postgres_data"]["driver"] = "local"
+    restore.check_restore_mounts(PROJECT, config)
 
 
 @pytest.mark.parametrize("probe_index", range(5))

@@ -98,7 +98,7 @@ python3 scripts/pilot/restore_local.py --bundle ~/pilot-backups/pilot-backup-<UT
   --project smartnote-restore-rehearsal-20261120
 ```
 
-Выбирать ранее не использованное имя; при отказе не удалять существующую цель ради повторения. Обхода защиты и destructive override нет. Пользовательские/shared/external volumes, включая устаревший `--target-photos-volume`, отклоняются. Тестовый override может менять image/окружение, но volumes должны оставаться в пространстве нового проекта.
+Выбирать ранее не использованное имя; при отказе не удалять существующую цель ради повторения. Обхода защиты и destructive override нет. Пользовательские/shared/external volumes, включая устаревший `--target-photos-volume`, отклоняются. Тестовый override может менять image/окружение, но effective mounts `postgres/backend/worker/migrate` должны совпадать с базовой схемой: `postgres_data:/var/lib/postgresql/data`, `pilot_photos:/var/lib/smartnote/photos` у backend/worker, без mounts у migrate. Bind mounts, `volumes_from`, дополнительные/перенаправленные mounts, нестандартные volume drivers и `driver_opts` запрещены до запуска цели; допустим обычный local volume без опций с именем нового проекта.
 
 Скрипт поднимает `postgres`, копирует дамп, делает `pg_restore --exit-on-error --clean --if-exists`, прогоняет migrate (сверка checksums), распаковывает фото в приватный volume и поднимает `postgres/backend/worker` с `--wait`. Код каждой операции и итоговые счетчики проверяются; при ошибке выполнение прекращается с ненулевым exit, JSON успеха не печатается. Частично созданная цель остается для диагностики; новый прогон требует нового имени. Frontend не стартует: второй экземпляр потребовал бы еще один порт, а факт восстановления проверяется по базе, файлам и worker.
 
