@@ -42,6 +42,17 @@
 
 REL-02 выполнен и проверен на локальном Compose-стеке (см. таблицу приёмки в [INTEGRATION_STATE](../../../../docs/pilot/INTEGRATION_STATE.md)). Дальше по порядку идут REL-03–REL-12. Все REL-C01–REL-C28 получают статус по факту; кейсы вне уже выполненных остаются not_run. Реальная модель, настоящие Android/iPhone, внешнее развёртывание и школьная апробация — отдельные факты и в локальный результат не входят.
 
+## Runbook, backup и recovery (REL-11)
+
+| Артефакт | Назначение |
+|---|---|
+| `docs/pilot/RELEASE_RUNBOOK.md` | Полная операторская инструкция: env, build/migrate/up/seed/health, pause/resume, cap, reconcile, backup, restore, rollback, приёмка |
+| `docs/pilot/RUNBOOK.md` | Короткий вход-ссылка на полный runbook |
+| `scripts/pilot/backup_local.py` | Приватный согласованный backup БД и фото в каталог вне репозитория; отказывается работать при запущенных writers |
+| `scripts/pilot/restore_local.py` | Restore только в отдельный проект `smartnote-restore-*` с новыми volumes, с отказом поверх рабочей базы |
+
+Обычный запуск не использует `down -v`; destructive reset не автоматизирован. Rollback: пауза dispatch, сохранение unknown/evidence/reserve, возврат к совместимому commit/image без SQL-downgrade.
+
 ## Запуск и данные
 
 Имена локального окружения без значений: `POSTGRES_PASSWORD`, `VISITOR_COOKIE_SECRET`, `ALLOWED_BROWSER_ORIGINS`, `PILOT_TRANSPORT`, `PILOT_FIXTURE_TEACHER_1_LOGIN/PASSWORD`, `PILOT_FIXTURE_TEACHER_2_LOGIN/PASSWORD`, `PILOT_FIXTURE_STAFF_LOGIN/PASSWORD`. Значения хранятся вне Git: локальный файл лежит за пределами репозитория (например `~/.config/smartnote/pilot.env`) и передаётся Compose через `--env-file`, потому что `scripts/check_context.py` отклоняет `.env` внутри рабочего дерева. Точные команды — в [BOOTSTRAP](../../../../docs/pilot/BOOTSTRAP.md); `docs/pilot/RELEASE_RUNBOOK.md` создаётся в REL-11.

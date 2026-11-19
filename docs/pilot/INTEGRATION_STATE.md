@@ -172,3 +172,19 @@
 | Негативный контроль | временный зонд с широким `div` | PASS: детектор действительно фиксирует переполнение |
 
 Ручные шаги на настоящем Android/iPhone (камера, галерея, HEIC, отказ разрешения, сворачивание, второй вход) не выполнялись: устройств нет, эмуляция их не заменяет.
+
+## Проверено в приёмке release (REL-11)
+
+Runbook создан: [RELEASE_RUNBOOK](RELEASE_RUNBOOK.md), вход-ссылка — [RUNBOOK](RUNBOOK.md).
+
+| Проверка | Команда | Факт |
+| --- | --- | --- |
+| Приватный backup | `pytest tests/integration/pilot/test_compose_backup.py -k rel_c28_backup` | PASS: каталог вне репозитория, права `700`, `database.dump`+`photos.tar.gz`+`manifest.json` непустые; backup в каталоге внутри репозитория отклоняется |
+| Запрет restore поверх рабочей базы | та же | PASS: `--project smartnote-pilot` и проект без префикса `smartnote-restore-` отклоняются |
+| Восстановление | та же | PASS: 15 миграций, 3 аккаунта, все `pilot_checks` и `pilot_photo_assets`, каждый файл фото существует; исходный проект не изменился; повторный restore в тот же проект отклоняется |
+| Unknown и резерв | `-k rel_c28_unknown` | PASS: `state='unknown'` и активный резерв совпадают до и после backup/restore |
+| Сериализация миграций | `-k rel_c03_migrations` | PASS: два параллельных runner'а не добавляют строк, checksums уникальны |
+| Проверка checksum | `-k rel_c03_applied` | PASS: изменённый checksum применённой миграции останавливает runner, затем восстанавливается |
+| Backup при запущенных writers | ручная проверка скрипта | PASS: отказ с подсказкой остановить backend/worker |
+
+Полный набор `pytest tests/integration/pilot -q` включает эти тесты (49 тестов).

@@ -246,3 +246,25 @@
 | Негативный контроль детектора | PASS |
 
 Не проверено: настоящие Android/iPhone, физическая камера/галерея, HEIC с устройства, отказ в разрешении, сворачивание и возврат. Записаны как not_run, эмуляция их не закрывает.
+
+## REL-11. Runbook, backup и recovery
+
+**Статус: выполнено. Backup/restore проверены на изолированном проекте.**
+
+Сделано:
+
+- `docs/pilot/RELEASE_RUNBOOK.md`: env, запуск, health, диагностика, pause/resume, общий cap, сверка unknown, backup, restore, rollback, приёмка. `docs/pilot/RUNBOOK.md` — короткий вход-ссылка.
+- `scripts/pilot/backup_local.py`: приватный согласованный backup (`pg_dump -Fc` + `photos.tar.gz` + `manifest.json`) в каталог вне репозитория с правами `700`; отказывается работать при запущенных backend/worker и при каталоге внутри репозитория.
+- `scripts/pilot/restore_local.py`: restore только в проект с префиксом `smartnote-restore-`, с отказом поверх уже существующей базы и поверх `smartnote-pilot`; распаковка архива защищена от path traversal и ссылок; фото копируются плоско в приватный volume.
+- `tests/integration/pilot/test_compose_backup.py`: REL-C28 (backup, запреты, restore, сверка данных и фото, неизменность источника, unknown-резерв) и REL-C03 (сериализация и checksum миграций).
+- Найдены и устранены дефекты собственных скриптов: чтение бинарного дампа как текста, `extractall(filter=...)` на Python 3.9, вложенный каталог фото, попытка поднять второй frontend на занятом порту.
+
+Проверки:
+
+| Команда | Результат |
+|---|---|
+| `pytest tests/integration/pilot/test_compose_backup.py -q` | PASS, 4 теста |
+| `pytest tests/integration/pilot -q` | PASS, 49 тестов, 228,4 с |
+| `ruff check tests/integration/pilot scripts/pilot` | PASS |
+
+Не проверено: восстановление другим человеком по runbook (организационная отметка), внешний сервер и реальные школьные данные — их в локальном выпуске нет.
