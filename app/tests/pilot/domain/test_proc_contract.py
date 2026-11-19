@@ -108,6 +108,19 @@ async def test_proc_c07(h):
     await h.call('uploadPhoto',input_version_id=ids[3],files={'file':('bad.png',b'bad','image/png')},expected=422)
     await h.call('uploadPhoto',input_version_id=ids[3],files={'file':('bad.pdf',b'%PDF','application/pdf')},expected=415)
     await h.call('uploadPhoto',input_version_id=ids[3],files={'file':('tiny.png',png((31,64)),'image/png')},expected=422)
+    from ..harness import CommittedAckLostPool
+    base=h.svc.pool;revision=(await h.check())['revision'];count=await base.fetchval('SELECT count(*) FROM pilot_photo_assets');key=uuid4()
+    h.svc.pool=CommittedAckLostPool(base)
+    try:
+        with pytest.raises(ConnectionResetError,match='COMMIT'):
+            await h.call('uploadPhoto',input_version_id=ids[3],files={'file':('ack-lost.png',png(),'image/png')},revision=revision,key=key)
+    finally:h.svc.pool=base
+    assert await base.fetchval('SELECT count(*) FROM pilot_photo_assets')==count+1
+    replay=await h.call('uploadPhoto',input_version_id=ids[3],files={'file':('ack-lost.png',png(),'image/png')},revision=revision,key=key,expected=201)
+    asset=await h.call('getPhoto',photo_id=replay.json()['entity_id'],expected=200)
+    assert asset.content==png()
+    assert await base.fetchval('SELECT count(*) FROM pilot_photo_assets')==count+1
+    assert (await h.check())['revision']==revision+1
 
 
 async def test_proc_c08(h):
@@ -189,12 +202,35 @@ async def test_proc_c20(h):
     assert await h.svc.pool.fetchval("SELECT count(*) FROM pilot_jobs WHERE kind='class_analytics'")==0
 
 
-async def test_proc_c21(h):
-    await ready(h);await h.review_all();await h.call('beginCompletion',check_id=h.check_id,expected=200)
-    rev=(await h.check())['revision'];task=tasks(await h.check())[0]
-    results=await asyncio.gather(h.call('finalizeCheck',check_id=h.check_id,revision=rev),h.call('saveReview',task_id=task['task_id'],revision=rev,payload={'analysis_id':task['analysis_id'],'state':'system_error','comment':''}))
-    assert sorted(r.status_code for r in results)==[200,409] or sorted(r.status_code for r in results)==[202,409]
-    assert await h.svc.pool.fetchval('SELECT count(*) FROM pilot_snapshots')<=1
+async def test_proc_c21(h,monkeypatch):
+    from pilot.domain import repository
+    original=repository.load_check
+    for first_operation in ('finalizeCheck','saveReview'):
+        await ready(h);await h.review_all();await h.call('beginCompletion',check_id=h.check_id,expected=200)
+        rev=(await h.check())['revision'];task=tasks(await h.check())[0]
+        locked=asyncio.Event();release=asyncio.Event();second_entered=asyncio.Event()
+        async def gated(*args,**kwargs):
+            name=asyncio.current_task().get_name()
+            if name=='second-mutation':second_entered.set()
+            value=await original(*args,**kwargs)
+            if name=='first-mutation' and kwargs.get('lock'):
+                locked.set();await release.wait()
+            return value
+        monkeypatch.setattr(repository,'load_check',gated)
+        async def invoke(operation):
+            if operation=='finalizeCheck':return await h.call(operation,check_id=h.check_id,revision=rev)
+            return await h.call(operation,task_id=task['task_id'],revision=rev,payload={'analysis_id':task['analysis_id'],'state':'system_error','comment':''})
+        one=asyncio.create_task(invoke(first_operation),name='first-mutation')
+        await asyncio.wait_for(locked.wait(),10)
+        two=asyncio.create_task(invoke('saveReview' if first_operation=='finalizeCheck' else 'finalizeCheck'),name='second-mutation')
+        try:await asyncio.wait_for(second_entered.wait(),10)
+        finally:release.set()
+        first,second=await asyncio.gather(one,two)
+        assert first.status_code==(202 if first_operation=='finalizeCheck' else 200)
+        assert second.status_code==409 and second.json()['error']['code']=='revision_conflict'
+        snapshots=await h.svc.pool.fetchval('SELECT count(*) FROM pilot_snapshots WHERE check_id=$1',UUID(h.check_id))
+        assert snapshots==(1 if first_operation=='finalizeCheck' else 0)
+        monkeypatch.setattr(repository,'load_check',original)
 
 
 async def test_proc_c22(h):

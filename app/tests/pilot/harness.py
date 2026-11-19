@@ -32,6 +32,37 @@ def png(size=(64, 64), fmt='PNG'):
     return out.getvalue()
 
 
+class CommittedAckLostPool:
+    """Fault only the acknowledgement: PostgreSQL commits the real transaction."""
+    def __init__(self,pool):
+        self.pool=pool
+        self.armed=True
+
+    def __getattr__(self,name):return getattr(self.pool,name)
+
+    def acquire(self,*args,**kwargs):
+        owner=self
+        context=self.pool.acquire(*args,**kwargs)
+        class Connection:
+            async def __aenter__(self):
+                self.connection=await context.__aenter__()
+                return self
+            async def __aexit__(self,*exc):return await context.__aexit__(*exc)
+            def __getattr__(self,name):return getattr(self.connection,name)
+            def transaction(self,*args,**kwargs):
+                transaction=self.connection.transaction(*args,**kwargs)
+                class Transaction:
+                    async def __aenter__(self):return await transaction.__aenter__()
+                    async def __aexit__(self,*exc):
+                        result=await transaction.__aexit__(*exc)
+                        if exc[0] is None and owner.armed:
+                            owner.armed=False
+                            raise ConnectionResetError('Synthetic lost COMMIT acknowledgement')
+                        return result
+                return Transaction()
+        return Connection()
+
+
 def make_app(svc):
     from pilot.domain import mutations as mu, queries as qu, auth
     from pilot.domain.access import require_actor
@@ -110,6 +141,7 @@ class Harness:
         self.clients = {}
         self.ids = {}
         self.http = []
+        self.provider_posts=0
         self.check_id = None
 
     async def start(self):

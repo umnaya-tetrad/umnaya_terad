@@ -17,12 +17,19 @@ async def main():
     async def gateway(job,payload):
         from pilot.processing.transport import TransportResult
         await pool.execute('INSERT INTO test_gateway_calls(job_id,kind) VALUES($1,$2)',job['id'],job['kind'])
+        if os.environ.get('PILOT_TEST_GATE')=='1':
+            while not await pool.fetchval('SELECT dispatch_released FROM test_gateway_control'):
+                await asyncio.sleep(.01)
         value=json.loads(Path(os.environ['PILOT_TEST_REPORT']).read_text(encoding='utf-8'))
         return TransportResult('success',payload=value,actual_cost_rub=Decimal('0.01'),provider_request_id='synthetic-child',raw=json.dumps(value))
     svc.transport=gateway
     try:
         if sys.argv[1]=='once':
             from pilot.processing.worker import run_once
+            if os.environ.get('PILOT_TEST_BARRIER')=='1':
+                await pool.execute('INSERT INTO test_worker_ready(pid) VALUES($1)',os.getpid())
+                while not await pool.fetchval('SELECT start_released FROM test_gateway_control'):
+                    await asyncio.sleep(.01)
             await run_once(svc)
         elif sys.argv[1]=='health':
             from pilot.processing.worker import heartbeat

@@ -74,22 +74,56 @@ async def test_proc_c26(h):
     assert refreshed.json()['job']['input_id']!=summary['snapshot_id']
 
 
-async def test_proc_c31(h):
+async def test_proc_c31(h,monkeypatch):
+    from pilot.domain import repository
     await ready(h);await finalize(h);task=tasks(await h.check())[0]
     await h.call('saveReview',task_id=task['task_id'],payload={'analysis_id':task['analysis_id'],'state':'system_error','comment':''},expected=200)
     old=(await h.call('getSummary',check_id=h.check_id,expected=200)).json();assert old['can_refresh']
-    refreshed=await h.call('refreshSummary',check_id=h.check_id,expected=202)
+    original=repository.load_check;locked=asyncio.Event();release=asyncio.Event()
+    async def gated(*args,**kwargs):
+        value=await original(*args,**kwargs)
+        if asyncio.current_task().get_name()=='refresh-first' and kwargs.get('lock'):
+            locked.set();await release.wait()
+        return value
+    monkeypatch.setattr(repository,'load_check',gated)
+    refreshing=asyncio.create_task(h.call('refreshSummary',check_id=h.check_id,expected=202),name='refresh-first')
+    await asyncio.wait_for(locked.wait(),10)
+    gateway=Gateway();h.svc.transport=gateway
+    try:
+        assert not await h.run()
+        assert gateway.calls==[]
+    finally:release.set()
+    refreshed=await refreshing
+    monkeypatch.setattr(repository,'load_check',original)
     assert await h.svc.pool.fetchval('SELECT state FROM pilot_jobs WHERE id=$1',UUID(old['job_id']))=='superseded'
     assert refreshed.json()['job']['input_id']!=old['snapshot_id']
     gateway=Gateway();gateway.release=asyncio.Event();h.svc.transport=gateway
+    previous_revision=(await h.check())['revision']
     runner=asyncio.create_task(h.run());await asyncio.wait_for(gateway.entered.wait(),10)
     try:
         await h.call('saveReview',task_id=task['task_id'],payload={'analysis_id':task['analysis_id'],'state':'confirmed','comment':''},expected=200)
         current=(await h.call('getSummary',check_id=h.check_id,expected=200)).json()
         assert current['stale'] and not current['can_refresh']
+        conflict=await h.call('refreshSummary',check_id=h.check_id,revision=previous_revision,expected=409)
+        assert conflict.json()['error']['code']=='revision_conflict'
         await h.call('refreshSummary',check_id=h.check_id,expected=409)
     finally:gateway.release.set();await runner
     assert all(call[0]!=old['job_id'] for call in gateway.calls)
+    # Exercise all shared guard combinations using actual Attempt rows, rather
+    # than inferring safety from a Job enum alone.
+    cases=json.loads((SHARED/'api/fixtures/summary-guards.json').read_text(encoding='utf-8'))
+    snapshot_id=UUID(refreshed.json()['job']['input_id'])
+    base_revision=await h.svc.pool.fetchval('SELECT data_revision FROM pilot_snapshots WHERE id=$1',snapshot_id)
+    for case in cases:
+        jid=uuid4()
+        await h.svc.pool.execute('INSERT INTO pilot_jobs(id,check_id,kind,snapshot_id,state) VALUES($1,$2,$3,$4,$5)',jid,UUID(h.check_id),'class_analytics',snapshot_id,case['state'])
+        if case['has_provider_attempt']:
+            state='settled' if case['declared_safe'] else ('unknown' if case['state'] in ('unknown','failed') else 'started')
+            await h.svc.pool.execute('INSERT INTO pilot_attempts(id,job_id,ordinal,epoch,state,dispatched) VALUES($1,$2,1,1,$3,true)',uuid4(),jid,state)
+        await h.svc.pool.execute('UPDATE pilot_checks SET selected_summary_job_id=$2,phase=$3,data_revision=$4 WHERE id=$1',UUID(h.check_id),jid,case['phase'],base_revision+int(case['stale']))
+        summary=(await h.call('getSummary',check_id=h.check_id,expected=200)).json()
+        assert summary['can_refresh']==case['can_refresh'],case
+        assert summary['can_retry']==case['can_retry'],case
 
 
 async def test_proc_c32(h):
@@ -108,3 +142,12 @@ async def test_proc_c32(h):
     assert await h.svc.pool.fetchval("SELECT count(*) FROM pilot_fund_ledger WHERE operation='settlement'")==2
     assert len(gateway.calls)==2 and {x[1] for x in gateway.calls}=={'page_check','class_analytics'}
     assert h.svc.mode=='fixture'
+    # The ordinary explicit fixture profile must also work end-to-end, without
+    # any test gateway override or mathematically fabricated production result.
+    h.svc.transport=None
+    second=await h.create()
+    await h.submit(second[2],second[3],expected=202);await h.run()
+    assert len(tasks(await h.check()))>0
+    await finalize(h);await h.run()
+    normal=(await h.call('getSummary',check_id=second[0],expected=200)).json()
+    assert normal['state']=='succeeded' and normal['result'] is not None

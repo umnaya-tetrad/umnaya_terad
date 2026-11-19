@@ -66,8 +66,12 @@ async def ready(h, *, count=1, mixed=False):
         await wallet(h.svc)
     ids=await h.create()
     response=await h.submit(ids[2],ids[3],expected=202)
-    await h.run()
-    return ids,gateway,response.json()['job']['id']
+    job_id=response.json()['job']['id']
+    for _ in range(20):
+        await h.run()
+        if await h.svc.pool.fetchval('SELECT state FROM pilot_jobs WHERE id=$1',UUID(job_id)) in ('succeeded','failed','unknown'):
+            break
+    return ids,gateway,job_id
 
 
 def tasks(check):

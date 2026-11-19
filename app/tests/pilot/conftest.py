@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import tempfile
+import subprocess
 from pathlib import Path
 from urllib.parse import urlsplit
 from uuid import uuid4
@@ -13,6 +14,13 @@ import pytest_asyncio
 
 APP = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(APP))
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item,call):
+    result=yield
+    report=result.get_result()
+    setattr(item,'rep_'+report.when,report)
 
 
 @pytest.fixture(autouse=True)
@@ -65,9 +73,14 @@ async def svc(db, tmp_path):
 
 
 @pytest_asyncio.fixture
-async def h(svc,request):
+async def h(svc,request,monkeypatch):
     from .harness import Harness
     harness = Harness(svc)
+    from pilot.processing import worker,providers
+    async def observed(job_svc,job,payload):
+        harness.provider_posts+=1
+        return await providers.run_job(job_svc,job,payload)
+    monkeypatch.setattr(worker,'run_job',observed)
     await harness.start()
     try:
         yield harness
@@ -77,6 +90,15 @@ async def h(svc,request):
         counts={}
         for table in ['pilot_jobs','pilot_attempts','pilot_bundle_reports','pilot_snapshots','pilot_analytics_results','pilot_idempotency','pilot_outbox','pilot_fund_ledger']:
             counts[table]=await svc.pool.fetchval(f'SELECT count(*) FROM {table}')
-        report={'node':request.node.nodeid,'transport':svc.mode,'postgres':await svc.pool.fetchval('SELECT version()'),'http':harness.http,'db_counts':counts,'provider_post_count':getattr(svc.transport,'calls',None) and len(svc.transport.calls)}
+        checks={
+            'wallet_nonnegative_holds_and_protected_balance':await svc.pool.fetchval('SELECT bool_and(held_rub>=0 AND balance_rub>=held_rub AND outstanding_debt_rub>=0) FROM pilot_funds'),
+            'global_active_slots_at_most_two':await svc.pool.fetchval('SELECT count(*)<=2 FROM pilot_slots WHERE attempt_id IS NOT NULL'),
+            'at_most_one_settlement_per_attempt':await svc.pool.fetchval("SELECT NOT EXISTS(SELECT 1 FROM pilot_fund_ledger WHERE operation='settlement' GROUP BY attempt_id HAVING count(*)>1)")}
+        has_child_calls=await svc.pool.fetchval("SELECT to_regclass('test_gateway_calls') IS NOT NULL")
+        child_posts=await svc.pool.fetchval('SELECT count(*) FROM test_gateway_calls') if has_child_calls else 0
+        commit=subprocess.run(['git','rev-parse','HEAD'],cwd=APP.parent,capture_output=True,text=True,check=True).stdout.strip()
+        outcome=getattr(request.node,'rep_call',None)
+        report={'node':request.node.nodeid,'commit':commit,'transport':svc.mode,'outcome':outcome.outcome if outcome else 'setup_failed','postgres':await svc.pool.fetchval('SELECT version()'),'http':harness.http,'db_counts':counts,'db_assertions':checks,'provider_post_count':int(harness.provider_posts+child_posts)}
         (folder/(request.node.name+'.json')).write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
         await harness.close()
+        assert all(checks.values()),checks

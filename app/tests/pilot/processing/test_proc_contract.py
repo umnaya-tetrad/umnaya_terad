@@ -20,13 +20,19 @@ async def child(h,mode='once',*args):
     path=h.svc.storage_root.parent/'declared-report.json'
     path.parent.mkdir(parents=True,exist_ok=True)
     path.write_text(json.dumps(report()),encoding='utf-8')
-    env={**os.environ,'DATABASE_URL':h.svc.test_database_url,'PILOT_STORAGE_ROOT':str(h.svc.storage_root),'PILOT_TEST_REPORT':str(path),'PYTHONPATH':str(ROOT/'app'),'PYTHONPYCACHEPREFIX':str(ROOT.parent/'.cache/processing-bytecode')}
+    env={**os.environ,'DATABASE_URL':h.svc.test_database_url,'PILOT_STORAGE_ROOT':str(h.svc.storage_root),'PILOT_TEST_REPORT':str(path),'PILOT_TEST_GATE':'1' if getattr(h.svc,'test_gateway_gate',False) else '0','PILOT_TEST_BARRIER':'1' if getattr(h.svc,'test_worker_barrier',False) else '0','PYTHONPATH':str(ROOT/'app'),'PYTHONPYCACHEPREFIX':str(ROOT.parent/'.cache/processing-bytecode')}
     return await asyncio.create_subprocess_exec(sys.executable,'-m','tests.pilot.child_runtime',mode,*map(str,args),cwd=ROOT/'app',env=env,stdout=asyncio.subprocess.PIPE,stderr=asyncio.subprocess.PIPE)
 
 
 async def finish(process):
     out,err=await asyncio.wait_for(process.communicate(),30)
     assert process.returncode==0,(out.decode(),err.decode())
+
+
+async def wait_sql(h,query,expected):
+    async def poll():
+        while await h.svc.pool.fetchval(query)!=expected:await asyncio.sleep(.01)
+    await asyncio.wait_for(poll(),15)
 
 
 async def test_proc_c05(h):
@@ -39,7 +45,8 @@ async def test_proc_c05(h):
     for _ in range(2):
         backend=await child(h,'serve',port)
         try:
-            async with httpx.AsyncClient(base_url=f'http://127.0.0.1:{port}',cookies=h.clients['t1'].cookies) as client:
+            cookies='; '.join(f'{key}={value}' for key,value in h.clients['t1'].cookies.items())
+            async with httpx.AsyncClient(base_url=f'http://127.0.0.1:{port}',headers={'Cookie':cookies}) as client:
                 for attempt in range(100):
                     try:
                         got=await client.get('/api/checks/'+ids[0]);break
@@ -74,13 +81,38 @@ async def test_proc_c09(h):
 
 
 async def test_proc_c15(h):
+    from pilot.processing.queue import claim,renew
+    from pilot.processing.worker import recover_expired
+    from pilot.processing.attempts import complete
+    from pilot.processing.transport import TransportResult
     await wallet(h.svc);ids=await h.create();await h.submit(ids[2],ids[3],expected=202)
     await h.svc.pool.execute('CREATE TABLE test_gateway_calls(job_id UUID,kind TEXT)')
+    await h.svc.pool.execute('CREATE TABLE test_worker_ready(pid INTEGER)')
+    await h.svc.pool.execute('CREATE TABLE test_gateway_control(start_released BOOLEAN,dispatch_released BOOLEAN)')
+    await h.svc.pool.execute('INSERT INTO test_gateway_control VALUES(false,true)')
+    h.svc.test_worker_barrier=True
     workers=await asyncio.gather(child(h),child(h))
+    await wait_sql(h,'SELECT count(*) FROM test_worker_ready',2)
+    await h.svc.pool.execute('UPDATE test_gateway_control SET start_released=true')
     await asyncio.gather(*(finish(p) for p in workers))
     assert await h.svc.pool.fetchval('SELECT count(*) FROM pilot_attempts')==1
     assert await h.svc.pool.fetchval('SELECT count(*) FROM test_gateway_calls')==1
     assert len(tasks(await h.check()))==1
+    # Fault injection before any actual provider call: the old epoch must be
+    # fenced after durable recovery and a new process publishes a fresh result.
+    ids=await h.create();await h.submit(ids[2],ids[3],expected=202)
+    wid=uuid4();old=await claim(h.svc,wid)
+    await h.svc.pool.execute('UPDATE pilot_attempts SET dispatched=false WHERE id=$1',old['attempt_id'])
+    await h.svc.pool.execute("UPDATE pilot_jobs SET lease_until=now()-interval '1 second' WHERE id=$1",old['job']['id'])
+    await recover_expired(h.svc)
+    assert not await renew(h.svc,old['job'],wid)
+    restarted=await child(h);await finish(restarted)
+    assert len(tasks(await h.check()))==1
+    before=(await h.check())['revision']
+    stale=TransportResult('success',payload=report(),actual_cost_rub=Decimal('.01'),raw=json.dumps(report()))
+    assert not await complete(h.svc,old,stale)
+    assert (await h.check())['revision']==before
+    assert await h.svc.pool.fetchval('SELECT count(*) FROM test_gateway_calls')==2
 
 
 async def test_proc_c16(h):
@@ -97,17 +129,47 @@ async def test_proc_c16(h):
 
 async def test_proc_c17(h):
     from pilot.processing.worker import recover_expired
-    ids,gateway,jid=await ready(h)
-    # Another accepted input receives a genuinely unknown provider outcome.
-    ids=await h.create();gateway=Gateway('unknown');h.svc.transport=gateway
-    response=await h.submit(ids[2],ids[3],expected=202);await h.run()
+    await wallet(h.svc)
+    ids=await h.create();response=await h.submit(ids[2],ids[3],expected=202)
+    await h.svc.pool.execute('CREATE TABLE test_gateway_calls(job_id UUID,kind TEXT)')
+    await h.svc.pool.execute('CREATE TABLE test_gateway_control(start_released BOOLEAN,dispatch_released BOOLEAN)')
+    await h.svc.pool.execute('INSERT INTO test_gateway_control VALUES(true,false)')
+    h.svc.test_gateway_gate=True
+    worker=await child(h)
+    try:
+        await wait_sql(h,'SELECT count(*) FROM test_gateway_calls',1)
+    finally:
+        worker.terminate();await worker.communicate()
+    await h.svc.pool.execute("UPDATE pilot_jobs SET lease_until=now()-interval '1 second'")
+    await recover_expired(h.svc)
     job=(await h.call('getJob',job_id=response.json()['job']['id'],expected=200)).json()
     assert job['state']=='unknown' and not job['can_retry']
     hold=await h.svc.pool.fetchval("SELECT held_rub FROM pilot_funds WHERE mode='fixture'")
     assert hold>0
-    await recover_expired(h.svc);await h.run();assert len(gateway.calls)==1
+    await recover_expired(h.svc)
+    restarted=await child(h);await finish(restarted)
+    assert await h.svc.pool.fetchval('SELECT count(*) FROM test_gateway_calls')==1
     await h.call('skipBundle',bundle_id=ids[2],payload={'input_version_id':ids[3]},expected=200)
     assert await h.svc.pool.fetchval("SELECT held_rub FROM pilot_funds WHERE mode='fixture'")==hold
+    # Repeat the crash-after-dispatch scenario for class analytics. Its immutable
+    # snapshot and reservation also survive a real worker process restart.
+    await ready(h);finalized=await finalize(h);analytics_id=UUID(finalized.json()['job']['id'])
+    snapshot_id=UUID(finalized.json()['job']['input_id'])
+    worker=await child(h)
+    try:await wait_sql(h,'SELECT count(*) FROM test_gateway_calls',2)
+    finally:worker.terminate();await worker.communicate()
+    await h.svc.pool.execute("UPDATE pilot_jobs SET lease_until=now()-interval '1 second' WHERE id=$1",analytics_id)
+    await recover_expired(h.svc)
+    summary=(await h.call('getSummary',check_id=h.check_id,expected=200)).json()
+    assert summary['state']=='unknown' and not summary['can_retry'] and not summary['can_refresh']
+    assert await h.svc.pool.fetchval('SELECT count(*) FROM pilot_snapshots WHERE id=$1',snapshot_id)==1
+    await h.call('retrySummary',check_id=h.check_id,expected=409)
+    restarted=await child(h);await finish(restarted)
+    assert await h.svc.pool.fetchval('SELECT count(*) FROM test_gateway_calls')==2
+    total_hold=await h.svc.pool.fetchval("SELECT held_rub FROM pilot_funds WHERE mode='fixture'")
+    assert total_hold==hold+1
+    await h.call('deleteCheck',check_id=h.check_id,expected=200)
+    assert await h.svc.pool.fetchval("SELECT held_rub FROM pilot_funds WHERE mode='fixture'")==total_hold
 
 
 async def test_proc_c18(h):
@@ -133,6 +195,7 @@ async def test_proc_c19(h):
     await wallet(h.svc);gateway=Gateway();h.svc.transport=gateway;await h.run()
     assert len(gateway.calls)==1 and gateway.calls[0][1]=='page_check'
     images=gateway.calls[0][2]['images'];assert len(images)==2
+    h.svc.settings.polza_api_key='synthetic-builder-only-no-network'
     request,_=build_request(h.svc,{'kind':'page_check'},gateway.calls[0][2])
     assert request['messages'][0]['content']==load_prompt()
     encoded=request['messages'][1]['content']
@@ -141,35 +204,45 @@ async def test_proc_c19(h):
 
 async def test_proc_c27(h):
     from pilot.processing.funds import fund_wallet,FundsEvidence
-    await wallet(h.svc,'10');h.svc.fixture_request_bound=Decimal('6')
-    first=await h.create();await h.submit(first[2],first[3],expected=202)
+    await wallet(h.svc,'10.01')
+    await ready(h);await finalize(h)
+    h.svc.fixture_request_bound=Decimal('6')
     second=await h.create(actor='t2');await h.submit(second[2],second[3],actor='t2',expected=202)
     gateway=Gateway();gateway.release=asyncio.Event();h.svc.transport=gateway
     runs=[asyncio.create_task(h.run()),asyncio.create_task(h.run())]
-    await asyncio.wait_for(gateway.entered.wait(),10)
-    await asyncio.sleep(0)
-    state=await h.svc.pool.fetchrow("SELECT * FROM pilot_funds WHERE mode='fixture'")
-    assert state['held_rub']==6 and state['balance_rub']-state['held_rub']==4
-    assert len(gateway.calls)==1
-    req=uuid4();evidence=FundsEvidence(reference='synthetic topup',sha256='b'*64,profile_id='fixture')
-    for _ in range(2):await fund_wallet(h.svc,operation='topup',amount_rub=Decimal(5),evidence=evidence,operator_ref='pytest',request_id=req)
-    state=await h.svc.pool.fetchrow("SELECT * FROM pilot_funds WHERE mode='fixture'")
-    assert state['balance_rub']==15 and state['held_rub']==6
-    gateway.release.set();await asyncio.gather(*runs);await h.run()
+    try:
+        await asyncio.wait_for(gateway.entered.wait(),10)
+        state=await h.svc.pool.fetchrow("SELECT * FROM pilot_funds WHERE mode='fixture'")
+        assert state['held_rub']==6 and state['balance_rub']-state['held_rub']==4
+        assert len(gateway.calls)==1
+        req=uuid4();evidence=FundsEvidence(reference='synthetic topup',sha256='b'*64,profile_id='fixture')
+        for _ in range(2):await fund_wallet(h.svc,operation='topup',amount_rub=Decimal(5),evidence=evidence,operator_ref='pytest',request_id=req)
+        state=await h.svc.pool.fetchrow("SELECT * FROM pilot_funds WHERE mode='fixture'")
+        assert state['balance_rub']==15 and state['held_rub']==6
+    finally:
+        gateway.release.set();await asyncio.gather(*runs)
+    await h.run()
     assert len(gateway.calls)==2
-    assert await h.svc.pool.fetchval("SELECT count(*) FROM pilot_fund_ledger WHERE operation='settlement'")==2
+    assert {call[1] for call in gateway.calls}=={'page_check','class_analytics'}
+    assert await h.svc.pool.fetchval("SELECT count(*) FROM pilot_fund_ledger WHERE operation='settlement'")==3
     with pytest.raises(Exception):await h.svc.pool.execute("UPDATE pilot_funds SET held_rub=balance_rub+1 WHERE mode='fixture'")
 
 
 async def test_proc_c28(h):
     from pilot.processing.control import set_processing_paused,get_processing_control
-    await wallet(h.svc);ids=await h.create();await h.submit(ids[2],ids[3],expected=202)
-    gateway=Gateway();h.svc.transport=gateway
-    pause=await set_processing_paused(h.svc,paused=True,operator_ref='pytest',reason='synthetic',request_id=uuid4())
-    await h.run();assert gateway.calls==[]
-    await h.check()
+    await ready(h);await finalize(h)
+    for _ in range(2):
+        ids=await h.create();await h.submit(ids[2],ids[3],expected=202)
+    gateway=Gateway();gateway.release=asyncio.Event();h.svc.transport=gateway
+    running=asyncio.create_task(h.run());await asyncio.wait_for(gateway.entered.wait(),10)
+    try:
+        await set_processing_paused(h.svc,paused=True,operator_ref='pytest',reason='synthetic',request_id=uuid4())
+        await h.run();assert len(gateway.calls)==1
+        await h.check()
+    finally:gateway.release.set();await running
+    assert await h.svc.pool.fetchval("SELECT count(*) FROM pilot_attempts WHERE state='settled'")==2
     await set_processing_paused(h.svc,paused=False,operator_ref='pytest',reason='synthetic',request_id=uuid4())
-    await h.run();assert len(gateway.calls)==1
+    await h.run();await h.run();assert len(gateway.calls)==3
     assert not (await get_processing_control(h.svc)).paused
     assert (await h.clients['t1'].post('/api/admin/pause')).status_code==404
 
@@ -189,6 +262,25 @@ async def test_proc_c29(h):
     assert await h.svc.pool.fetchval("SELECT count(*) FROM pilot_fund_ledger WHERE operation='settlement'")==1
     with pytest.raises(Exception):await fund_wallet(h.svc,operation='topup',amount_rub=Decimal('NaN'),evidence=FundsEvidence(reference='bad',sha256='d'*64,profile_id='fixture'),operator_ref='pytest',request_id=uuid4())
     assert await h.svc.pool.fetchval("SELECT balance_rub FROM pilot_funds WHERE mode='polza'")==0
+    # An over-bound settlement must preserve another unknown attempt's reserve,
+    # record the full liability once, and leave no invented available funds.
+    h.svc.transport=Gateway('unknown','unknown')
+    for _ in range(2):
+        ids=await h.create();await h.submit(ids[2],ids[3],expected=202);await h.run()
+    unknown=await h.svc.pool.fetch('SELECT id FROM pilot_attempts WHERE state=\'unknown\' ORDER BY created_at')
+    assert len(unknown)==2
+    over=ReconciliationEvidence(reference='synthetic over-bound',sha256='e'*64,actual_cost_rub=Decimal('20'),provider_request_id='synthetic-over')
+    request=uuid4()
+    for _ in range(2):await reconcile_attempt(h.svc,attempt_id=unknown[0]['id'],outcome='settled',evidence=over,operator_ref='pytest',request_id=request)
+    state=await h.svc.pool.fetchrow("SELECT * FROM pilot_funds WHERE mode='fixture'")
+    assert state['held_rub']==1 and state['balance_rub']==1 and state['outstanding_debt_rub']==Decimal('11.2') and state['paused']
+    assert await h.svc.pool.fetchval('SELECT active FROM pilot_fund_reservations WHERE attempt_id=$1',unknown[1]['id'])
+    credits=await h.svc.pool.fetchval("SELECT sum(amount_rub) FROM pilot_fund_ledger WHERE operation IN ('initialize','topup')")
+    debits=await h.svc.pool.fetchval("SELECT sum(amount_rub) FROM pilot_fund_ledger WHERE operation='settlement'")
+    assert state['balance_rub']-state['outstanding_debt_rub']==credits-debits
+    await fund_wallet(h.svc,operation='topup',amount_rub=Decimal(5),evidence=FundsEvidence(reference='synthetic debt payment',sha256='f'*64,profile_id='fixture'),operator_ref='pytest',request_id=uuid4())
+    state=await h.svc.pool.fetchrow("SELECT * FROM pilot_funds WHERE mode='fixture'")
+    assert state['held_rub']==1 and state['balance_rub']==1 and state['outstanding_debt_rub']==Decimal('6.2')
 
 
 async def test_proc_c30(h):
