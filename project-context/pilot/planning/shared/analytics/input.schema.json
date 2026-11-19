@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:smartnote:summary-input:1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "summary-input/1"
+    },
+    "snapshot_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "check_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "data_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "notebooks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "notebook_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "unresolved_bundles": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "task_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "analysis_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "review_state": {
+                  "enum": [
+                    null,
+                    "confirmed",
+                    "system_error"
+                  ]
+                },
+                "analysis": {
+                  "$ref": "urn:smartnote:page-check:1.2#/$defs/Task"
+                }
+              },
+              "required": [
+                "task_id",
+                "analysis_id",
+                "review_state",
+                "analysis"
+              ]
+            }
+          }
+        },
+        "required": [
+          "notebook_id",
+          "unresolved_bundles",
+          "tasks"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "snapshot_id",
+    "check_id",
+    "data_revision",
+    "notebooks"
+  ]
+}

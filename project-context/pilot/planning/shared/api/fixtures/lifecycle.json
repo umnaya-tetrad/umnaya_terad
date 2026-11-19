@@ -1,0 +1,4663 @@
+{
+  "multi-task-confirmed": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "review",
+    "revision": 12,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 5,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                "analysis": {
+                  "task_id": "task_1",
+                  "locator": "Верхняя часть страницы, номер 21 в рамке",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 4x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 6x + 2x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "(2x-1)(6x-1)=0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 1,
+                    "wrong_latex": "(2x-1)(6x-1)=0",
+                    "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                    "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                    "corrected_latex": "(2x-1)(6x+1)=0"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              },
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": true
+    },
+    "summary": {
+      "state": "not_started",
+      "stale": false,
+      "snapshot_id": null,
+      "job_id": null,
+      "data_revision": null,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "two-photo-continuation": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "review",
+    "revision": 12,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 5,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                },
+                {
+                  "id": "ca6c0ca3-79b2-58da-ad94-5243f558abbb",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "1",
+                    "locator": "Фото 1, верхняя часть, задание 1",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{(x-1)^2} + \\frac{3}{x-1} - 10 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "\\frac{1}{(x-1)^2} + \\frac{3}{x-1} - 10 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "10x^2 - 23x + 12 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 529 - 480 = 49 = 7^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "\\text{ОТВЕТ: } 0{,}8; \\; 1{,}5."
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "2",
+                    "locator": "Фото 1 (нижняя часть) и Фото 2",
+                    "photo_indices": [
+                      1,
+                      2
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{3}{x} - 10 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "10x^2 - 3x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 2,
+                        "latex": "x_{1,2} = \\frac{3 \\pm 7}{20}"
+                      },
+                      {
+                        "photo_index": 2,
+                        "latex": "x_2 = \\frac{4}{20} = \\frac{1}{5} = 0{,}2"
+                      },
+                      {
+                        "photo_index": 2,
+                        "latex": "\\text{Ответ } x_1 = 0{,}5, \\; x_2 = 0{,}2"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 2,
+                      "wrong_latex": "x_2 = \\frac{4}{20} = \\frac{1}{5} = 0{,}2",
+                      "rule": "При вычитании большего числа из меньшего результат отрицателен: $3 - 7 = -4$.",
+                      "explanation": "При вычислении второго корня потерян знак «минус»: $3 - 7 = -4$, поэтому дробь равна $-\\frac{4}{20} = -0{,}2$, а не $0{,}2$.",
+                      "corrected_latex": "x_2 = -\\frac{4}{20} = -\\frac{1}{5} = -0{,}2"
+                    },
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверено 2 задания: в первом все шаги выполнены верно, во втором найдена ошибка в знаке при вычислении второго корня."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                "analysis": {
+                  "task_id": "1",
+                  "locator": "Фото 1, верхняя часть, задание 1",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{(x-1)^2} + \\frac{3}{x-1} - 10 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "\\frac{1}{(x-1)^2} + \\frac{3}{x-1} - 10 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "10x^2 - 23x + 12 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 529 - 480 = 49 = 7^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "\\text{ОТВЕТ: } 0{,}8; \\; 1{,}5."
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              },
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "2",
+                  "locator": "Фото 1 (нижняя часть) и Фото 2",
+                  "photo_indices": [
+                    1,
+                    2
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{3}{x} - 10 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "10x^2 - 3x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 2,
+                      "latex": "x_{1,2} = \\frac{3 \\pm 7}{20}"
+                    },
+                    {
+                      "photo_index": 2,
+                      "latex": "x_2 = \\frac{4}{20} = \\frac{1}{5} = 0{,}2"
+                    },
+                    {
+                      "photo_index": 2,
+                      "latex": "\\text{Ответ } x_1 = 0{,}5, \\; x_2 = 0{,}2"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 2,
+                    "wrong_latex": "x_2 = \\frac{4}{20} = \\frac{1}{5} = 0{,}2",
+                    "rule": "При вычитании большего числа из меньшего результат отрицателен: $3 - 7 = -4$.",
+                    "explanation": "При вычислении второго корня потерян знак «минус»: $3 - 7 = -4$, поэтому дробь равна $-\\frac{4}{20} = -0{,}2$, а не $0{,}2$.",
+                    "corrected_latex": "x_2 = -\\frac{4}{20} = -\\frac{1}{5} = -0{,}2"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": true
+    },
+    "summary": {
+      "state": "not_started",
+      "stale": false,
+      "snapshot_id": null,
+      "job_id": null,
+      "data_revision": null,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "mixed-skip-only-one-task": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "review",
+    "revision": 12,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 5,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "not_assessed",
+                    "completeness": "unknown",
+                    "detail_level": "unknown",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [],
+                    "first_error": null,
+                    "uncheckable_reason": "Синтетически не хватает условия"
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                "analysis": {
+                  "task_id": "task_1",
+                  "locator": "Верхняя часть страницы, номер 21 в рамке",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 4x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 6x + 2x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "(2x-1)(6x-1)=0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 1,
+                    "wrong_latex": "(2x-1)(6x-1)=0",
+                    "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                    "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                    "corrected_latex": "(2x-1)(6x+1)=0"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              },
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "not_assessed",
+                  "completeness": "unknown",
+                  "detail_level": "unknown",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [],
+                  "first_error": null,
+                  "uncheckable_reason": "Синтетически не хватает условия"
+                },
+                "review": null,
+                "skipped": true
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": true
+    },
+    "summary": {
+      "state": "not_started",
+      "stale": false,
+      "snapshot_id": null,
+      "job_id": null,
+      "data_revision": null,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "red-resolves-review-excluded-from-math": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "review",
+    "revision": 12,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 5,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                "analysis": {
+                  "task_id": "task_1",
+                  "locator": "Верхняя часть страницы, номер 21 в рамке",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 4x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 6x + 2x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "(2x-1)(6x-1)=0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 1,
+                    "wrong_latex": "(2x-1)(6x-1)=0",
+                    "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                    "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                    "corrected_latex": "(2x-1)(6x+1)=0"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              },
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "system_error",
+                  "comment": "Ошибка распознавания"
+                },
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": true
+    },
+    "summary": {
+      "state": "not_started",
+      "stale": false,
+      "snapshot_id": null,
+      "job_id": null,
+      "data_revision": null,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "completion-waits-checker": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "review",
+    "revision": 12,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 5,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "queued",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": null,
+            "tasks": [],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 1,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "not_started",
+      "stale": false,
+      "snapshot_id": null,
+      "job_id": null,
+      "data_revision": null,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "failed-input-no-false-zero": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "review",
+    "revision": 12,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 5,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "failed",
+              "reason": "temporary_failure",
+              "can_retry": true
+            },
+            "result": null,
+            "tasks": [],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 1,
+      "unsent_drafts": 0,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "not_started",
+      "stale": false,
+      "snapshot_id": null,
+      "job_id": null,
+      "data_revision": null,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "unknown-input-no-false-zero": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "review",
+    "revision": 12,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 5,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "unknown",
+              "reason": "provider_outcome_unknown",
+              "can_retry": false
+            },
+            "result": null,
+            "tasks": [],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 1,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "not_started",
+      "stale": false,
+      "snapshot_id": null,
+      "job_id": null,
+      "data_revision": null,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "blocked-input-no-false-zero": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "review",
+    "revision": 12,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 5,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "blocked",
+              "reason": "funds_unavailable",
+              "can_retry": false
+            },
+            "result": null,
+            "tasks": [],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 1,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "not_started",
+      "stale": false,
+      "snapshot_id": null,
+      "job_id": null,
+      "data_revision": null,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "skipped-failed-bundle-stays-partial": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "review",
+    "revision": 12,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 5,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "failed",
+              "reason": "temporary_failure",
+              "can_retry": true
+            },
+            "result": null,
+            "tasks": [],
+            "skipped": true
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": true
+    },
+    "summary": {
+      "state": "not_started",
+      "stale": false,
+      "snapshot_id": null,
+      "job_id": null,
+      "data_revision": null,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "skipped-unknown-attempt-reserve-retained": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "review",
+    "revision": 12,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 5,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "cancelled",
+              "reason": "skipped",
+              "can_retry": false
+            },
+            "result": null,
+            "tasks": [],
+            "skipped": true
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": true
+    },
+    "summary": {
+      "state": "not_started",
+      "stale": false,
+      "snapshot_id": null,
+      "job_id": null,
+      "data_revision": null,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "uncheckable-skipped-input": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "review",
+    "revision": 12,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 5,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": "input_uncheckable",
+              "can_retry": false
+            },
+            "result": {
+              "id": "00394738-f3dd-5144-bace-7c2b71f0044e",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "uncheckable",
+                "tasks": [],
+                "message": "Нечитаемое синтетическое фото"
+              }
+            },
+            "tasks": [],
+            "skipped": true
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": true
+    },
+    "summary": {
+      "state": "not_started",
+      "stale": false,
+      "snapshot_id": null,
+      "job_id": null,
+      "data_revision": null,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "unsent-draft-blocks-finalize": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "review",
+    "revision": 12,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 5,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": {
+              "id": "07168e79-09b9-5f9e-9ced-e242306e8244",
+              "state": "draft",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                },
+                {
+                  "id": "ca6c0ca3-79b2-58da-ad94-5243f558abbb",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                "analysis": {
+                  "task_id": "task_1",
+                  "locator": "Верхняя часть страницы, номер 21 в рамке",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 4x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 6x + 2x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "(2x-1)(6x-1)=0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 1,
+                    "wrong_latex": "(2x-1)(6x-1)=0",
+                    "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                    "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                    "corrected_latex": "(2x-1)(6x+1)=0"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              },
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 1,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "not_started",
+      "stale": false,
+      "snapshot_id": null,
+      "job_id": null,
+      "data_revision": null,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "finalize-queues-analytics": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "finalized",
+    "revision": 12,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 5,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                "analysis": {
+                  "task_id": "task_1",
+                  "locator": "Верхняя часть страницы, номер 21 в рамке",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 4x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 6x + 2x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "(2x-1)(6x-1)=0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 1,
+                    "wrong_latex": "(2x-1)(6x-1)=0",
+                    "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                    "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                    "corrected_latex": "(2x-1)(6x+1)=0"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              },
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "queued",
+      "stale": false,
+      "snapshot_id": "50b2a29f-d122-5227-a72d-5618459166e2",
+      "job_id": "7dd02971-2015-57d7-8479-a6e3a2c3bd89",
+      "data_revision": 5,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "saved-analytics": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "finalized",
+    "revision": 12,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 5,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                "analysis": {
+                  "task_id": "task_1",
+                  "locator": "Верхняя часть страницы, номер 21 в рамке",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 4x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 6x + 2x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "(2x-1)(6x-1)=0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 1,
+                    "wrong_latex": "(2x-1)(6x-1)=0",
+                    "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                    "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                    "corrected_latex": "(2x-1)(6x+1)=0"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              },
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "succeeded",
+      "stale": false,
+      "snapshot_id": "50b2a29f-d122-5227-a72d-5618459166e2",
+      "job_id": "7dd02971-2015-57d7-8479-a6e3a2c3bd89",
+      "data_revision": 5,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": {
+        "schema_version": "class-summary/1",
+        "notebooks": {
+          "total": 1,
+          "with_errors": 1,
+          "without_errors": 0,
+          "partial": 0,
+          "empty": 0
+        },
+        "average_errors_per_notebook": 1,
+        "incomplete_tasks": 0,
+        "disputed_tasks": 0,
+        "unassessed_tasks": 0,
+        "top_errors": [
+          {
+            "rule": "Знак при разложении на множители",
+            "task_ids": [
+              "5feb605d-caaa-5737-a17d-c5ac892fa395"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "review-change-stales-analytics": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "finalized",
+    "revision": 13,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 6,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                "analysis": {
+                  "task_id": "task_1",
+                  "locator": "Верхняя часть страницы, номер 21 в рамке",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 4x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 6x + 2x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "(2x-1)(6x-1)=0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 1,
+                    "wrong_latex": "(2x-1)(6x-1)=0",
+                    "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                    "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                    "corrected_latex": "(2x-1)(6x+1)=0"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "system_error",
+                  "comment": "Измененная оценка"
+                },
+                "skipped": false
+              },
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "succeeded",
+      "stale": true,
+      "snapshot_id": "50b2a29f-d122-5227-a72d-5618459166e2",
+      "job_id": "7dd02971-2015-57d7-8479-a6e3a2c3bd89",
+      "data_revision": 5,
+      "can_retry": false,
+      "can_refresh": true,
+      "result": {
+        "schema_version": "class-summary/1",
+        "notebooks": {
+          "total": 1,
+          "with_errors": 1,
+          "without_errors": 0,
+          "partial": 0,
+          "empty": 0
+        },
+        "average_errors_per_notebook": 1,
+        "incomplete_tasks": 0,
+        "disputed_tasks": 0,
+        "unassessed_tasks": 0,
+        "top_errors": [
+          {
+            "rule": "Знак при разложении на множители",
+            "task_ids": [
+              "5feb605d-caaa-5737-a17d-c5ac892fa395"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "stale-analytics-queued": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "finalized",
+    "revision": 13,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 6,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                "analysis": {
+                  "task_id": "task_1",
+                  "locator": "Верхняя часть страницы, номер 21 в рамке",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 4x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 6x + 2x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "(2x-1)(6x-1)=0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 1,
+                    "wrong_latex": "(2x-1)(6x-1)=0",
+                    "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                    "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                    "corrected_latex": "(2x-1)(6x+1)=0"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "system_error",
+                  "comment": "Измененная оценка"
+                },
+                "skipped": false
+              },
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "queued",
+      "stale": true,
+      "snapshot_id": "50b2a29f-d122-5227-a72d-5618459166e2",
+      "job_id": "7dd02971-2015-57d7-8479-a6e3a2c3bd89",
+      "data_revision": 5,
+      "can_retry": false,
+      "can_refresh": true,
+      "result": null
+    }
+  },
+  "stale-analytics-blocked": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "finalized",
+    "revision": 13,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 6,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                "analysis": {
+                  "task_id": "task_1",
+                  "locator": "Верхняя часть страницы, номер 21 в рамке",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 4x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 6x + 2x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "(2x-1)(6x-1)=0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 1,
+                    "wrong_latex": "(2x-1)(6x-1)=0",
+                    "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                    "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                    "corrected_latex": "(2x-1)(6x+1)=0"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "system_error",
+                  "comment": "Измененная оценка"
+                },
+                "skipped": false
+              },
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "blocked",
+      "stale": true,
+      "snapshot_id": "50b2a29f-d122-5227-a72d-5618459166e2",
+      "job_id": "7dd02971-2015-57d7-8479-a6e3a2c3bd89",
+      "data_revision": 5,
+      "can_retry": false,
+      "can_refresh": true,
+      "result": null
+    }
+  },
+  "stale-analytics-running": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "finalized",
+    "revision": 13,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 6,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                "analysis": {
+                  "task_id": "task_1",
+                  "locator": "Верхняя часть страницы, номер 21 в рамке",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 4x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 6x + 2x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "(2x-1)(6x-1)=0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 1,
+                    "wrong_latex": "(2x-1)(6x-1)=0",
+                    "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                    "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                    "corrected_latex": "(2x-1)(6x+1)=0"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "system_error",
+                  "comment": "Измененная оценка"
+                },
+                "skipped": false
+              },
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "running",
+      "stale": true,
+      "snapshot_id": "50b2a29f-d122-5227-a72d-5618459166e2",
+      "job_id": "7dd02971-2015-57d7-8479-a6e3a2c3bd89",
+      "data_revision": 5,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "stale-analytics-retry_wait": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "finalized",
+    "revision": 13,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 6,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                "analysis": {
+                  "task_id": "task_1",
+                  "locator": "Верхняя часть страницы, номер 21 в рамке",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 4x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 6x + 2x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "(2x-1)(6x-1)=0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 1,
+                    "wrong_latex": "(2x-1)(6x-1)=0",
+                    "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                    "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                    "corrected_latex": "(2x-1)(6x+1)=0"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "system_error",
+                  "comment": "Измененная оценка"
+                },
+                "skipped": false
+              },
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "retry_wait",
+      "stale": true,
+      "snapshot_id": "50b2a29f-d122-5227-a72d-5618459166e2",
+      "job_id": "7dd02971-2015-57d7-8479-a6e3a2c3bd89",
+      "data_revision": 5,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "stale-analytics-unknown": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "finalized",
+    "revision": 13,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 6,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                "analysis": {
+                  "task_id": "task_1",
+                  "locator": "Верхняя часть страницы, номер 21 в рамке",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 4x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 6x + 2x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "(2x-1)(6x-1)=0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 1,
+                    "wrong_latex": "(2x-1)(6x-1)=0",
+                    "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                    "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                    "corrected_latex": "(2x-1)(6x+1)=0"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "system_error",
+                  "comment": "Измененная оценка"
+                },
+                "skipped": false
+              },
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "unknown",
+      "stale": true,
+      "snapshot_id": "50b2a29f-d122-5227-a72d-5618459166e2",
+      "job_id": "7dd02971-2015-57d7-8479-a6e3a2c3bd89",
+      "data_revision": 5,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "stale-analytics-failed": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "finalized",
+    "revision": 13,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 6,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                "analysis": {
+                  "task_id": "task_1",
+                  "locator": "Верхняя часть страницы, номер 21 в рамке",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 4x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 6x + 2x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "(2x-1)(6x-1)=0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 1,
+                    "wrong_latex": "(2x-1)(6x-1)=0",
+                    "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                    "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                    "corrected_latex": "(2x-1)(6x+1)=0"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "system_error",
+                  "comment": "Измененная оценка"
+                },
+                "skipped": false
+              },
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "failed",
+      "stale": true,
+      "snapshot_id": "50b2a29f-d122-5227-a72d-5618459166e2",
+      "job_id": "7dd02971-2015-57d7-8479-a6e3a2c3bd89",
+      "data_revision": 5,
+      "can_retry": false,
+      "can_refresh": true,
+      "result": null
+    }
+  },
+  "fresh-failed-analytics-can-retry": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "finalized",
+    "revision": 12,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 5,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                "analysis": {
+                  "task_id": "task_1",
+                  "locator": "Верхняя часть страницы, номер 21 в рамке",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 4x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 6x + 2x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "(2x-1)(6x-1)=0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 1,
+                    "wrong_latex": "(2x-1)(6x-1)=0",
+                    "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                    "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                    "corrected_latex": "(2x-1)(6x+1)=0"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              },
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "failed",
+      "stale": false,
+      "snapshot_id": "50b2a29f-d122-5227-a72d-5618459166e2",
+      "job_id": "7dd02971-2015-57d7-8479-a6e3a2c3bd89",
+      "data_revision": 5,
+      "can_retry": true,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "comment-keeps-analytics-current": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "finalized",
+    "revision": 13,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 5,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                "analysis": {
+                  "task_id": "task_1",
+                  "locator": "Верхняя часть страницы, номер 21 в рамке",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 4x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 6x + 2x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "(2x-1)(6x-1)=0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 1,
+                    "wrong_latex": "(2x-1)(6x-1)=0",
+                    "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                    "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                    "corrected_latex": "(2x-1)(6x+1)=0"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": "Изменен только комментарий"
+                },
+                "skipped": false
+              },
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "succeeded",
+      "stale": false,
+      "snapshot_id": "50b2a29f-d122-5227-a72d-5618459166e2",
+      "job_id": "7dd02971-2015-57d7-8479-a6e3a2c3bd89",
+      "data_revision": 5,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": {
+        "schema_version": "class-summary/1",
+        "notebooks": {
+          "total": 1,
+          "with_errors": 1,
+          "without_errors": 0,
+          "partial": 0,
+          "empty": 0
+        },
+        "average_errors_per_notebook": 1,
+        "incomplete_tasks": 0,
+        "disputed_tasks": 0,
+        "unassessed_tasks": 0,
+        "top_errors": [
+          {
+            "rule": "Знак при разложении на множители",
+            "task_ids": [
+              "5feb605d-caaa-5737-a17d-c5ac892fa395"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "new-segmentation-two-to-three": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "review",
+    "revision": 14,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 7,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "e72fc2f5-71a5-52da-8a43-0d0c3493f561",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "a69c8b05-22a7-58db-9f24-d907456d8ab1",
+              "kind": "page_check",
+              "input_id": "e72fc2f5-71a5-52da-8a43-0d0c3493f561",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "337ba6ed-de81-5e06-8aba-c37a3e56eecd",
+              "input_version_id": "e72fc2f5-71a5-52da-8a43-0d0c3493f561",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "synthetic-task-3",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "68fb768a-1846-5e72-9e94-f3d5d9eec359",
+                "analysis_id": "26eca28a-0f4b-59d4-91c2-70fc535cff81",
+                "analysis": {
+                  "task_id": "task_1",
+                  "locator": "Верхняя часть страницы, номер 21 в рамке",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                  "result": "first_error_found",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 4x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "12x^2 - 6x + 2x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "(2x-1)(6x-1)=0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                    }
+                  ],
+                  "first_error": {
+                    "photo_index": 1,
+                    "wrong_latex": "(2x-1)(6x-1)=0",
+                    "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                    "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                    "corrected_latex": "(2x-1)(6x+1)=0"
+                  },
+                  "uncheckable_reason": ""
+                },
+                "review": null,
+                "skipped": false
+              },
+              {
+                "task_id": "3cdeb563-a890-529a-b150-02a12aeafc1f",
+                "analysis_id": "74d93866-a93b-5b72-a085-9902862db138",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": null,
+                "skipped": false
+              },
+              {
+                "task_id": "3594055f-008d-5696-80a9-006186bac129",
+                "analysis_id": "df3bab8e-03df-5023-aa82-23741cda228d",
+                "analysis": {
+                  "task_id": "synthetic-task-3",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": null,
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 3,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": false
+    },
+    "summary": {
+      "state": "not_started",
+      "stale": false,
+      "snapshot_id": null,
+      "job_id": null,
+      "data_revision": null,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  },
+  "task-deleted-report-retained": {
+    "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+    "title": "Синтетическая проверка",
+    "phase": "review",
+    "revision": 13,
+    "created_at": "2026-11-19T10:00:00Z",
+    "data_revision": 6,
+    "notebooks": [
+      {
+        "id": "17012e60-679e-555d-972d-d04425ba697c",
+        "number": 1,
+        "bundles": [
+          {
+            "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+            "draft": null,
+            "current_input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "job": {
+              "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+              "kind": "page_check",
+              "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "succeeded",
+              "reason": null,
+              "can_retry": false
+            },
+            "result": {
+              "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+              "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "report": {
+                "schema_version": "page-check/1.2",
+                "status": "ok",
+                "tasks": [
+                  {
+                    "task_id": "task_1",
+                    "locator": "Верхняя часть страницы, номер 21 в рамке",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                    "result": "first_error_found",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 4x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "12x^2 - 6x + 2x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "(2x-1)(6x-1)=0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                      }
+                    ],
+                    "first_error": {
+                      "photo_index": 1,
+                      "wrong_latex": "(2x-1)(6x-1)=0",
+                      "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                      "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                      "corrected_latex": "(2x-1)(6x+1)=0"
+                    },
+                    "uncheckable_reason": ""
+                  },
+                  {
+                    "task_id": "task_2",
+                    "locator": "Нижняя часть страницы, номер № 20",
+                    "photo_indices": [
+                      1
+                    ],
+                    "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                    "result": "all_steps_correct",
+                    "completeness": "complete",
+                    "detail_level": "sufficient",
+                    "omitted_steps_note": "",
+                    "completeness_note": "",
+                    "evidence": [
+                      {
+                        "photo_index": 1,
+                        "latex": "6x^2 + x - 1 = 0"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                      },
+                      {
+                        "photo_index": 1,
+                        "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                      }
+                    ],
+                    "first_error": null,
+                    "uncheckable_reason": ""
+                  }
+                ],
+                "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+              }
+            },
+            "tasks": [
+              {
+                "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                "analysis": {
+                  "task_id": "task_2",
+                  "locator": "Нижняя часть страницы, номер № 20",
+                  "photo_indices": [
+                    1
+                  ],
+                  "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                  "result": "all_steps_correct",
+                  "completeness": "complete",
+                  "detail_level": "sufficient",
+                  "omitted_steps_note": "",
+                  "completeness_note": "",
+                  "evidence": [
+                    {
+                      "photo_index": 1,
+                      "latex": "6x^2 + x - 1 = 0"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                    },
+                    {
+                      "photo_index": 1,
+                      "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                    }
+                  ],
+                  "first_error": null,
+                  "uncheckable_reason": ""
+                },
+                "review": {
+                  "state": "confirmed",
+                  "comment": ""
+                },
+                "skipped": false
+              }
+            ],
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "completion": {
+      "pending_jobs": 0,
+      "unreviewed_tasks": 0,
+      "unresolved_tasks": 0,
+      "unresolved_bundles": 0,
+      "unsent_drafts": 0,
+      "can_finalize": true
+    },
+    "summary": {
+      "state": "not_started",
+      "stale": false,
+      "snapshot_id": null,
+      "job_id": null,
+      "data_revision": null,
+      "can_retry": false,
+      "can_refresh": false,
+      "result": null
+    }
+  }
+}

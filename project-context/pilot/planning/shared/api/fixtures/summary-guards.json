@@ -1,0 +1,128 @@
+[
+  {
+    "phase": "finalized",
+    "stale": true,
+    "state": "queued",
+    "has_provider_attempt": false,
+    "declared_safe": false,
+    "can_refresh": true,
+    "can_retry": false
+  },
+  {
+    "phase": "finalized",
+    "stale": true,
+    "state": "blocked",
+    "has_provider_attempt": false,
+    "declared_safe": false,
+    "can_refresh": true,
+    "can_retry": false
+  },
+  {
+    "phase": "finalized",
+    "stale": true,
+    "state": "queued",
+    "has_provider_attempt": true,
+    "declared_safe": false,
+    "can_refresh": false,
+    "can_retry": false
+  },
+  {
+    "phase": "finalized",
+    "stale": true,
+    "state": "blocked",
+    "has_provider_attempt": true,
+    "declared_safe": false,
+    "can_refresh": false,
+    "can_retry": false
+  },
+  {
+    "phase": "finalized",
+    "stale": true,
+    "state": "running",
+    "has_provider_attempt": true,
+    "declared_safe": false,
+    "can_refresh": false,
+    "can_retry": false
+  },
+  {
+    "phase": "finalized",
+    "stale": true,
+    "state": "retry_wait",
+    "has_provider_attempt": true,
+    "declared_safe": false,
+    "can_refresh": false,
+    "can_retry": false
+  },
+  {
+    "phase": "finalized",
+    "stale": true,
+    "state": "unknown",
+    "has_provider_attempt": true,
+    "declared_safe": false,
+    "can_refresh": false,
+    "can_retry": false
+  },
+  {
+    "phase": "finalized",
+    "stale": true,
+    "state": "failed",
+    "has_provider_attempt": false,
+    "declared_safe": true,
+    "can_refresh": true,
+    "can_retry": false
+  },
+  {
+    "phase": "finalized",
+    "stale": true,
+    "state": "succeeded",
+    "has_provider_attempt": true,
+    "declared_safe": true,
+    "can_refresh": true,
+    "can_retry": false
+  },
+  {
+    "phase": "finalized",
+    "stale": false,
+    "state": "failed",
+    "has_provider_attempt": false,
+    "declared_safe": true,
+    "can_refresh": false,
+    "can_retry": true
+  },
+  {
+    "phase": "finalized",
+    "stale": false,
+    "state": "failed",
+    "has_provider_attempt": true,
+    "declared_safe": false,
+    "can_refresh": false,
+    "can_retry": false
+  },
+  {
+    "phase": "finalized",
+    "stale": false,
+    "state": "blocked",
+    "has_provider_attempt": false,
+    "declared_safe": true,
+    "can_refresh": false,
+    "can_retry": false
+  },
+  {
+    "phase": "review",
+    "stale": true,
+    "state": "queued",
+    "has_provider_attempt": false,
+    "declared_safe": false,
+    "can_refresh": false,
+    "can_retry": false
+  },
+  {
+    "phase": "finalized",
+    "stale": false,
+    "state": "succeeded",
+    "has_provider_attempt": true,
+    "declared_safe": true,
+    "can_refresh": false,
+    "can_retry": false
+  }
+]

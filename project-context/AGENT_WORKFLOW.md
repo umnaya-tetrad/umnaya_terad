@@ -60,3 +60,7 @@ AGENTS и skills — инструкции работающему агенту. �
 Спецификации хранят продуктовые факты, AGENTS — постоянные правила, skills — повторяемые рабочие действия. Общие знания разработки не копируются в проектные skills. В этой поставке нет личных настроек автора, скрытого плагина или обязательного доступа к его чату.
 
 Расположение проектных skills и роль AGENTS сверены с официальными руководствами: [skills](https://learn.chatgpt.com/docs/build-skills), [AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md). Для среды без автоматического обнаружения работает явное чтение SKILL.md.
+
+## Общий пакет и три ТЗ v1
+
+Канонический вход — [planning](pilot/planning/README.md). HTTP/DTO изменяются в shared/api/build_contract.py, затем синхронно регенерируются схемы/типы и проверяются fixtures; classifier/score не добавляются. Материалы трех направлений ссылаются на одну версию shared, перемены проверяются и в TASKS/ACCEPTANCE. Общие UX/конфигурация/передача заданы в shared. Выполнить `python project-context/pilot/planning/shared/check_shared.py` и `python project-context/pilot/planning/check_tasks.py` из корня, дополнительно check_context/diff checks и runtime модуля после его появления. Если поменялся код, недостаточно обновить только status: проверить фактический diff и doc-impact через проектные skills.

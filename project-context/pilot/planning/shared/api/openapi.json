@@ -1,0 +1,4917 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SmartNote Pilot API",
+    "version": "1.0.0",
+    "description": "Замороженный минимальный HTTP-контракт независимой реализации. Приложение еще не реализовано."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000"
+    }
+  ],
+  "paths": {
+    "/api/auth/login": {
+      "post": {
+        "operationId": "login",
+        "tags": [
+          "public"
+        ],
+        "summary": "login",
+        "x-required-role": "public",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Session"
+                }
+              }
+            },
+            "headers": {
+              "Set-Cookie": {
+                "description": "HttpOnly; SameSite=Lax; Path=/; Secure в HTTPS. Значение не журналируется.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "schemas/domain.schema.json#/$defs/Login"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/session": {
+      "get": {
+        "operationId": "getSession",
+        "tags": [
+          "authenticated"
+        ],
+        "summary": "getSession",
+        "x-required-role": "authenticated",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "operationId": "logout",
+        "tags": [
+          "authenticated"
+        ],
+        "summary": "logout",
+        "x-required-role": "authenticated",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Успех; изменение надежно сохранено до ответа."
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/checks": {
+      "get": {
+        "operationId": "listChecks",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "listChecks",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Checks"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createCheck",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "createCheck",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "schemas/domain.schema.json#/$defs/Title"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/checks/{check_id}": {
+      "get": {
+        "operationId": "getCheck",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "getCheck",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Check"
+                }
+              }
+            },
+            "headers": {
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^\"[0-9]+\"$"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "check_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteCheck",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "deleteCheck",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "check_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/checks/{check_id}/notebooks": {
+      "post": {
+        "operationId": "createNotebook",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "createNotebook",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "check_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/notebooks/{notebook_id}": {
+      "delete": {
+        "operationId": "deleteNotebook",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "deleteNotebook",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "notebook_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/notebooks/{notebook_id}/bundles": {
+      "post": {
+        "operationId": "createBundle",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "createBundle",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "notebook_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/bundles/{bundle_id}": {
+      "delete": {
+        "operationId": "deleteBundle",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "deleteBundle",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "bundle_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/bundles/{bundle_id}/versions": {
+      "post": {
+        "operationId": "createInputVersion",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "createInputVersion",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "bundle_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "schemas/domain.schema.json#/$defs/VersionCreate"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/input-versions/{input_version_id}": {
+      "patch": {
+        "operationId": "reorderPhotos",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "reorderPhotos",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "input_version_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "schemas/domain.schema.json#/$defs/PhotoOrder"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "discardDraft",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "discardDraft",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "input_version_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/input-versions/{input_version_id}/photos": {
+      "post": {
+        "operationId": "uploadPhoto",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "uploadPhoto",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "input_version_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "contentType": "image/jpeg, image/png, image/webp, image/heic, image/heif"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/input-versions/{input_version_id}/photos/{photo_id}": {
+      "delete": {
+        "operationId": "deleteDraftPhoto",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "deleteDraftPhoto",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "input_version_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "photo_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/assets/{photo_id}": {
+      "get": {
+        "operationId": "getPhoto",
+        "tags": [
+          "owner_or_staff"
+        ],
+        "summary": "getPhoto",
+        "x-required-role": "owner_or_staff",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/webp": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "photo_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/bundles/{bundle_id}/submit": {
+      "post": {
+        "operationId": "submitBundle",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "submitBundle",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "bundle_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "schemas/domain.schema.json#/$defs/Submit"
+              }
+            }
+          }
+        },
+        "description": "Mutation проверяет версии/поколение под общей блокировкой Check до создания Job/outbox. Worker повторно проверяет current job/input/snapshot и отсутствие удаления до резервирования/первой возможной отправки LLM. Устаревший неотправленный snapshot не расходует деньги; HTTP GET ничего не запускает."
+      }
+    },
+    "/api/bundles/{bundle_id}/retry": {
+      "post": {
+        "operationId": "retryBundle",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "retryBundle",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "bundle_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "schemas/domain.schema.json#/$defs/InputTarget"
+              }
+            }
+          }
+        },
+        "description": "Mutation проверяет версии/поколение под общей блокировкой Check до создания Job/outbox. Worker повторно проверяет current job/input/snapshot и отсутствие удаления до резервирования/первой возможной отправки LLM. Устаревший неотправленный snapshot не расходует деньги; HTTP GET ничего не запускает."
+      }
+    },
+    "/api/bundles/{bundle_id}/skip": {
+      "post": {
+        "operationId": "skipBundle",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "skipBundle",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "bundle_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "schemas/domain.schema.json#/$defs/InputTarget"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/bundles/{bundle_id}/history": {
+      "get": {
+        "operationId": "getBundleHistory",
+        "tags": [
+          "staff"
+        ],
+        "summary": "getBundleHistory",
+        "x-required-role": "staff",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/BundleHistory"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "bundle_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/tasks/{task_id}": {
+      "delete": {
+        "operationId": "deleteTask",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "deleteTask",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/tasks/{task_id}/review": {
+      "put": {
+        "operationId": "saveReview",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "saveReview",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "schemas/domain.schema.json#/$defs/ReviewWrite"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tasks/{task_id}/skip": {
+      "post": {
+        "operationId": "skipTask",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "skipTask",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "schemas/domain.schema.json#/$defs/AnalysisTarget"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/jobs/{job_id}": {
+      "get": {
+        "operationId": "getJob",
+        "tags": [
+          "owner_or_staff"
+        ],
+        "summary": "getJob",
+        "x-required-role": "owner_or_staff",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Job"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/checks/{check_id}/begin-completion": {
+      "post": {
+        "operationId": "beginCompletion",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "beginCompletion",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "check_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/checks/{check_id}/finalize": {
+      "post": {
+        "operationId": "finalizeCheck",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "finalizeCheck",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "check_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "description": "Mutation проверяет версии/поколение под общей блокировкой Check до создания Job/outbox. Worker повторно проверяет current job/input/snapshot и отсутствие удаления до резервирования/первой возможной отправки LLM. Устаревший неотправленный snapshot не расходует деньги; HTTP GET ничего не запускает."
+      }
+    },
+    "/api/checks/{check_id}/summary": {
+      "get": {
+        "operationId": "getSummary",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "getSummary",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Summary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "check_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/checks/{check_id}/summary/history": {
+      "get": {
+        "operationId": "getSummaryHistory",
+        "tags": [
+          "staff"
+        ],
+        "summary": "getSummaryHistory",
+        "x-required-role": "staff",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/SummaryHistory"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "check_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/checks/{check_id}/summary/refresh": {
+      "post": {
+        "operationId": "refreshSummary",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "refreshSummary",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "check_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "description": "Mutation проверяет версии/поколение под общей блокировкой Check до создания Job/outbox. Worker повторно проверяет current job/input/snapshot и отсутствие удаления до резервирования/первой возможной отправки LLM. Устаревший неотправленный snapshot не расходует деньги; HTTP GET ничего не запускает."
+      }
+    },
+    "/api/checks/{check_id}/summary/retry": {
+      "post": {
+        "operationId": "retrySummary",
+        "tags": [
+          "teacher"
+        ],
+        "summary": "retrySummary",
+        "x-required-role": "teacher",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/Mutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "check_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Точный quoted ETag родительской Check: например, \\\"12\\\". Обязателен даже для photo upload и worker-конкурирующих операций.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\"[0-9]+\"$"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID одного намерения. Точный повтор ищется до If-Match, возвращает исходный ответ даже после изменения revision.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "description": "Mutation проверяет версии/поколение под общей блокировкой Check до создания Job/outbox. Worker повторно проверяет current job/input/snapshot и отсутствие удаления до резервирования/первой возможной отправки LLM. Устаревший неотправленный snapshot не расходует деньги; HTTP GET ничего не запускает."
+      }
+    },
+    "/api/staff/checks": {
+      "get": {
+        "operationId": "listStaffChecks",
+        "tags": [
+          "staff"
+        ],
+        "summary": "listStaffChecks",
+        "x-required-role": "staff",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/StaffChecks"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            }
+          },
+          {
+            "name": "owner_login",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "description": "Точный выданный логин учителя; без отдельного каталога учителей."
+          }
+        ]
+      }
+    },
+    "/api/staff/checks/{check_id}": {
+      "get": {
+        "operationId": "getStaffCheck",
+        "tags": [
+          "staff"
+        ],
+        "summary": "getStaffCheck",
+        "x-required-role": "staff",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/StaffCheck"
+                }
+              }
+            },
+            "headers": {
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^\"[0-9]+\"$"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "check_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/events": {
+      "post": {
+        "operationId": "ingestEvents",
+        "tags": [
+          "authenticated"
+        ],
+        "summary": "ingestEvents",
+        "x-required-role": "authenticated",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Успех; изменение надежно сохранено до ответа.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/EventsAccepted"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Безопасная ошибка; состояние не изменено.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "schemas/domain.schema.json#/$defs/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "schemas/domain.schema.json#/$defs/Events"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "sessionCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "smartnote_session"
+      }
+    }
+  }
+}

@@ -1,0 +1,2013 @@
+[
+  {
+    "name": "login",
+    "operation_id": "login",
+    "path_parameters": {},
+    "request": {
+      "headers": {},
+      "body": {
+        "login": "synthetic_teacher",
+        "password": "synthetic-fixture-only"
+      }
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "user_id": "e2655763-bac9-5254-8661-d84fef6d5126",
+        "role": "teacher"
+      }
+    }
+  },
+  {
+    "name": "getSession",
+    "operation_id": "getSession",
+    "path_parameters": {},
+    "request": {
+      "headers": {},
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "user_id": "e2655763-bac9-5254-8661-d84fef6d5126",
+        "role": "teacher"
+      }
+    }
+  },
+  {
+    "name": "logout",
+    "operation_id": "logout",
+    "path_parameters": {},
+    "request": {
+      "headers": {},
+      "body": null
+    },
+    "response": {
+      "status": 204,
+      "headers": {},
+      "body": null
+    }
+  },
+  {
+    "name": "listChecks",
+    "operation_id": "listChecks",
+    "path_parameters": {},
+    "request": {
+      "headers": {},
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "items": [
+          {
+            "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+            "title": "Синтетическая проверка",
+            "phase": "review",
+            "revision": 12,
+            "created_at": "2026-11-19T10:00:00Z"
+          }
+        ],
+        "next_cursor": null
+      }
+    }
+  },
+  {
+    "name": "createCheck",
+    "operation_id": "createCheck",
+    "path_parameters": {},
+    "request": {
+      "headers": {
+        "Idempotency-Key": "59662f5a-f82d-5b09-b907-797206a15d14"
+      },
+      "body": {
+        "title": "Проверка алгебры"
+      }
+    },
+    "response": {
+      "status": 201,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": null,
+        "job": null
+      }
+    }
+  },
+  {
+    "name": "getCheck",
+    "operation_id": "getCheck",
+    "path_parameters": {
+      "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1"
+    },
+    "request": {
+      "headers": {},
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "ETag": "\"12\""
+      },
+      "body": {
+        "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "title": "Синтетическая проверка",
+        "phase": "review",
+        "revision": 12,
+        "created_at": "2026-11-19T10:00:00Z",
+        "data_revision": 5,
+        "notebooks": [
+          {
+            "id": "17012e60-679e-555d-972d-d04425ba697c",
+            "number": 1,
+            "bundles": [
+              {
+                "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+                "draft": null,
+                "current_input": {
+                  "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+                  "state": "sealed",
+                  "photos": [
+                    {
+                      "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                      "media_type": "image/jpeg"
+                    }
+                  ]
+                },
+                "job": {
+                  "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+                  "kind": "page_check",
+                  "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+                  "state": "succeeded",
+                  "reason": null,
+                  "can_retry": false
+                },
+                "result": {
+                  "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+                  "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+                  "report": {
+                    "schema_version": "page-check/1.2",
+                    "status": "ok",
+                    "tasks": [
+                      {
+                        "task_id": "task_1",
+                        "locator": "Верхняя часть страницы, номер 21 в рамке",
+                        "photo_indices": [
+                          1
+                        ],
+                        "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                        "result": "first_error_found",
+                        "completeness": "complete",
+                        "detail_level": "sufficient",
+                        "omitted_steps_note": "",
+                        "completeness_note": "",
+                        "evidence": [
+                          {
+                            "photo_index": 1,
+                            "latex": "12x^2 - 4x - 1 = 0"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "12x^2 - 6x + 2x - 1 = 0"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "(2x-1)(6x-1)=0"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                          }
+                        ],
+                        "first_error": {
+                          "photo_index": 1,
+                          "wrong_latex": "(2x-1)(6x-1)=0",
+                          "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                          "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                          "corrected_latex": "(2x-1)(6x+1)=0"
+                        },
+                        "uncheckable_reason": ""
+                      },
+                      {
+                        "task_id": "task_2",
+                        "locator": "Нижняя часть страницы, номер № 20",
+                        "photo_indices": [
+                          1
+                        ],
+                        "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                        "result": "all_steps_correct",
+                        "completeness": "complete",
+                        "detail_level": "sufficient",
+                        "omitted_steps_note": "",
+                        "completeness_note": "",
+                        "evidence": [
+                          {
+                            "photo_index": 1,
+                            "latex": "6x^2 + x - 1 = 0"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                          }
+                        ],
+                        "first_error": null,
+                        "uncheckable_reason": ""
+                      }
+                    ],
+                    "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+                  }
+                },
+                "tasks": [
+                  {
+                    "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                    "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                    "analysis": {
+                      "task_id": "task_1",
+                      "locator": "Верхняя часть страницы, номер 21 в рамке",
+                      "photo_indices": [
+                        1
+                      ],
+                      "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                      "result": "first_error_found",
+                      "completeness": "complete",
+                      "detail_level": "sufficient",
+                      "omitted_steps_note": "",
+                      "completeness_note": "",
+                      "evidence": [
+                        {
+                          "photo_index": 1,
+                          "latex": "12x^2 - 4x - 1 = 0"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "12x^2 - 6x + 2x - 1 = 0"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "(2x-1)(6x-1)=0"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                        }
+                      ],
+                      "first_error": {
+                        "photo_index": 1,
+                        "wrong_latex": "(2x-1)(6x-1)=0",
+                        "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                        "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                        "corrected_latex": "(2x-1)(6x+1)=0"
+                      },
+                      "uncheckable_reason": ""
+                    },
+                    "review": {
+                      "state": "confirmed",
+                      "comment": ""
+                    },
+                    "skipped": false
+                  },
+                  {
+                    "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                    "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                    "analysis": {
+                      "task_id": "task_2",
+                      "locator": "Нижняя часть страницы, номер № 20",
+                      "photo_indices": [
+                        1
+                      ],
+                      "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                      "result": "all_steps_correct",
+                      "completeness": "complete",
+                      "detail_level": "sufficient",
+                      "omitted_steps_note": "",
+                      "completeness_note": "",
+                      "evidence": [
+                        {
+                          "photo_index": 1,
+                          "latex": "6x^2 + x - 1 = 0"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                        }
+                      ],
+                      "first_error": null,
+                      "uncheckable_reason": ""
+                    },
+                    "review": {
+                      "state": "confirmed",
+                      "comment": ""
+                    },
+                    "skipped": false
+                  }
+                ],
+                "skipped": false
+              }
+            ]
+          }
+        ],
+        "completion": {
+          "pending_jobs": 0,
+          "unreviewed_tasks": 0,
+          "unresolved_tasks": 0,
+          "unresolved_bundles": 0,
+          "unsent_drafts": 0,
+          "can_finalize": true
+        },
+        "summary": {
+          "state": "not_started",
+          "stale": false,
+          "snapshot_id": null,
+          "job_id": null,
+          "data_revision": null,
+          "can_retry": false,
+          "can_refresh": false,
+          "result": null
+        }
+      }
+    }
+  },
+  {
+    "name": "deleteCheck",
+    "operation_id": "deleteCheck",
+    "path_parameters": {
+      "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "677d0f51-c884-5fdd-96c2-f4c226b5449a"
+      },
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": null,
+        "job": null
+      }
+    }
+  },
+  {
+    "name": "createNotebook",
+    "operation_id": "createNotebook",
+    "path_parameters": {
+      "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "afdb37f3-60a0-5727-bf52-51c6bc6c6cfc"
+      },
+      "body": null
+    },
+    "response": {
+      "status": 201,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": "17012e60-679e-555d-972d-d04425ba697c",
+        "job": null
+      }
+    }
+  },
+  {
+    "name": "deleteNotebook",
+    "operation_id": "deleteNotebook",
+    "path_parameters": {
+      "notebook_id": "17012e60-679e-555d-972d-d04425ba697c"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "968bcb63-194a-5632-a099-2b968d912bf6"
+      },
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": "17012e60-679e-555d-972d-d04425ba697c",
+        "job": null
+      }
+    }
+  },
+  {
+    "name": "createBundle",
+    "operation_id": "createBundle",
+    "path_parameters": {
+      "notebook_id": "17012e60-679e-555d-972d-d04425ba697c"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "c774dd0d-a20a-5cf4-8a0e-6ce673a123db"
+      },
+      "body": null
+    },
+    "response": {
+      "status": 201,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+        "job": null
+      }
+    }
+  },
+  {
+    "name": "deleteBundle",
+    "operation_id": "deleteBundle",
+    "path_parameters": {
+      "bundle_id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "1a44e80a-8469-555b-9a02-e37133ea6205"
+      },
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+        "job": null
+      }
+    }
+  },
+  {
+    "name": "createInputVersion",
+    "operation_id": "createInputVersion",
+    "path_parameters": {
+      "bundle_id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "50117d81-b1ed-5d7d-9be1-55f794ec72c6"
+      },
+      "body": {
+        "photo_ids": [
+          "e73171fd-e0d0-5be5-b6c9-bfff80ce9213"
+        ]
+      }
+    },
+    "response": {
+      "status": 201,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": "07168e79-09b9-5f9e-9ced-e242306e8244",
+        "job": null
+      }
+    }
+  },
+  {
+    "name": "reorderPhotos",
+    "operation_id": "reorderPhotos",
+    "path_parameters": {
+      "input_version_id": "1439d0f9-d43d-561a-8b5c-00dc8eb44d66"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "f735cafd-bf11-5982-92f2-8a7b2a7b36cd"
+      },
+      "body": {
+        "photo_ids": [
+          "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+          "ca6c0ca3-79b2-58da-ad94-5243f558abbb"
+        ]
+      }
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": "07168e79-09b9-5f9e-9ced-e242306e8244",
+        "job": null
+      }
+    }
+  },
+  {
+    "name": "discardDraft",
+    "operation_id": "discardDraft",
+    "path_parameters": {
+      "input_version_id": "1439d0f9-d43d-561a-8b5c-00dc8eb44d66"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "13b7d08d-4be2-5221-b8cc-a92a11f8d762"
+      },
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": "07168e79-09b9-5f9e-9ced-e242306e8244",
+        "job": null
+      }
+    }
+  },
+  {
+    "name": "uploadPhoto",
+    "operation_id": "uploadPhoto",
+    "path_parameters": {
+      "input_version_id": "1439d0f9-d43d-561a-8b5c-00dc8eb44d66"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "6dfe18a6-f223-577d-b3e1-77dedd46d208"
+      },
+      "body": {
+        "file": "synthetic-photo.png"
+      }
+    },
+    "response": {
+      "status": 201,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": "2e5df76d-9da4-569f-8049-da9cdcf1f26d",
+        "job": null
+      }
+    }
+  },
+  {
+    "name": "deleteDraftPhoto",
+    "operation_id": "deleteDraftPhoto",
+    "path_parameters": {
+      "input_version_id": "1439d0f9-d43d-561a-8b5c-00dc8eb44d66",
+      "photo_id": "2e5df76d-9da4-569f-8049-da9cdcf1f26d"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "a3ab61dc-e0e1-5b6f-83b5-ffb100667871"
+      },
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": "2e5df76d-9da4-569f-8049-da9cdcf1f26d",
+        "job": null
+      }
+    }
+  },
+  {
+    "name": "getPhoto",
+    "operation_id": "getPhoto",
+    "path_parameters": {
+      "photo_id": "2e5df76d-9da4-569f-8049-da9cdcf1f26d"
+    },
+    "request": {
+      "headers": {},
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "image/png"
+      },
+      "body": null
+    }
+  },
+  {
+    "name": "submitBundle",
+    "operation_id": "submitBundle",
+    "path_parameters": {
+      "bundle_id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "e4ed5480-5765-5dfa-8030-a7b5aa6fc54f"
+      },
+      "body": {
+        "input_version_id": "07168e79-09b9-5f9e-9ced-e242306e8244"
+      }
+    },
+    "response": {
+      "status": 202,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+        "job": {
+          "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+          "kind": "page_check",
+          "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+          "state": "queued",
+          "reason": null,
+          "can_retry": false
+        }
+      }
+    }
+  },
+  {
+    "name": "retryBundle",
+    "operation_id": "retryBundle",
+    "path_parameters": {
+      "bundle_id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "ed789343-04d5-5cf4-b6b8-760334b55ae7"
+      },
+      "body": {
+        "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca"
+      }
+    },
+    "response": {
+      "status": 202,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+        "job": {
+          "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+          "kind": "page_check",
+          "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+          "state": "queued",
+          "reason": null,
+          "can_retry": false
+        }
+      }
+    }
+  },
+  {
+    "name": "skipBundle",
+    "operation_id": "skipBundle",
+    "path_parameters": {
+      "bundle_id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "0ce32615-5657-56a3-b763-68439ca593b7"
+      },
+      "body": {
+        "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca"
+      }
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+        "job": null
+      }
+    }
+  },
+  {
+    "name": "getBundleHistory",
+    "operation_id": "getBundleHistory",
+    "path_parameters": {
+      "bundle_id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9"
+    },
+    "request": {
+      "headers": {},
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "bundle_id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+        "versions": [
+          {
+            "input": {
+              "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+              "state": "sealed",
+              "photos": [
+                {
+                  "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                  "media_type": "image/jpeg"
+                }
+              ]
+            },
+            "runs": [
+              {
+                "job": {
+                  "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+                  "kind": "page_check",
+                  "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+                  "state": "succeeded",
+                  "reason": null,
+                  "can_retry": false
+                },
+                "result": {
+                  "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+                  "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+                  "report": {
+                    "schema_version": "page-check/1.2",
+                    "status": "ok",
+                    "tasks": [
+                      {
+                        "task_id": "task_1",
+                        "locator": "Верхняя часть страницы, номер 21 в рамке",
+                        "photo_indices": [
+                          1
+                        ],
+                        "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                        "result": "first_error_found",
+                        "completeness": "complete",
+                        "detail_level": "sufficient",
+                        "omitted_steps_note": "",
+                        "completeness_note": "",
+                        "evidence": [
+                          {
+                            "photo_index": 1,
+                            "latex": "12x^2 - 4x - 1 = 0"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "12x^2 - 6x + 2x - 1 = 0"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "(2x-1)(6x-1)=0"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                          }
+                        ],
+                        "first_error": {
+                          "photo_index": 1,
+                          "wrong_latex": "(2x-1)(6x-1)=0",
+                          "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                          "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                          "corrected_latex": "(2x-1)(6x+1)=0"
+                        },
+                        "uncheckable_reason": ""
+                      },
+                      {
+                        "task_id": "task_2",
+                        "locator": "Нижняя часть страницы, номер № 20",
+                        "photo_indices": [
+                          1
+                        ],
+                        "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                        "result": "all_steps_correct",
+                        "completeness": "complete",
+                        "detail_level": "sufficient",
+                        "omitted_steps_note": "",
+                        "completeness_note": "",
+                        "evidence": [
+                          {
+                            "photo_index": 1,
+                            "latex": "6x^2 + x - 1 = 0"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                          }
+                        ],
+                        "first_error": null,
+                        "uncheckable_reason": ""
+                      }
+                    ],
+                    "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+                  }
+                },
+                "tasks": [
+                  {
+                    "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                    "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                    "analysis": {
+                      "task_id": "task_1",
+                      "locator": "Верхняя часть страницы, номер 21 в рамке",
+                      "photo_indices": [
+                        1
+                      ],
+                      "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                      "result": "first_error_found",
+                      "completeness": "complete",
+                      "detail_level": "sufficient",
+                      "omitted_steps_note": "",
+                      "completeness_note": "",
+                      "evidence": [
+                        {
+                          "photo_index": 1,
+                          "latex": "12x^2 - 4x - 1 = 0"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "12x^2 - 6x + 2x - 1 = 0"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "(2x-1)(6x-1)=0"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                        }
+                      ],
+                      "first_error": {
+                        "photo_index": 1,
+                        "wrong_latex": "(2x-1)(6x-1)=0",
+                        "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                        "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                        "corrected_latex": "(2x-1)(6x+1)=0"
+                      },
+                      "uncheckable_reason": ""
+                    },
+                    "review": {
+                      "state": "confirmed",
+                      "comment": ""
+                    },
+                    "skipped": false
+                  },
+                  {
+                    "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                    "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                    "analysis": {
+                      "task_id": "task_2",
+                      "locator": "Нижняя часть страницы, номер № 20",
+                      "photo_indices": [
+                        1
+                      ],
+                      "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                      "result": "all_steps_correct",
+                      "completeness": "complete",
+                      "detail_level": "sufficient",
+                      "omitted_steps_note": "",
+                      "completeness_note": "",
+                      "evidence": [
+                        {
+                          "photo_index": 1,
+                          "latex": "6x^2 + x - 1 = 0"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                        }
+                      ],
+                      "first_error": null,
+                      "uncheckable_reason": ""
+                    },
+                    "review": {
+                      "state": "confirmed",
+                      "comment": ""
+                    },
+                    "skipped": false
+                  }
+                ],
+                "deleted_task_ids": [
+                  "739f2141-bc2c-598d-aaaa-8740c3e73c4c"
+                ]
+              },
+              {
+                "job": {
+                  "id": "a97034f2-d72c-5d79-b84f-7324f399de0d",
+                  "kind": "page_check",
+                  "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+                  "state": "succeeded",
+                  "reason": null,
+                  "can_retry": false
+                },
+                "result": {
+                  "id": "9a90a8cf-e680-5b44-9e7c-af37ef3229a3",
+                  "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+                  "report": {
+                    "schema_version": "page-check/1.2",
+                    "status": "ok",
+                    "tasks": [
+                      {
+                        "task_id": "task_1",
+                        "locator": "Верхняя часть страницы, номер 21 в рамке",
+                        "photo_indices": [
+                          1
+                        ],
+                        "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                        "result": "first_error_found",
+                        "completeness": "complete",
+                        "detail_level": "sufficient",
+                        "omitted_steps_note": "",
+                        "completeness_note": "",
+                        "evidence": [
+                          {
+                            "photo_index": 1,
+                            "latex": "12x^2 - 4x - 1 = 0"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "12x^2 - 6x + 2x - 1 = 0"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "(2x-1)(6x-1)=0"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                          }
+                        ],
+                        "first_error": {
+                          "photo_index": 1,
+                          "wrong_latex": "(2x-1)(6x-1)=0",
+                          "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                          "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                          "corrected_latex": "(2x-1)(6x+1)=0"
+                        },
+                        "uncheckable_reason": ""
+                      },
+                      {
+                        "task_id": "task_2",
+                        "locator": "Нижняя часть страницы, номер № 20",
+                        "photo_indices": [
+                          1
+                        ],
+                        "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                        "result": "all_steps_correct",
+                        "completeness": "complete",
+                        "detail_level": "sufficient",
+                        "omitted_steps_note": "",
+                        "completeness_note": "",
+                        "evidence": [
+                          {
+                            "photo_index": 1,
+                            "latex": "6x^2 + x - 1 = 0"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                          }
+                        ],
+                        "first_error": null,
+                        "uncheckable_reason": ""
+                      }
+                    ],
+                    "message": "Синтетический повтор того же входа; новое поколение и отдельные отзывы."
+                  }
+                },
+                "tasks": [
+                  {
+                    "task_id": "5690b49a-262c-51ad-95f4-75425655921b",
+                    "analysis_id": "aa6be61e-9091-5edc-856c-dd1fb9d79cf6",
+                    "analysis": {
+                      "task_id": "task_1",
+                      "locator": "Верхняя часть страницы, номер 21 в рамке",
+                      "photo_indices": [
+                        1
+                      ],
+                      "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                      "result": "first_error_found",
+                      "completeness": "complete",
+                      "detail_level": "sufficient",
+                      "omitted_steps_note": "",
+                      "completeness_note": "",
+                      "evidence": [
+                        {
+                          "photo_index": 1,
+                          "latex": "12x^2 - 4x - 1 = 0"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "12x^2 - 6x + 2x - 1 = 0"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "(2x-1)(6x-1)=0"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                        }
+                      ],
+                      "first_error": {
+                        "photo_index": 1,
+                        "wrong_latex": "(2x-1)(6x-1)=0",
+                        "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                        "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                        "corrected_latex": "(2x-1)(6x+1)=0"
+                      },
+                      "uncheckable_reason": ""
+                    },
+                    "review": {
+                      "state": "system_error",
+                      "comment": ""
+                    },
+                    "skipped": false
+                  },
+                  {
+                    "task_id": "8ea40022-e0f7-51cc-ab6e-4e105dc2d602",
+                    "analysis_id": "c980f77c-a596-54fa-9092-d8d54957b9c9",
+                    "analysis": {
+                      "task_id": "task_2",
+                      "locator": "Нижняя часть страницы, номер № 20",
+                      "photo_indices": [
+                        1
+                      ],
+                      "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                      "result": "all_steps_correct",
+                      "completeness": "complete",
+                      "detail_level": "sufficient",
+                      "omitted_steps_note": "",
+                      "completeness_note": "",
+                      "evidence": [
+                        {
+                          "photo_index": 1,
+                          "latex": "6x^2 + x - 1 = 0"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                        },
+                        {
+                          "photo_index": 1,
+                          "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                        }
+                      ],
+                      "first_error": null,
+                      "uncheckable_reason": ""
+                    },
+                    "review": {
+                      "state": "confirmed",
+                      "comment": ""
+                    },
+                    "skipped": false
+                  }
+                ],
+                "deleted_task_ids": []
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "deleteTask",
+    "operation_id": "deleteTask",
+    "path_parameters": {
+      "task_id": "9d996eaf-afab-5a8d-835d-7c689232309a"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "c20aff0f-488d-5d7b-889e-38e0e40c23e1"
+      },
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": "9d996eaf-afab-5a8d-835d-7c689232309a",
+        "job": null
+      }
+    }
+  },
+  {
+    "name": "saveReview",
+    "operation_id": "saveReview",
+    "path_parameters": {
+      "task_id": "9d996eaf-afab-5a8d-835d-7c689232309a"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "04e59473-b357-5642-b3f2-b8635dfc3a6b"
+      },
+      "body": {
+        "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+        "state": "confirmed",
+        "comment": ""
+      }
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": "9d996eaf-afab-5a8d-835d-7c689232309a",
+        "job": null
+      }
+    }
+  },
+  {
+    "name": "skipTask",
+    "operation_id": "skipTask",
+    "path_parameters": {
+      "task_id": "9d996eaf-afab-5a8d-835d-7c689232309a"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "ee2c82b8-a007-5f96-bdc7-d585ff0c8288"
+      },
+      "body": {
+        "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1"
+      }
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": "9d996eaf-afab-5a8d-835d-7c689232309a",
+        "job": null
+      }
+    }
+  },
+  {
+    "name": "getJob",
+    "operation_id": "getJob",
+    "path_parameters": {
+      "job_id": "81d26415-de91-5e3f-9b55-1213b2c435d3"
+    },
+    "request": {
+      "headers": {},
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+        "kind": "page_check",
+        "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+        "state": "queued",
+        "reason": null,
+        "can_retry": false
+      }
+    }
+  },
+  {
+    "name": "beginCompletion",
+    "operation_id": "beginCompletion",
+    "path_parameters": {
+      "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "b6765310-8ed4-5cd9-89f6-bec2020d9516"
+      },
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": null,
+        "job": null
+      }
+    }
+  },
+  {
+    "name": "finalizeCheck",
+    "operation_id": "finalizeCheck",
+    "path_parameters": {
+      "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "0601fa3c-43d6-54e9-8239-5fc6f0d0e468"
+      },
+      "body": null
+    },
+    "response": {
+      "status": 202,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": null,
+        "job": {
+          "id": "7dd02971-2015-57d7-8479-a6e3a2c3bd89",
+          "kind": "class_analytics",
+          "input_id": "50b2a29f-d122-5227-a72d-5618459166e2",
+          "state": "queued",
+          "reason": null,
+          "can_retry": false
+        }
+      }
+    }
+  },
+  {
+    "name": "getSummary",
+    "operation_id": "getSummary",
+    "path_parameters": {
+      "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1"
+    },
+    "request": {
+      "headers": {},
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "state": "succeeded",
+        "stale": false,
+        "snapshot_id": "50b2a29f-d122-5227-a72d-5618459166e2",
+        "job_id": "7dd02971-2015-57d7-8479-a6e3a2c3bd89",
+        "data_revision": 5,
+        "can_retry": false,
+        "can_refresh": false,
+        "result": {
+          "schema_version": "class-summary/1",
+          "notebooks": {
+            "total": 1,
+            "with_errors": 1,
+            "without_errors": 0,
+            "partial": 0,
+            "empty": 0
+          },
+          "average_errors_per_notebook": 1,
+          "incomplete_tasks": 0,
+          "disputed_tasks": 0,
+          "unassessed_tasks": 0,
+          "top_errors": [
+            {
+              "rule": "Знак при разложении на множители",
+              "task_ids": [
+                "5feb605d-caaa-5737-a17d-c5ac892fa395"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "getSummaryHistory",
+    "operation_id": "getSummaryHistory",
+    "path_parameters": {
+      "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1"
+    },
+    "request": {
+      "headers": {},
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "items": [
+          {
+            "created_at": "2026-11-19T10:02:00Z",
+            "summary": {
+              "state": "succeeded",
+              "stale": false,
+              "snapshot_id": "50b2a29f-d122-5227-a72d-5618459166e2",
+              "job_id": "7dd02971-2015-57d7-8479-a6e3a2c3bd89",
+              "data_revision": 5,
+              "can_retry": false,
+              "can_refresh": false,
+              "result": {
+                "schema_version": "class-summary/1",
+                "notebooks": {
+                  "total": 1,
+                  "with_errors": 1,
+                  "without_errors": 0,
+                  "partial": 0,
+                  "empty": 0
+                },
+                "average_errors_per_notebook": 1,
+                "incomplete_tasks": 0,
+                "disputed_tasks": 0,
+                "unassessed_tasks": 0,
+                "top_errors": [
+                  {
+                    "rule": "Знак при разложении на множители",
+                    "task_ids": [
+                      "5feb605d-caaa-5737-a17d-c5ac892fa395"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "refreshSummary",
+    "operation_id": "refreshSummary",
+    "path_parameters": {
+      "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "b1ab6b72-c00a-5ff7-b375-2b28c4cd0315"
+      },
+      "body": null
+    },
+    "response": {
+      "status": 202,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": null,
+        "job": {
+          "id": "0936045f-a990-5219-ae1f-582cb1816cef",
+          "kind": "class_analytics",
+          "input_id": "c32084b4-ba14-5ded-abdc-afc326b5b1f5",
+          "state": "queued",
+          "reason": null,
+          "can_retry": false
+        }
+      }
+    }
+  },
+  {
+    "name": "retrySummary",
+    "operation_id": "retrySummary",
+    "path_parameters": {
+      "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "d0418616-e589-5ec4-9c0f-443f723a2561"
+      },
+      "body": null
+    },
+    "response": {
+      "status": 202,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": null,
+        "job": {
+          "id": "aa761b21-71df-5ca1-87b7-38adc9637eab",
+          "kind": "class_analytics",
+          "input_id": "50b2a29f-d122-5227-a72d-5618459166e2",
+          "state": "queued",
+          "reason": null,
+          "can_retry": false
+        }
+      }
+    }
+  },
+  {
+    "name": "listStaffChecks",
+    "operation_id": "listStaffChecks",
+    "path_parameters": {},
+    "request": {
+      "headers": {},
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {},
+      "body": {
+        "items": [
+          {
+            "owner": {
+              "user_id": "e2655763-bac9-5254-8661-d84fef6d5126",
+              "login": "synthetic_teacher"
+            },
+            "check": {
+              "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+              "title": "Синтетическая проверка",
+              "phase": "review",
+              "revision": 12,
+              "created_at": "2026-11-19T10:00:00Z"
+            }
+          }
+        ],
+        "next_cursor": null
+      }
+    }
+  },
+  {
+    "name": "getStaffCheck",
+    "operation_id": "getStaffCheck",
+    "path_parameters": {
+      "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1"
+    },
+    "request": {
+      "headers": {},
+      "body": null
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "ETag": "\"12\""
+      },
+      "body": {
+        "owner": {
+          "user_id": "e2655763-bac9-5254-8661-d84fef6d5126",
+          "login": "synthetic_teacher"
+        },
+        "check": {
+          "id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+          "title": "Синтетическая проверка",
+          "phase": "review",
+          "revision": 12,
+          "created_at": "2026-11-19T10:00:00Z",
+          "data_revision": 5,
+          "notebooks": [
+            {
+              "id": "17012e60-679e-555d-972d-d04425ba697c",
+              "number": 1,
+              "bundles": [
+                {
+                  "id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+                  "draft": null,
+                  "current_input": {
+                    "id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+                    "state": "sealed",
+                    "photos": [
+                      {
+                        "id": "e73171fd-e0d0-5be5-b6c9-bfff80ce9213",
+                        "media_type": "image/jpeg"
+                      }
+                    ]
+                  },
+                  "job": {
+                    "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+                    "kind": "page_check",
+                    "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+                    "state": "succeeded",
+                    "reason": null,
+                    "can_retry": false
+                  },
+                  "result": {
+                    "id": "d13d03cf-93f4-528b-bd5e-5a1ea9a683d6",
+                    "input_version_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+                    "report": {
+                      "schema_version": "page-check/1.2",
+                      "status": "ok",
+                      "tasks": [
+                        {
+                          "task_id": "task_1",
+                          "locator": "Верхняя часть страницы, номер 21 в рамке",
+                          "photo_indices": [
+                            1
+                          ],
+                          "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                          "result": "first_error_found",
+                          "completeness": "complete",
+                          "detail_level": "sufficient",
+                          "omitted_steps_note": "",
+                          "completeness_note": "",
+                          "evidence": [
+                            {
+                              "photo_index": 1,
+                              "latex": "12x^2 - 4x - 1 = 0"
+                            },
+                            {
+                              "photo_index": 1,
+                              "latex": "12x^2 - 6x + 2x - 1 = 0"
+                            },
+                            {
+                              "photo_index": 1,
+                              "latex": "(2x-1)(6x-1)=0"
+                            },
+                            {
+                              "photo_index": 1,
+                              "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                            }
+                          ],
+                          "first_error": {
+                            "photo_index": 1,
+                            "wrong_latex": "(2x-1)(6x-1)=0",
+                            "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                            "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                            "corrected_latex": "(2x-1)(6x+1)=0"
+                          },
+                          "uncheckable_reason": ""
+                        },
+                        {
+                          "task_id": "task_2",
+                          "locator": "Нижняя часть страницы, номер № 20",
+                          "photo_indices": [
+                            1
+                          ],
+                          "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                          "result": "all_steps_correct",
+                          "completeness": "complete",
+                          "detail_level": "sufficient",
+                          "omitted_steps_note": "",
+                          "completeness_note": "",
+                          "evidence": [
+                            {
+                              "photo_index": 1,
+                              "latex": "6x^2 + x - 1 = 0"
+                            },
+                            {
+                              "photo_index": 1,
+                              "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                            },
+                            {
+                              "photo_index": 1,
+                              "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                            },
+                            {
+                              "photo_index": 1,
+                              "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                            }
+                          ],
+                          "first_error": null,
+                          "uncheckable_reason": ""
+                        }
+                      ],
+                      "message": "Проверка завершена: найдено 2 задачи. В задаче №21 допущена ошибка в знаке при разложении на множители; задача №20 решена верно."
+                    }
+                  },
+                  "tasks": [
+                    {
+                      "task_id": "5feb605d-caaa-5737-a17d-c5ac892fa395",
+                      "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+                      "analysis": {
+                        "task_id": "task_1",
+                        "locator": "Верхняя часть страницы, номер 21 в рамке",
+                        "photo_indices": [
+                          1
+                        ],
+                        "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+                        "result": "first_error_found",
+                        "completeness": "complete",
+                        "detail_level": "sufficient",
+                        "omitted_steps_note": "",
+                        "completeness_note": "",
+                        "evidence": [
+                          {
+                            "photo_index": 1,
+                            "latex": "12x^2 - 4x - 1 = 0"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "12x^2 - 6x + 2x - 1 = 0"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "(2x-1)(6x-1)=0"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+                          }
+                        ],
+                        "first_error": {
+                          "photo_index": 1,
+                          "wrong_latex": "(2x-1)(6x-1)=0",
+                          "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+                          "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+                          "corrected_latex": "(2x-1)(6x+1)=0"
+                        },
+                        "uncheckable_reason": ""
+                      },
+                      "review": {
+                        "state": "confirmed",
+                        "comment": ""
+                      },
+                      "skipped": false
+                    },
+                    {
+                      "task_id": "739f2141-bc2c-598d-aaaa-8740c3e73c4c",
+                      "analysis_id": "9e476f5d-c6a1-58b2-aae9-a341303b1352",
+                      "analysis": {
+                        "task_id": "task_2",
+                        "locator": "Нижняя часть страницы, номер № 20",
+                        "photo_indices": [
+                          1
+                        ],
+                        "condition": "\\frac{1}{x^2} - \\frac{1}{x} - 6 = 0",
+                        "result": "all_steps_correct",
+                        "completeness": "complete",
+                        "detail_level": "sufficient",
+                        "omitted_steps_note": "",
+                        "completeness_note": "",
+                        "evidence": [
+                          {
+                            "photo_index": 1,
+                            "latex": "6x^2 + x - 1 = 0"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "D = 1 + 4 \\cdot 6 = 1 + 24 = 25 = 5^2"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "x_1 = \\frac{-1+5}{2 \\cdot 6} = \\frac{4}{12} = \\frac{1}{3}"
+                          },
+                          {
+                            "photo_index": 1,
+                            "latex": "x_2 = \\frac{-1-5}{12} = -\\frac{6}{12} = -\\frac{1}{2} = -0{,}5"
+                          }
+                        ],
+                        "first_error": null,
+                        "uncheckable_reason": ""
+                      },
+                      "review": {
+                        "state": "confirmed",
+                        "comment": ""
+                      },
+                      "skipped": false
+                    }
+                  ],
+                  "skipped": false
+                }
+              ]
+            }
+          ],
+          "completion": {
+            "pending_jobs": 0,
+            "unreviewed_tasks": 0,
+            "unresolved_tasks": 0,
+            "unresolved_bundles": 0,
+            "unsent_drafts": 0,
+            "can_finalize": true
+          },
+          "summary": {
+            "state": "not_started",
+            "stale": false,
+            "snapshot_id": null,
+            "job_id": null,
+            "data_revision": null,
+            "can_retry": false,
+            "can_refresh": false,
+            "result": null
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "ingestEvents",
+    "operation_id": "ingestEvents",
+    "path_parameters": {},
+    "request": {
+      "headers": {},
+      "body": {
+        "events": [
+          {
+            "id": "8b874d50-d4ad-5417-be36-cc3a71b8d5c2",
+            "session_id": "6df602f9-570b-5641-94a7-80854613af9a",
+            "occurred_at": "2026-11-19T10:00:00Z",
+            "name": "result_opened",
+            "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+            "entity_id": "5feb605d-caaa-5737-a17d-c5ac892fa395"
+          }
+        ]
+      }
+    },
+    "response": {
+      "status": 202,
+      "headers": {},
+      "body": {
+        "accepted_ids": [
+          "8b874d50-d4ad-5417-be36-cc3a71b8d5c2"
+        ]
+      }
+    }
+  },
+  {
+    "name": "foreign-account",
+    "operation_id": "getCheck",
+    "path_parameters": {
+      "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1"
+    },
+    "request": {
+      "headers": {},
+      "body": null
+    },
+    "response": {
+      "status": 404,
+      "headers": {},
+      "body": {
+        "error": {
+          "code": "not_found",
+          "message": "Синтетический безопасный отказ",
+          "current_revision": null
+        }
+      }
+    }
+  },
+  {
+    "name": "unauthenticated-photo",
+    "operation_id": "getPhoto",
+    "path_parameters": {
+      "photo_id": "2e5df76d-9da4-569f-8049-da9cdcf1f26d"
+    },
+    "request": {
+      "headers": {},
+      "body": null
+    },
+    "response": {
+      "status": 401,
+      "headers": {},
+      "body": {
+        "error": {
+          "code": "unauthenticated",
+          "message": "Синтетический безопасный отказ",
+          "current_revision": null
+        }
+      }
+    }
+  },
+  {
+    "name": "teacher-cannot-read-history",
+    "operation_id": "getBundleHistory",
+    "path_parameters": {
+      "bundle_id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9"
+    },
+    "request": {
+      "headers": {},
+      "body": null
+    },
+    "response": {
+      "status": 403,
+      "headers": {},
+      "body": {
+        "error": {
+          "code": "forbidden",
+          "message": "Синтетический безопасный отказ",
+          "current_revision": null
+        }
+      }
+    }
+  },
+  {
+    "name": "bad-photo",
+    "operation_id": "uploadPhoto",
+    "path_parameters": {
+      "input_version_id": "1439d0f9-d43d-561a-8b5c-00dc8eb44d66"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "6dfe18a6-f223-577d-b3e1-77dedd46d208"
+      },
+      "body": {
+        "file": "synthetic-photo.png"
+      }
+    },
+    "response": {
+      "status": 422,
+      "headers": {},
+      "body": {
+        "error": {
+          "code": "invalid_input",
+          "message": "Синтетический безопасный отказ",
+          "current_revision": null
+        }
+      }
+    }
+  },
+  {
+    "name": "review-conflict",
+    "operation_id": "saveReview",
+    "path_parameters": {
+      "task_id": "9d996eaf-afab-5a8d-835d-7c689232309a"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "04e59473-b357-5642-b3f2-b8635dfc3a6b"
+      },
+      "body": {
+        "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+        "state": "confirmed",
+        "comment": ""
+      }
+    },
+    "response": {
+      "status": 409,
+      "headers": {},
+      "body": {
+        "error": {
+          "code": "revision_conflict",
+          "message": "Синтетический безопасный отказ",
+          "current_revision": 12
+        }
+      }
+    }
+  },
+  {
+    "name": "finalize-pending",
+    "operation_id": "finalizeCheck",
+    "path_parameters": {
+      "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "0601fa3c-43d6-54e9-8239-5fc6f0d0e468"
+      },
+      "body": null
+    },
+    "response": {
+      "status": 409,
+      "headers": {},
+      "body": {
+        "error": {
+          "code": "completion_blocked",
+          "message": "Синтетический безопасный отказ",
+          "current_revision": 12
+        }
+      }
+    }
+  },
+  {
+    "name": "finalized-composition",
+    "operation_id": "deleteTask",
+    "path_parameters": {
+      "task_id": "9d996eaf-afab-5a8d-835d-7c689232309a"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "c20aff0f-488d-5d7b-889e-38e0e40c23e1"
+      },
+      "body": null
+    },
+    "response": {
+      "status": 409,
+      "headers": {},
+      "body": {
+        "error": {
+          "code": "invalid_state",
+          "message": "Синтетический безопасный отказ",
+          "current_revision": 12
+        }
+      }
+    }
+  },
+  {
+    "name": "same-key-different-payload",
+    "operation_id": "submitBundle",
+    "path_parameters": {
+      "bundle_id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "e4ed5480-5765-5dfa-8030-a7b5aa6fc54f"
+      },
+      "body": {
+        "input_version_id": "07168e79-09b9-5f9e-9ced-e242306e8244"
+      }
+    },
+    "response": {
+      "status": 409,
+      "headers": {},
+      "body": {
+        "error": {
+          "code": "idempotency_conflict",
+          "message": "Синтетический безопасный отказ",
+          "current_revision": 12
+        }
+      }
+    }
+  },
+  {
+    "name": "stale-analysis",
+    "operation_id": "saveReview",
+    "path_parameters": {
+      "task_id": "9d996eaf-afab-5a8d-835d-7c689232309a"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "04e59473-b357-5642-b3f2-b8635dfc3a6b"
+      },
+      "body": {
+        "analysis_id": "dfc644a9-3fae-5f81-8d4f-f55fd58cb5f1",
+        "state": "confirmed",
+        "comment": ""
+      }
+    },
+    "response": {
+      "status": 409,
+      "headers": {},
+      "body": {
+        "error": {
+          "code": "stale_analysis",
+          "message": "Синтетический безопасный отказ",
+          "current_revision": 12
+        }
+      }
+    }
+  },
+  {
+    "name": "submit-response-lost-replay",
+    "operation_id": "submitBundle",
+    "path_parameters": {
+      "bundle_id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9"
+    },
+    "request": {
+      "headers": {
+        "If-Match": "\"11\"",
+        "Idempotency-Key": "e4ed5480-5765-5dfa-8030-a7b5aa6fc54f"
+      },
+      "body": {
+        "input_version_id": "07168e79-09b9-5f9e-9ced-e242306e8244"
+      }
+    },
+    "response": {
+      "status": 202,
+      "headers": {},
+      "body": {
+        "check_id": "91b2e942-6dca-5c1f-a7a8-07845ad899e1",
+        "check_revision": 12,
+        "entity_id": "31e0cfa7-b3ec-5a73-b76e-7e40203784b9",
+        "job": {
+          "id": "81d26415-de91-5e3f-9b55-1213b2c435d3",
+          "kind": "page_check",
+          "input_id": "1253226e-c93a-552c-911d-44d9e88f31ca",
+          "state": "queued",
+          "reason": null,
+          "can_retry": false
+        }
+      }
+    }
+  }
+]

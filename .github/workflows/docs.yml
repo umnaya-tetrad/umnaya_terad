@@ -16,6 +16,12 @@ jobs:
           python-version: '3.12'
       - name: Validate context and skills
         run: python scripts/check_context.py
+      - name: Install shared specification validators
+        run: python -m pip install -r project-context/pilot/planning/shared/requirements.txt
+      - name: Validate shared API, UX and analytics offline
+        run: python project-context/pilot/planning/shared/check_shared.py
+      - name: Validate task and acceptance references
+        run: python project-context/pilot/planning/check_tasks.py
       - name: Check changed commits for whitespace
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
