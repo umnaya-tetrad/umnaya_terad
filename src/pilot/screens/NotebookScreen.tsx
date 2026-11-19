@@ -166,6 +166,10 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
       <h2>{copy(group.title)}</h2>
       <ul className="plain stack">{group.entries.map(entry => {
         const state = entry.task.review?.state
+        const analysis = entry.task.analysis
+        const result = analysis.completeness === 'incomplete' ? 'incomplete'
+          : analysis.result === 'first_error_found' ? 'incorrect'
+          : analysis.result === 'all_steps_correct' ? 'correct' : 'unassessed'
         return <li key={entry.task.task_id}>
           <button className={`row-card task-review-card task-review-card--${state ?? 'unreviewed'}`} onClick={() => review(entry)}>
             <span className="task-review-heading">
@@ -174,6 +178,11 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
                 <span aria-hidden="true">{state === 'confirmed' ? '✓' : '✕'}</span>
                 {copy(state === 'confirmed' ? 'notebook.confirmed' : 'notebook.system_error')}
               </span>}
+            </span>
+            <span className={`task-result-label task-result-label--${result}`}>
+              {copy(result === 'incomplete' ? 'result.incomplete'
+                : result === 'incorrect' ? 'result.error_found'
+                : result === 'correct' ? 'result.correct' : 'result.no_result')}
             </span>
             <span>{entry.task.skipped ? copy('task.skipped') : entry.task.analysis.locator}</span>
           </button>

@@ -132,6 +132,11 @@ textarea { resize: vertical; }
 .task-review-card--confirmed .task-review-badge { color: var(--green); }
 .task-review-card--system_error { border-color: var(--red); background: #fff0f0; }
 .task-review-card--system_error .task-review-badge { color: var(--red); }
+.row-card .task-result-label { justify-self: start; padding: 4px 9px; border: 1px solid currentColor; border-radius: 5px; font-size: .85rem; font-weight: 700; }
+.task-result-label--correct { color: #17633b; background: #edf9ef; }
+.task-result-label--incorrect { color: #a3242a; background: #fff0f0; }
+.task-result-label--incomplete { color: #765407; background: #fff1b3; }
+.task-result-label--unassessed { color: #51493a; background: var(--cream); }
 .photo-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(145px, 100%), 1fr)); gap: 10px; }
 .photo-tile { border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
 .thumbnail { display: grid; width: 100%; gap: 4px; padding: 6px; }
