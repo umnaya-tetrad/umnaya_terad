@@ -1,6 +1,10 @@
 # Состояние локальной интеграции пилота
 
-Локальная work/application объединена с origin/main 0f8460df6465612a815810b77eb2f60a72376350. Контракт shared v1 / API 1.0.0 взят из 1144c498b4aba1e4e4fe118abe7c3f6f1b940198. Локальный B1 и учительский путь до сохранённой сводки проверены. Приём B4 остаётся за release. [HANDOFF application](../../project-context/pilot/planning/application/HANDOFF.md)
+Срез 20.11.2026: исходное объединение application/processing/release — main `a7a7454`, база аудита. После независимого аудита шесть исходных дефектов и дополнительный restore mount P1 исправлены в `fix/release-audit`: ops `f67c188`/`19114a1`/`9980048`, UI `f3b7812`/`6d1c68d`, code/test HEAD `261bb6e`. Текущий повтор: ops 63 PASS, frontend 43 PASS/build, усиленные C24/C15 3 PASS, финальный E2E 15 PASS с source/image parity, application/staff/legacy 24/8/11 PASS; backend processing 99 и полный integration 51 — PASS. Локальная fixture-приемка исправлений завершена. Точные результаты и границы — [RELEASE_REPORT](RELEASE_REPORT.md), эксплуатация — [RELEASE_RUNBOOK](RELEASE_RUNBOOK.md). Платная модель, физические Android/iPhone, внешний сервер и школа не проверены.
+
+## Историческая база и приемка 19.11.2026
+
+Ниже сохранены результаты первоначальных этапов, они не заменяют повтор после аудита. Локальная work/application была объединена с origin/main `0f8460df6465612a815810b77eb2f60a72376350`; shared v1 / API 1.0.0 взят из `1144c498b4aba1e4e4fe118abe7c3f6f1b940198`. Локальный B1 и учительский путь до сохраненной сводки проверены; B4 принят release, как зафиксировано ниже и в [HANDOFF release](../../project-context/pilot/planning/release/HANDOFF.md). [HANDOFF application](../../project-context/pilot/planning/application/HANDOFF.md).
 
 ## Приём B4 в release
 

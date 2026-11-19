@@ -1,8 +1,12 @@
 # Состояние и передача release
 
-19.11.2026, Asia/Yekaterinburg. **status: in_progress.** B4 принят, задачи REL-01–REL-12 выполняются; отдельные результаты записываются по факту выполнения, а не авансом.
+20.11.2026, Asia/Yekaterinburg. **status: in_progress — формальная передача release; локальная fixture-приемка исправлений завершена.** B4 принят 19.11, исходные REL-01–REL-12 завершены в `release_tasks` и объединены в main `a7a7454` (база аудита). В `fix/release-audit` все шесть исходных дефектов и дополнительный mount R1 закрыты; production fixes завершаются `9980048`, code/test HEAD — `261bb6e`. 63 ops-теста, 43 frontend-теста/build, усиленные C24/C15 (3), финальный E2E (15), application/staff/legacy (24/8/11), backend processing 99 и полный integration 51 — PASS. Это проверка локальных исправлений, без общей готовности пилота, платной модели, физических телефонов, deploy и школьной апробации. Точные SHA, новые команды/результаты и ограничения — [RELEASE_REPORT](../../../../docs/pilot/RELEASE_REPORT.md). Таблицы приемки 19.11 ниже сохранены как история, а не сегодняшний повтор.
 
-## Ревизии
+## Формат формальной передачи
+
+`in_progress` относится к документальной передаче, а не к незавершенным тестам или открытым дефектам. Формат `ready` в `check_tasks.py` требует собственные release `RUNTIME_REPORT.md`/`runtime-results.json` и clean tree в начале/конце прогона. Эта задача их не создавала: фактический processing run `e801c0690ca94853885ca244f9fa7b1c` имеет неизменный code/test HEAD, но `working_tree_clean_at_start/end=false` из-за 9 файлов doc-sync. Это не подменяется ложным `clean=true`; все 193 backend/integration-теста (99+24+8+11+51) реально прошли. Протокол gate сохранен без изменений, сведения о прогоне зафиксированы в RELEASE_REPORT и приватном evidence.
+
+## Ревизии первоначальной передачи, 19.11.2026
 
 | Поле | Фактическое значение |
 |---|---|
@@ -38,9 +42,9 @@
 
 Не проверено этим приёмом: Compose/PostgreSQL runtime, браузерные smoke-прогоны, платный Polza, внешний сервер. Они относятся к REL-02 и далее.
 
-## Еще не готово
+## Границы локальной приемки после аудита
 
-REL-02 выполнен и проверен на локальном Compose-стеке (см. таблицу приёмки в [INTEGRATION_STATE](../../../../docs/pilot/INTEGRATION_STATE.md)). Дальше по порядку идут REL-03–REL-12. Все REL-C01–REL-C28 получают статус по факту; кейсы вне уже выполненных остаются not_run. Реальная модель, настоящие Android/iPhone, внешнее развёртывание и школьная апробация — отдельные факты и в локальный результат не входят.
+Полный повтор integration-приемки (51 тест), включая actual backup/restore и защиту остановленной цели, — PASS. Backend processing 99 PASS. Финальный E2E уже прошел на пересобранном image с проверкой source/image parity. Усиленные REL-C24/C15 проверяют настоящие очередь/worker/settlement с синтетической HTTP-границей поставщика; внешних запросов нет. Реальная модель, настоящие Android/iPhone, интерактивный полный `run.sh up` на Windows, внешний deploy и школьная апробация — not_run. Bash/Docker-stub и read-only Compose config не заменяют такой запуск launcher. Актуальный состав проверки — [RELEASE_REPORT](../../../../docs/pilot/RELEASE_REPORT.md), операторский маршрут — [RELEASE_RUNBOOK](../../../../docs/pilot/RELEASE_RUNBOOK.md).
 
 ## Runbook, backup и recovery (REL-11)
 
@@ -55,7 +59,7 @@ REL-02 выполнен и проверен на локальном Compose-ст
 
 ## Запуск и данные
 
-Имена локального окружения без значений: `POSTGRES_PASSWORD`, `VISITOR_COOKIE_SECRET`, `ALLOWED_BROWSER_ORIGINS`, `PILOT_TRANSPORT`, `PILOT_FIXTURE_TEACHER_1_LOGIN/PASSWORD`, `PILOT_FIXTURE_TEACHER_2_LOGIN/PASSWORD`, `PILOT_FIXTURE_STAFF_LOGIN/PASSWORD`. Значения хранятся вне Git: локальный файл лежит за пределами репозитория (например `~/.config/smartnote/pilot.env`) и передаётся Compose через `--env-file`, потому что `scripts/check_context.py` отклоняет `.env` внутри рабочего дерева. Точные команды — в [BOOTSTRAP](../../../../docs/pilot/BOOTSTRAP.md); `docs/pilot/RELEASE_RUNBOOK.md` создаётся в REL-11.
+Имена локального окружения без значений: `POSTGRES_PASSWORD`, `VISITOR_COOKIE_SECRET`, `ALLOWED_BROWSER_ORIGINS`, `PILOT_TRANSPORT`, `PILOT_FIXTURE_TEACHER_1_LOGIN/PASSWORD`, `PILOT_FIXTURE_TEACHER_2_LOGIN/PASSWORD`, `PILOT_FIXTURE_STAFF_LOGIN/PASSWORD`. Значения хранятся вне Git: локальный файл лежит за пределами репозитория (например `~/.config/smartnote/pilot.env`) и передается Compose через `--env-file`. Пароли и ключ не вписываются в tracked `run.sh` и не передаются значениями в argv. Обычный startup не сбрасывает несовпадающий пароль; явный trusted reset сохраняет ID/роли/материалы. Точные команды — [RELEASE_RUNBOOK](../../../../docs/pilot/RELEASE_RUNBOOK.md) и [BOOTSTRAP](../../../../docs/pilot/BOOTSTRAP.md).
 
 ## Управление аккаунтами (REL-03)
 
@@ -97,7 +101,7 @@ REL-02 выполнен и проверен на локальном Compose-ст
 
 Пароль приходит скрытым вводом в терминале или из `PILOT_ACCOUNT_PASSWORD`; аргумента `--password` нет, значения не печатаются. Для аудита задаётся `--operator-ref` или `PILOT_OPERATOR_REF`, по умолчанию `local-cli`; `request_id` генерируется на каждый вызов. HTTP admin API и роль operator не создаются.
 
-## Итог REL-01–REL-12
+## Исторический итог REL-01–REL-12, 19.11.2026
 
 Все двенадцать задач выполнены и зафиксированы отдельными коммитами в `release_tasks` без push. Итоговые результаты:
 
@@ -117,4 +121,4 @@ REL-02 выполнен и проверен на локальном Compose-ст
 
 ## Блокеры
 
-Активных блокеров нет. Формат записи при появлении: `BLK-release-NN / severity / contract+A-ID / commit / fixture+команда / actual / expected / next action`.
+На production fixes до `9980048` независимое ревью не оставило открытых P1/P2; полный runtime/browser повтор на code/test HEAD `261bb6e` завершен. Финальное ревью зафиксированного doc-sync commit выполняется перед Git-передачей. Внешний выпуск приложения этим не подтвержден. Формат нового блокера: `BLK-release-NN / severity / contract+A-ID / commit / fixture+команда / actual / expected / next action`.
