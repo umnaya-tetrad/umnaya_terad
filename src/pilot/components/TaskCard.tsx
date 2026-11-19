@@ -12,7 +12,8 @@ export function TaskCard({ value, photoCount }: { value: CheckerTask; photoCount
     line.latex.replace(/\s/g, '') === first.wrong_latex.replace(/\s/g, '')) : -1
   const leadingLines = errorLine >= 0 ? lines.slice(0, errorLine) : lines
   const verifiedLines = value.result === 'all_steps_correct' || errorLine >= 0
-  const outcome = value.result === 'first_error_found' ? 'incorrect'
+  const incomplete = value.completeness === 'incomplete'
+  const outcome = incomplete ? 'incomplete' : value.result === 'first_error_found' ? 'incorrect'
     : value.result === 'all_steps_correct' ? 'correct' : 'unassessed'
   const conditionIsFormula = !/[А-Яа-яЁё]|\$|\\\(|\\\[/.test(value.condition ?? '') ||
     /^\\(?:text|begin|left)\b/.test(value.condition ?? '')
@@ -26,12 +27,14 @@ export function TaskCard({ value, photoCount }: { value: CheckerTask; photoCount
     </section>}
     <section className={`task-outcome task-frame task-outcome--${outcome}`}>
       <h2>{copy(
-      value.result === 'first_error_found' ? 'result.error_found'
+      incomplete ? 'result.incomplete' : value.result === 'first_error_found' ? 'result.error_found'
       : value.result === 'all_steps_correct' ? 'result.correct' : 'result.no_result',
       )}</h2>
+      {incomplete && value.result === 'first_error_found' && <p className="task-incomplete-error">{copy('result.error_found')}</p>}
+      {incomplete && value.completeness_note && <p className="task-completeness-note"><MathText text={value.completeness_note} /></p>}
     </section>
-    {value.completeness !== 'complete' && <div className="notice">
-      <p>{copy(value.completeness === 'incomplete' ? 'result.incomplete' : 'result.completeness_unknown')}</p>
+    {value.completeness !== 'complete' && !incomplete && <div className="notice">
+      <p>{copy('result.completeness_unknown')}</p>
       {value.completeness_note && <p><MathText text={value.completeness_note} /></p>}
     </div>}
     {(value.result === 'not_assessed' && value.uncheckable_reason) && <p><MathText text={value.uncheckable_reason} /></p>}

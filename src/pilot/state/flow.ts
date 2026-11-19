@@ -6,6 +6,13 @@ export type RefreshRevision = (compatible: (check: Check) => boolean) => Promise
 export type Run = (work: (refreshRevision: RefreshRevision) => Promise<void>) => Promise<boolean>
 export type TaskLocation = { notebook: Notebook; bundle: Bundle; task: TaskAnalysis; number: number }
 
+export function notebookPhotoCount(notebook: Notebook): number {
+  return new Set(notebook.bundles.flatMap(bundle => [
+    ...(bundle.current_input?.photos ?? []),
+    ...(bundle.draft?.photos ?? []),
+  ]).map(photo => photo.id)).size
+}
+
 export function tasksIn(notebook: Notebook): TaskLocation[] {
   return notebook.bundles.flatMap(bundle =>
     bundle.skipped ? [] : bundle.tasks.map(task => ({ notebook, bundle, task })),

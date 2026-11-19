@@ -8,7 +8,7 @@ import { PhotoThumbnail } from '../components/PhotoStrip'
 import { PhotoViewer } from '../components/PhotoViewer'
 import { copy } from '../copy'
 import { movePhoto } from '../photos'
-import { skippable, tasksIn, type Mutate, type Run, type TaskLocation } from '../state/flow'
+import { notebookPhotoCount, skippable, tasksIn, type Mutate, type Run, type TaskLocation } from '../state/flow'
 import type { Event } from '../api/contract'
 
 export function NotebookScreen({ api, check, notebook, initialBundle, busy, run, mutate, back, next, review, emit }: {
@@ -151,6 +151,10 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
   const tasks = tasksIn(notebook).sort((a, b) =>
     Number(a.task.analysis.result === 'not_assessed') - Number(b.task.analysis.result === 'not_assessed'),
   )
+  const taskGroups = [
+    { title: 'notebook.unreviewed', entries: tasks.filter(entry => !entry.task.review) },
+    { title: 'notebook.reviewed', entries: tasks.filter(entry => !!entry.task.review) },
+  ] as const
   return <section className="stack">
     <button className="back" disabled={busy} onClick={goBack}>{copy('common.back')}</button>
     <header className="sheet">
@@ -158,14 +162,24 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
       <h1>{copy('check.notebook', { number: notebook.number })}</h1>
     </header>
     {accepted && <p className="notice success" role="status">{copy('capture.accepted')}</p>}
-    {tasks.length > 0 && <ul className="plain stack">{tasks.map(entry => (
-      <li key={entry.task.task_id}>
-        <button className="row-card" onClick={() => review(entry)}>
-          <strong>{copy('check.task', { number: entry.number })}</strong>
-          <span>{entry.task.skipped ? copy('task.skipped') : entry.task.analysis.locator}</span>
-        </button>
-      </li>
-    ))}</ul>}
+    {taskGroups.filter(group => group.entries.length > 0).map(group => <section className="stack" key={group.title}>
+      <h2>{copy(group.title)}</h2>
+      <ul className="plain stack">{group.entries.map(entry => {
+        const state = entry.task.review?.state
+        return <li key={entry.task.task_id}>
+          <button className={`row-card task-review-card task-review-card--${state ?? 'unreviewed'}`} onClick={() => review(entry)}>
+            <span className="task-review-heading">
+              <strong>{copy('check.task', { number: entry.number })}</strong>
+              {state && <span className="task-review-badge">
+                <span aria-hidden="true">{state === 'confirmed' ? '✓' : '✕'}</span>
+                {copy(state === 'confirmed' ? 'notebook.confirmed' : 'notebook.system_error')}
+              </span>}
+            </span>
+            <span>{entry.task.skipped ? copy('task.skipped') : entry.task.analysis.locator}</span>
+          </button>
+        </li>
+      })}</ul>
+    </section>)}
     {canEdit && <div className="sheet stack">
       {notebook.bundles.filter(bundle => bundle.id !== draftBundle?.id && bundle.draft?.photos.length).map(bundle =>
         <button key={bundle.id} disabled={busy} onClick={() => { setReplace(undefined); setBundleId(bundle.id) }}>
@@ -204,7 +218,7 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
         <button className="primary" disabled={busy} onClick={() => submit(false)}>{copy('capture.submit_stay')}</button>
         <button disabled={busy} onClick={() => submit(true)}>{copy('capture.submit_next')}</button>
         <button className="subtle danger" disabled={busy} onClick={discard}>{copy('capture.discard')}</button>
-      </div> : <button disabled={busy} onClick={() => void run(next)}>{copy('notebook.next')}</button>}
+      </div> : notebookPhotoCount(notebook) > 0 && <button disabled={busy} onClick={() => void run(next)}>{copy('notebook.next')}</button>}
     </div>}
     {notebook.bundles.filter(bundle => bundle.current_input).map(bundle => <div className="stack" key={bundle.id}>
       <JobStatus bundle={bundle} />

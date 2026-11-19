@@ -123,6 +123,15 @@ textarea { resize: vertical; }
 .row-card span, .row-link span { font-size: .9rem; font-weight: 400; }
 .row-link { border: 0; padding: 0; }
 .notebook-row { display: grid; gap: 10px; }
+.notebook-row--empty { border-color: #92701b; background: #fff5cc; }
+.notebook-row--uploaded { border-color: var(--blue); background: #edf3ff; }
+.notebook-row .row-link { background: transparent; }
+.row-card .task-review-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; font-size: 1rem; }
+.row-card .task-review-badge { display: inline-flex; align-items: center; gap: 6px; font-size: .85rem; font-weight: 700; }
+.task-review-card--confirmed { border-color: var(--green); background: #edf9ef; }
+.task-review-card--confirmed .task-review-badge { color: var(--green); }
+.task-review-card--system_error { border-color: var(--red); background: #fff0f0; }
+.task-review-card--system_error .task-review-badge { color: var(--red); }
 .photo-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(145px, 100%), 1fr)); gap: 10px; }
 .photo-tile { border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
 .thumbnail { display: grid; width: 100%; gap: 4px; padding: 6px; }
@@ -165,6 +174,10 @@ textarea { resize: vertical; }
 .task-outcome--correct, .task-lines--correct { border-color: var(--analysis-green); background: #edf9ef; }
 .task-outcome--correct h2, .task-lines--correct h3 { color: #17633b; }
 .task-outcome--unassessed { background: var(--cream); }
+.task-outcome--incomplete { border-color: #92701b; background: #fff1b3; }
+.task-outcome--incomplete h2 { color: #765407; }
+.task-completeness-note { margin-top: 12px; text-align: left; }
+.task-incomplete-error { margin-top: 10px; color: #ce2835; font-weight: 700; }
 .task-lines h3 span { margin-right: 6px; }
 .task-lines-content { display: grid; gap: 18px; padding-block: 8px; }
 .task-key-line { display: grid; min-width: 0; gap: 5px; }
