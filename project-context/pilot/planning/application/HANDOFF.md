@@ -9,7 +9,7 @@
 | Цель | [TASKS APP-01–15](TASKS.md), [ACCEPTANCE APP-C01–35](ACCEPTANCE.md) |
 | Pinned source | SmartNoteLanding d62f5ecb8c1c53b1c97faf06530b8d84e691f88d. Импорт и проверка blob описаны в [BOOTSTRAP](../../../../docs/pilot/BOOTSTRAP.md). |
 | База и контракт B0 | 1144c498b4aba1e4e4fe118abe7c3f6f1b940198 на origin/main. Shared v1, API 1.0.0. |
-| Application | Локальная work/application. Код APPLICATION_CODE_SHA. |
+| Application | Локальная work/application. Код 77cdbbddef6510a0a977936f75028c363ec3e2fe. |
 | B1 / B4 / B5 | Объединённые commit и приемка **not_run**. Ветки integration/pilot-local на origin на момент начала работы ещё не было. |
 | Transport | Браузерная подмена HTTP и ASGI doubles использованы явно. Реальный fixture-worker и polza **not_run**. |
 
@@ -26,7 +26,7 @@
 | --- | --- |
 | Исходный npm test и npm run build из pinned SmartNoteLanding | PASS, 31 тест и сборка. Предупреждение Vite о чанке больше 500 КБ. |
 | Исходный python -m pytest -q из pinned app с отдельной PostgreSQL 16.15 | PASS, 120 тестов. Первый запуск дал 6 ошибок ZoneInfo на Windows, после установки tzdata==2025.2 на временное окружение — PASS. |
-| npm test и npm run build | PASS, 16 unit-тестов и сборка. Предупреждение Vite о чанке больше 500 КБ. |
+| npm test и npm run build | PASS, 16 unit-тестов и сборка на Windows. Production build также прошёл внутри frontend-образа с отключённой сетью. Предупреждение Vite о чанке больше 500 КБ. |
 | python -m pytest -q из app | PASS, 22 теста, включая 11 ASGI тестов с явными doubles. Starlette предупреждает о будущем отказе от httpx в TestClient. |
 | npm run test:browser | PASS, Chrome на Windows, headless mobile 320 CSS px, перехват HTTP. Вход, история, открытие задачи/zoom, отдельный отзыв, reload, загрузка PNG из галереи и submit-next, выход. |
 | docker compose -f compose.yaml config -q с синтетическими значениями | PASS. |
