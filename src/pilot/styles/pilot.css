@@ -130,6 +130,7 @@ textarea { resize: vertical; }
 .compact { gap: 8px; }
 .compact > button { flex: 1; }
 .evidence, .metrics { display: grid; grid-template-columns: minmax(0, 1fr); gap: 5px; }
+.metrics { overflow-wrap: anywhere; }
 .evidence { margin: 6px 0 0; padding-inline-start: 1.4em; }
 .first-error { padding: 12px; border-left: 4px solid #ef4147; background: #fff6eb; }
 .math-text { white-space: pre-wrap; }

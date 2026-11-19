@@ -2,7 +2,7 @@ import type { CheckerTask } from '../api/contract'
 import { copy } from '../copy'
 import { MathText } from './MathText'
 
-export function TaskCard({ value }: { value: CheckerTask }) {
+export function TaskCard({ value, photoCount }: { value: CheckerTask; photoCount: number }) {
   const first = value.first_error
   return <div className="sheet stack">
     {value.locator && <p className="context">{value.locator}</p>}
@@ -21,12 +21,19 @@ export function TaskCard({ value }: { value: CheckerTask }) {
     {!!value.evidence.length && <div>
       <h3>{copy('result.lines')}</h3>
       <ol className="evidence">{value.evidence.slice(0, 4).map((line, index) =>
-        <li key={index}><MathText formula text={line.latex} /></li>,
+        <li key={index}>
+          <small className="context">{copy('capture.photo', { number: line.photo_index, total: photoCount })}</small>
+          <MathText formula text={line.latex} />
+        </li>,
       )}</ol>
     </div>}
     {value.omitted_steps_note && <p><MathText text={value.omitted_steps_note} /></p>}
     {first && <div className="first-error stack">
-      <div><h3>{copy('result.first_error')}</h3><MathText formula text={first.wrong_latex} /></div>
+      <div>
+        <h3>{copy('result.first_error')}</h3>
+        <small className="context">{copy('capture.photo', { number: first.photo_index, total: photoCount })}</small>
+        <MathText formula text={first.wrong_latex} />
+      </div>
       <div><h3>{copy('result.rule')}</h3><p><MathText text={first.rule} /></p></div>
       <div><h3>{copy('result.explanation')}</h3><p><MathText text={first.explanation} /></p></div>
       <div><h3>{copy('result.corrected')}</h3><MathText formula text={first.corrected_latex} /></div>

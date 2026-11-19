@@ -92,9 +92,9 @@ export class PilotApi {
     return (await this.request(path('assets', id), { signal })).blob()
   }
 
-  events(events: Events, keepalive: boolean) {
+  events(events: Events, keepalive: boolean, signal?: AbortSignal) {
     return this.json<EventsAccepted>('/events', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(events), keepalive,
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(events), keepalive, signal,
     }, true)
   }
 

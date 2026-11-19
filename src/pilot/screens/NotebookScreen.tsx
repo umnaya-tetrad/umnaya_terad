@@ -216,9 +216,9 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
           </li>
         })}
       </ul>}
-      {canEdit && (bundle.job?.can_retry || skippable(bundle) || bundle.draft) && <div className="button-row">
+      {canEdit && (bundle.job?.can_retry || bundle.skipped || skippable(bundle) || bundle.draft) && <div className="button-row">
         {bundle.job?.can_retry && <button disabled={busy} onClick={() => retry(bundle)}>{copy('job.retry')}</button>}
-        {(skippable(bundle) || bundle.draft) && <button disabled={busy} onClick={() => changePhotos(bundle)}>{copy('result.change_photos')}</button>}
+        {(bundle.skipped || skippable(bundle) || bundle.draft) && <button disabled={busy} onClick={() => changePhotos(bundle)}>{copy('result.change_photos')}</button>}
         {skippable(bundle) && <button disabled={busy} onClick={() => void run(async () => {
           if (bundle.current_input) await mutate(actions.skipBundle(bundle.id, { input_version_id: bundle.current_input.id }))
         })}>{copy('job.skip')}</button>}

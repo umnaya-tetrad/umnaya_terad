@@ -236,13 +236,65 @@ try {
   check.summary = lifecycle['saved-analytics'].summary
   check.revision++
   await page.getByText('Тетрадей в проверке: 1', { exact: true }).waitFor()
+  for (const width of [320, 375, 390, 1280]) {
+    await page.setViewportSize({ width, height: 760 })
+    for (const fontSize of [18, 36]) {
+      const textScale = await page.addStyleTag({ content: 'html { font-size: ' + fontSize + 'px !important; }' })
+      const metrics = page.locator('ul.metrics > li')
+      assert.ok(await metrics.getByText(/В расчете полностью подтвержденных тетрадей/).isVisible())
+      assert.ok(await metrics.getByText(/Без найденных математических ошибок/).isVisible())
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), width)
+      assert.ok(await metrics.evaluateAll(items => items.every(item => item.scrollWidth <= item.clientWidth)))
+      assert.ok((await page.getByRole('button', { name: 'Открыть материалы', exact: true }).boundingBox()).height >= 48)
+      await textScale.evaluate(element => element.remove())
+    }
+  }
+  await page.setViewportSize({ width: 320, height: 760 })
   await page.getByRole('button', { name: 'Открыть материалы', exact: true }).click()
   await page.getByRole('button', { name: 'Открыть сводку', exact: true }).waitFor()
   assert.equal(await page.getByRole('button', { name: 'Добавить тетрадь', exact: true }).count(), 0)
+
+  async function showCheck(name, phase) {
+    const snapshot = structuredClone(lifecycle[name])
+    Object.assign(check, snapshot, { id: check.id, title: check.title, revision: check.revision + 1, phase: phase ?? snapshot.phase })
+    await page.reload()
+  }
+
+  await showCheck('two-photo-continuation')
+  await page.getByRole('button', { name: 'Посмотреть разборы' }).click()
+  await page.getByRole('button', { name: 'Следующий разбор' }).click()
+  await page.getByRole('heading', { name: /Разбор задачи/ }).waitFor()
+  const continuation = check.notebooks.flatMap(book => book.bundles.flatMap(bundle => bundle.tasks))
+    .find(task => task.analysis.photo_indices.length === 2).analysis
+  assert.deepEqual(await page.locator('ol.evidence small').allTextContents(),
+    continuation.evidence.slice(0, 4).map(line => 'Фото ' + line.photo_index + ' из 2'))
+  assert.equal(await page.locator('.first-error small').textContent(), 'Фото 2 из 2')
+  assert.equal(await page.getByRole('button', { name: /Увеличить фото/ }).count(), 2)
+  const reviewScale = await page.addStyleTag({ content: 'html { font-size: 36px !important; }' })
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), 320)
+  await reviewScale.evaluate(element => element.remove())
+
+  for (const name of ['skipped-unknown-attempt-reserve-retained', 'skipped-failed-bundle-stays-partial']) {
+    await showCheck(name)
+    await page.getByRole('button', { name: /^Тетрадь 1/ }).click()
+    const skipped = check.notebooks[0].bundles.find(bundle => bundle.skipped)
+    const change = page.getByRole('button', { name: 'Изменить фото комплекта', exact: true })
+    await change.click()
+    await page.getByRole('dialog').getByText(/Прежние оценки проверки всех его задач будут сняты/).waitFor()
+    await page.getByRole('dialog').getByRole('button', { name: 'Отмена', exact: true }).click()
+    assert.equal(await page.getByRole('button', { name: 'Повторить проверку комплекта', exact: true }).count(), Number(skipped.job.can_retry))
+  }
+  await showCheck('skipped-unknown-attempt-reserve-retained', 'finalized')
+  await page.getByRole('button', { name: 'Открыть материалы', exact: true }).click()
+  await page.getByRole('button', { name: /^Тетрадь 1/ }).click()
+  await page.getByText('Комплект пропущен. Математического итога нет.', { exact: true }).waitFor()
+  assert.equal(await page.getByRole('button', { name: 'Изменить фото комплекта', exact: true }).count(), 0)
+
   await page.getByRole('button', { name: 'Выйти' }).click()
   await page.getByRole('heading', { name: 'Вход в Умную тетрадь' }).waitFor()
   assert.deepEqual(errors, [])
   console.log('PASS browser mock: 320 CSS px, text 200%, auth/history, review/photo zoom and reload, upload/submit-next, revision conflict, completion and saved summary')
+  console.log('PASS APP-F01/F02/F04: skipped bundle recovery and finalized guard, M06 source labels, summary at four widths and both text sizes.')
 } finally {
   await browser?.close()
   server.kill()

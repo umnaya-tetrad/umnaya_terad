@@ -9,7 +9,8 @@
     "build": "tsc -b && vite build",
     "test": "vitest run src",
     "test:browser": "node scripts/pilot/browser_smoke.mjs",
-    "test:browser:compose": "node scripts/pilot/browser_compose_smoke.mjs"
+    "test:browser:compose": "node scripts/pilot/browser_compose_smoke.mjs",
+    "test:browser:followups:compose": "node scripts/pilot/browser_followups_compose.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "6.1.1",

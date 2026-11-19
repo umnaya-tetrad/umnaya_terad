@@ -4,22 +4,41 @@ import type { Login, Session } from './api/contract'
 import { ApiError, errorText } from './api/errors'
 import { Intents, resetIntentStorage } from './api/intents'
 import { copy } from './copy'
+import { Telemetry } from './telemetry/client'
 
 const lastAccount = 'smartnote:account'
+const cookieVersionKey = 'smartnote:cookie-version'
+
+function cookieVersion() {
+  return localStorage.getItem(cookieVersionKey)
+}
+
+function markCookieChange() {
+  const version = crypto.randomUUID()
+  localStorage.setItem(cookieVersionKey, version)
+  return version
+}
+
+type ActiveSession = {
+  session: Session
+  intents: Intents
+  telemetry: Telemetry
+  version: string | null
+}
 
 export function useAuth() {
-  const [session, setSession] = useState<Session | null>()
+  const [active, setActive] = useState<ActiveSession | null>()
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
-  const [intents, setIntents] = useState<Intents | null>(null)
-  const currentIntents = useRef<Intents | null>(null)
+  const current = useRef<ActiveSession | null>(null)
+  const logoutPending = useRef(false)
   const authChanges = useRef<BroadcastChannel | null>(null)
 
   const clear = useCallback(() => {
-    currentIntents.current?.expire()
-    currentIntents.current = null
-    setIntents(null)
-    setSession(null)
+    current.current?.telemetry.discard()
+    current.current?.intents.expire()
+    current.current = null
+    setActive(null)
   }, [])
 
   const api = useMemo(() => new PilotApi(fetch, () => {
@@ -27,25 +46,34 @@ export function useAuth() {
     setError(copy('common.session_expired'))
   }), [clear])
 
-  const accept = useCallback((next: Session) => {
+  const accept = useCallback((next: Session, version: string | null) => {
+    current.current?.telemetry.discard()
+    current.current?.intents.expire()
     if (sessionStorage.getItem(lastAccount) !== next.user_id) {
       resetIntentStorage(sessionStorage)
       history.replaceState(null, '', location.pathname)
     }
     sessionStorage.setItem(lastAccount, next.user_id)
-    const nextIntents = new Intents(api, next.user_id, sessionStorage)
-    currentIntents.current = nextIntents
-    setIntents(nextIntents)
-    setSession(next)
+    const nextActive = {
+      session: next,
+      intents: new Intents(api, next.user_id, sessionStorage),
+      telemetry: new Telemetry(api, undefined, () => cookieVersion() === version),
+      version,
+    }
+    current.current = nextActive
+    setActive(nextActive)
   }, [api])
 
   useEffect(() => {
     let disposed = false
+    const version = cookieVersion()
     api.getSession().then(next => {
-      if (!disposed) accept(next)
+      if (disposed) return
+      if (cookieVersion() === version) accept(next, version)
+      else setActive(null)
     }).catch(failure => {
       if (disposed) return
-      setSession(null)
+      setActive(null)
       if (!(failure instanceof ApiError && failure.status === 401)) setError(errorText(failure))
     })
     return () => { disposed = true }
@@ -56,6 +84,7 @@ export function useAuth() {
     const channel = new BroadcastChannel('smartnote:auth')
     authChanges.current = channel
     channel.onmessage = () => {
+      if (current.current?.version === cookieVersion()) return
       clear()
       setError(copy('common.session_expired'))
     }
@@ -69,9 +98,12 @@ export function useAuth() {
     setBusy(true)
     setError('')
     try {
+      // Fence old tabs before a login request can replace the shared cookie.
+      const version = markCookieChange()
       await api.login(payload)
       authChanges.current?.postMessage('changed')
-      accept(await api.getSession())
+      const next = await api.getSession()
+      if (cookieVersion() === version) accept(next, version)
     } catch (failure) {
       setError(failure instanceof ApiError && failure.status === 401 ? copy('login.invalid') : errorText(failure))
     } finally {
@@ -80,20 +112,39 @@ export function useAuth() {
   }
 
   async function logout() {
+    const snapshot = current.current
+    if (!snapshot || logoutPending.current) return
+    logoutPending.current = true
     setBusy(true)
     setError('')
     try {
+      await snapshot.telemetry.finish()
+      if (current.current !== snapshot || cookieVersion() !== snapshot.version) {
+        if (current.current === snapshot) clear()
+        return
+      }
       await api.logout()
+      if (current.current !== snapshot || cookieVersion() !== snapshot.version) return
+      markCookieChange()
       authChanges.current?.postMessage('changed')
       clear()
       sessionStorage.removeItem(lastAccount)
       history.replaceState(null, '', location.pathname)
     } catch (failure) {
-      setError(errorText(failure))
+      if (current.current === snapshot && cookieVersion() === snapshot.version) {
+        const next = { ...snapshot, telemetry: new Telemetry(api, undefined, () => cookieVersion() === snapshot.version) }
+        current.current = next
+        setActive(next)
+        setError(errorText(failure))
+      }
     } finally {
+      logoutPending.current = false
       setBusy(false)
     }
   }
 
-  return { api, session, intents, busy, error, login, logout }
+  return {
+    api, session: active ? active.session : active, intents: active?.intents, telemetry: active?.telemetry,
+    busy, error, login, logout,
+  }
 }

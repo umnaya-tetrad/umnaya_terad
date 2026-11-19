@@ -32,7 +32,7 @@ export function ReviewScreen({ api, check, entry, busy, run, mutate, back, next,
       const label = copy('capture.photo', { number: index, total: photos.length })
       return item && <li key={item.id}><PhotoThumbnail api={api} photo={item} label={label} open={() => setPhoto({ id: item.id, label })} /></li>
     })}</ul>}
-    <TaskCard value={task.analysis} />
+    <TaskCard value={task.analysis} photoCount={photos.length} />
     {task.skipped && <p className="notice">{copy('task.skipped')}</p>}
     {eligible && <ReviewControls key={task.analysis_id} busy={busy} review={task.review} save={(state, comment) => run(async () => {
       await mutate(actions.saveReview(task.task_id, { analysis_id: task.analysis_id, state, comment }))
