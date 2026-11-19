@@ -1,0 +1,513 @@
+{
+  "commit": "9d788953a298ff03b7e7903a6b3015cc83f3045d",
+  "run_id": "cbc35dd744f541238ce847df507546d4",
+  "runtime": {
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "os": "Windows-10-10.0.19045-SP0",
+    "packages": {
+      "pytest": "8.4.2",
+      "pytest-asyncio": "1.5.0",
+      "asyncpg": "0.32.0",
+      "httpx": "0.28.1",
+      "fastapi": "0.165.0",
+      "pillow": "11.3.0",
+      "pillow-heif": "1.1.1",
+      "jsonschema": "4.26.0",
+      "referencing": "0.36.2"
+    },
+    "postgres": "PostgreSQL 16.15, compiled by Visual C++ build 1944, 64-bit"
+  },
+  "suite": {
+    "total": 99,
+    "passed": 99,
+    "failed": 0,
+    "skipped": 0
+  },
+  "primary_cases": {
+    "total": 32,
+    "passed": 32,
+    "failed": 0
+  },
+  "policy_delta": "Финансовые строки старого ТЗ заменены последним прямым решением: общий накопительный cap500 RUB, изменение trusted CLI без restart, без initialize/topup prerequisite. Неизвестная стоимость отделена от неизвестного результата исполнения.",
+  "limits": [
+    "Локальный test-only ASGI для application-owned CRUD/auth; production processing/events routers и domain/worker/SQL настоящие.",
+    "PG16.15 локально изолирован; Docker daemon был недоступен, Compose и контейнерный restart этим прогоном не проверены.",
+    "Модель заменена на явный fixture/mock gateway; внешних платных вызовов этим агентом не было.",
+    "UI/мобильная камера/HTTPS/внешний deploy/школьная апробация в этот прогон не входят.",
+    "PASS означает выполненные assertions, перечисленные у case; дополнительные требования подтверждаются отдельно связанными source/shared gates и независимым ревью."
+  ],
+  "run_metadata": {
+    "run_id": "cbc35dd744f541238ce847df507546d4",
+    "commit": "9d788953a298ff03b7e7903a6b3015cc83f3045d",
+    "started_at_utc": "2026-11-19T11:35:43.056583+00:00",
+    "working_tree_clean_at_start": true,
+    "finished_at_utc": "2026-11-19T11:37:56.050271+00:00",
+    "exit_status": 0,
+    "commit_at_end": "9d788953a298ff03b7e7903a6b3015cc83f3045d",
+    "working_tree_clean_at_end": true
+  },
+  "command": "$env:PYTHONPATH=(Resolve-Path 'app').Path; $env:PYTHONPYCACHEPREFIX='<private-cache>/processing-bytecode'; $env:PILOT_TEST_DATABASE_URL='<isolated PostgreSQL16 URL with pilot_test_* database>'; & <venv>/Scripts/python.exe -m pytest app/tests/pilot -q --tb=short -p no:cacheprovider --basetemp <private-cache>/processing-final --junitxml=<private-cache>/processing-final.xml",
+  "cwd": "repository root",
+  "cases": [
+    {
+      "case": "PROC-C01",
+      "node": "app/tests/pilot/domain/test_proc_contract.py::test_proc_c01",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 0,
+      "verified_assertions": "Чистая PG и upgrade 001–007 с сохраненными user/session hashes; checksum tamper; SQL unique/immutable/finite.",
+      "db_assertions": {
+        "checksummed_upgrade_and_clean_schema": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C02",
+      "node": "app/tests/pilot/domain/test_proc_contract.py::test_proc_c02",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 0,
+      "verified_assertions": "Уникальные router hooks, совпадение DTO, реальный worker health CLI: live/expired/PG unavailable.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": [
+        "shared/check_shared.py: generated drift gate"
+      ]
+    },
+    {
+      "case": "PROC-C03",
+      "node": "app/tests/pilot/domain/test_proc_contract.py::test_proc_c03",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 0,
+      "verified_assertions": "Сессии/роли/ACL, пароль/reset/revoke/expiry, HttpOnly/SameSite, Origin и staff read-only.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C04",
+      "node": "app/tests/pilot/domain/test_proc_contract.py::test_proc_c04",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 0,
+      "verified_assertions": "Реальный потерянный ACK после committed submit, intent replay перед revision, один Job/outbox.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C05",
+      "node": "app/tests/pilot/processing/test_proc_contract.py::test_proc_c05",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 1,
+      "verified_assertions": "Два запуска дочернего ASGI и перезапуск worker на тех же PG/storage; один provider dispatch.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C06",
+      "node": "app/tests/pilot/domain/test_proc_contract.py::test_proc_c06",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 1,
+      "verified_assertions": "Конфликт двух отзывов, точный revision/data_revision, comment-only/no-op, stale analysis.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C07",
+      "node": "app/tests/pilot/domain/test_proc_contract.py::test_proc_c07",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 0,
+      "verified_assertions": "Реальный upload/private bytes/ACL, corrupt/type/min edge и committed upload ACK loss.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": [
+        "app/tests/pilot/source/test_image_policy.py"
+      ]
+    },
+    {
+      "case": "PROC-C08",
+      "node": "app/tests/pilot/domain/test_proc_contract.py::test_proc_c08",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 0,
+      "verified_assertions": "Порядок фото, некорректная перестановка, sealed guard, replacement draft/discard.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C09",
+      "node": "app/tests/pilot/processing/test_proc_contract.py::test_proc_c09",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 6,
+      "verified_assertions": "Четыре multi/continuation сценария, invalid response, correct-but-incomplete.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C10",
+      "node": "app/tests/pilot/domain/test_proc_contract.py::test_proc_c10",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 2,
+      "verified_assertions": "Пересегментация 2→3 с новыми ID, снятие старых согласий и immutable reports.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C11",
+      "node": "app/tests/pilot/domain/test_proc_contract.py::test_proc_c11",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 2,
+      "verified_assertions": "Retry того же input, tombstone, история runs и сохраненный старый confirmed review.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C12",
+      "node": "app/tests/pilot/domain/test_proc_contract.py::test_proc_c12",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 1,
+      "verified_assertions": "Mixed not_assessed skip, соседний review, обе Task в серверном snapshot.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C13",
+      "node": "app/tests/pilot/domain/test_proc_contract.py::test_proc_c13",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 2,
+      "verified_assertions": "Общее фото после delete, delete последней Task→empty/null-average, номера 1/3.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C14",
+      "node": "app/tests/pilot/domain/test_proc_contract.py::test_proc_c14",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 0,
+      "verified_assertions": "Удаление queued Check, закрытые Check/Job, replay удаления и отсутствие dispatch.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C15",
+      "node": "app/tests/pilot/processing/test_proc_contract.py::test_proc_c15",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 6,
+      "verified_assertions": "Два OS worker на один Job; fencing/recovery; три OS worker на три Job разных kind при двух глобальных slots.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C16",
+      "node": "app/tests/pilot/processing/test_proc_contract.py::test_proc_c16",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 4,
+      "verified_assertions": "Ровно две попытки с actual worker process restart между ними; success/failure, третьего POST нет.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C17",
+      "node": "app/tests/pilot/processing/test_proc_contract.py::test_proc_c17",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 3,
+      "verified_assertions": "Actual worker kill после dispatch, page и analytics: unknown/restart/no-resend, сохраненные snapshot и budget holds.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C18",
+      "node": "app/tests/pilot/processing/test_proc_contract.py::test_proc_c18",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 1,
+      "verified_assertions": "Skip unknown→partial finalized summary→late callback без current publish→trusted cost reconciliation ровно один раз.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C19",
+      "node": "app/tests/pilot/processing/test_proc_contract.py::test_proc_c19",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 1,
+      "verified_assertions": "Frozen checker request/prompt, порядок реальных image parts/high; fixture без внешней сети.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": [
+        "app/tests/pilot/analytics/test_analytics_runtime.py"
+      ]
+    },
+    {
+      "case": "PROC-C20",
+      "node": "app/tests/pilot/domain/test_proc_contract.py::test_proc_c20",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 5,
+      "verified_assertions": "Editing/empty и пять completion blockers; red/skip; frozen composition после finalize.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C21",
+      "node": "app/tests/pilot/domain/test_proc_contract.py::test_proc_c21",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 8,
+      "verified_assertions": "Review/upload/publish против finalize в обоих порядках с настоящим Check lock и barriers.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C22",
+      "node": "app/tests/pilot/domain/test_proc_contract.py::test_proc_c22",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 1,
+      "verified_assertions": "Двойной finalize/replay, один immutable snapshot, GET summary не создает jobs.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C23",
+      "node": "app/tests/pilot/events/test_proc_contract.py::test_proc_c23",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 0,
+      "verified_assertions": "Events replay/conflict, 101/extra fields, mixed foreign batch без частичного приема.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C24",
+      "node": "app/tests/pilot/domain/test_proc_contract.py::test_proc_c24",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 1,
+      "verified_assertions": "Staff history/material audit с реальной ролью, private photo ACL, безопасные общие логи.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": [
+        "app/tests/pilot/source/test_safe_logging.py"
+      ]
+    },
+    {
+      "case": "PROC-C25",
+      "node": "app/tests/pilot/analytics/test_proc_contract.py::test_proc_c25",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 24,
+      "verified_assertions": "Четыре oracle snapshot/result через PG worker; invalid counts/refs/JSON/top/null average не публикуются.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C26",
+      "node": "app/tests/pilot/analytics/test_proc_contract.py::test_proc_c26",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 3,
+      "verified_assertions": "Fresh summary retry, stale/refresh, comment-only, новый snapshot.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": [
+        "app/tests/pilot/source/test_attempt_evidence.py: late historical analytics"
+      ]
+    },
+    {
+      "case": "PROC-C27",
+      "node": "app/tests/pilot/processing/test_proc_contract.py::test_proc_c27",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 3,
+      "verified_assertions": "Последнее решение: default cap500, оба kind/teachers, atomic reserves, live CLI cap change, same Job/worker IDs, без wallet initialization.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": [
+        "app/tests/pilot/source/test_pricing_configuration.py"
+      ]
+    },
+    {
+      "case": "PROC-C28",
+      "node": "app/tests/pilot/processing/test_proc_contract.py::test_proc_c28",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 4,
+      "verified_assertions": "Manual pause при running, запрет новых dispatch, settlement/read доступны, resume без HTTP admin.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C29",
+      "node": "app/tests/pilot/processing/test_proc_contract.py::test_proc_c29",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 2,
+      "verified_assertions": "Последнее решение: валидные page/summary с cost=null публикуются; execution/billing раздельны; holds и неизвестная стоимость не равны нулю; trusted reconciliation/dedupe.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": [
+        "app/tests/pilot/source/test_attempt_evidence.py: execution unknown, diagnostics, progressive billing reconciliation"
+      ]
+    },
+    {
+      "case": "PROC-C30",
+      "node": "app/tests/pilot/processing/test_proc_contract.py::test_proc_c30",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 62,
+      "verified_assertions": "60 тетрадей/180 Task/два worker; >100 stale кандидатов не голодают свежие page/analytics и не расходуют средства.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C31",
+      "node": "app/tests/pilot/analytics/test_proc_contract.py::test_proc_c31",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 2,
+      "verified_assertions": "Refresh-first/claim-first и все 14 summary guards с реальными Attempt rows.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    },
+    {
+      "case": "PROC-C32",
+      "node": "app/tests/pilot/analytics/test_proc_contract.py::test_proc_c32",
+      "outcome": "passed",
+      "transport": "fixture",
+      "provider_post_count": 4,
+      "verified_assertions": "Полный ASGI+PG+worker API цикл до saved summary; повтор с обычным default fixture без transport override.",
+      "db_assertions": {
+        "budget_nonnegative_and_spend_matches_immutable_cost_ledger": true,
+        "global_active_slots_at_most_two": true,
+        "at_most_one_settlement_per_attempt": true
+      },
+      "supplementary_evidence": []
+    }
+  ]
+}

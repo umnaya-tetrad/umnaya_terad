@@ -1,12 +1,12 @@
 # Приемка processing
 
-19.11.2026. **Тесты runtime требуется создать; ни один PROC-Cxx пока не выполнен на приложении.** Уже существующий offline gate описан внизу. Источник assertions – [shared v1](../shared/README.md), [API](../shared/API_CONTRACT.md), [формулы](../../SUMMARY_METRICS.md), [A01–A25](../../TRIAL_AND_ACCEPTANCE.md). Endpoint/DTO не копировать в другую схему: использовать operationId/OpenAPI и валидатор shared.
+19.11.2026. **PROC-C01–PROC-C32:32/32 PASS**, полный чистый прогон99 PASS на `9d788953a298ff03b7e7903a6b3015cc83f3045d`. [Точные assertions/команда/границы](RUNTIME_REPORT.md), [безопасный machine report](runtime-results.json). Уже существующий offline gate описан внизу. Источник assertions – [shared v1](../shared/README.md), [API](../shared/API_CONTRACT.md), [формулы](../../SUMMARY_METRICS.md), [A01–A25](../../TRIAL_AND_ACCEPTANCE.md). Endpoint/DTO не копировать в другую схему: использовать operationId/OpenAPI и валидатор shared.
 
 ## Общий стенд и исполняемые команды
 
-Создать `app/tests/pilot/domain/test_proc_contract.py`, `processing/test_proc_contract.py`, `analytics/test_proc_contract.py`, `events/test_proc_contract.py` и общие test fixtures. Каждый случай ниже имеет точный test-node. Одинаковое имя файла допустимо, pytest должен импортировать пакеты/уникальные пути без коллизий.
+Созданы `app/tests/pilot/domain/test_proc_contract.py`, `processing/test_proc_contract.py`, `analytics/test_proc_contract.py`, `events/test_proc_contract.py` и общие test fixtures. Каждый случай ниже имеет точный test-node. Одинаковое имя файла допустимо, pytest должен импортировать пакеты/уникальные пути без коллизий.
 
-До запуска application предоставляет Compose services backend/worker/postgres, pool/settings/hooks и ранний seed. **Создать** следующий интерфейс команд из корня репозитория; локальный test profile задает `PILOT_TRANSPORT=fixture` до запуска backend/worker и не берет transport из наличия ключа:
+До запуска application предоставляет Compose services backend/worker/postgres, pool/settings/hooks и ранний seed. Целевой контейнерный интерфейс команд из корня репозитория; локальный test profile задает `PILOT_TRANSPORT=fixture` до запуска backend/worker и не берет transport из наличия ключа:
 
 ```powershell
 docker compose -f compose.yaml exec -T backend python -m pilot.domain.migrate
@@ -15,7 +15,7 @@ docker compose -f compose.yaml exec -T worker python -m pilot.processing.worker 
 docker compose -f compose.yaml exec -T backend python -m pytest tests/pilot/domain tests/pilot/processing tests/pilot/analytics tests/pilot/events -q
 ```
 
-Для **каждого** PROC-Cnn ниже команда из корня имеет точную форму: `docker compose -f compose.yaml exec -T backend python -m pytest <node> -q`, где `<node>` указан у случая целиком. Это команды будущей реализации, а не результат сегодняшнего запуска.
+Для **каждого** PROC-Cnn ниже команда из корня имеет точную форму: `docker compose -f compose.yaml exec -T backend python -m pytest <node> -q`, где `<node>` указан у случая целиком. Это целевые контейнерные команды release; Compose здесь not_run. Фактический локальный прогон использовал venv, PG16.15 и ASGI/OS processes: команда в RUNTIME_REPORT.
 
 Тесты используют настоящую PostgreSQL16 с независимыми соединениями/транзакциями, не SQLite и не mock repository. `PILOT_TEST_DATABASE_URL` указывает изолированную БД с именем `pilot_test_*`; harness отказывается очищать обычную рабочую БД. Тестовые миграции применяются и туда. Синтетические T1/T2/staff создаются общим auth, credentials – из test profile без Git/вывода паролей. Полный HTTP цикл – настоящий ASGI с cookie/Origin, общими routers и DB; заглушка допустима только на границе провайдера/часов и fault injection. Process-restart cases действительно останавливают/запускают отдельный worker process на той же PG, не просто заново создают Python-объект. Для concurrency использовать barriers/две DB connections и проверять оба порядка, без надежды на sleep.
 
@@ -183,11 +183,11 @@ Staff query read/materials/history200 с реальным actor=staff; точн�
 
 Finalized fresh failed с доказанно безопасным исходом: can_retry=true, retrySummary202 создает новый Job того же snapshot ID, повтор K дает тот же Job. Смена state ставит stale=true/can_retry=false; retry409 invalid_state. Running/unknown stale: can_refresh=false, refresh409 invalid_state, новых POST0. Comment-only не делает stale. Поздний результат старого Job сохраняется в history, не в selected нового. Свежий succeeded повторно retry/refresh409; GET не платный. Terminal stale с актуальным guard/can_refresh=true→refresh202 с новым snapshot/Job, старый result остается историей.
 
-## PROC-C27 – Два worker на последние средства, оба kind; A19/A23
+## PROC-C27 – Общий cap500 и hot-change; A19/A23
 
 **Node:** `tests/pilot/processing/test_proc_contract.py::test_proc_c27`.
 
-Изолированный fixture wallet10RUB, request bound каждого 6RUB. Одновременно page_check/class_analytics через две DB connections. Ровно один reserve6/dispatch, другой blocked/funds_unavailable без POST, available4/held6, отрицательных значений нет. Topup5 с evidence/request ID дает balance15/held6/available9, повтор не дублирует пополнение. Разрешить второй dispatch→held12/available3. Дублировать settlement одной Attempt: ровно один ledger debit и одно снятие резерва. Test pricing задан явно; polza не использует эти 6 или 400 как реальную цену/баланс.
+R87 заменяет прежний walletinitialize/topup prerequisite. Проверить cap500 по умолчанию, без initialize/topup/file gate; atomic reserves на последних доступных средствах у разных teacher и обоих kind, не более2 global slots. Trusted CLI `python -m pilot.processing.budget status` и `set-limit --rub 500` использует PostgreSQL и меняет cap без restart: сохраняются worker/Job IDs и spent/holds, нет новых intent/дублей. Lowering не отменяет running; блокируются новые dispatch, повышение продолжает исходные Job. Повтор settlement не удваивает cumulative spent. PASS по фактическим assertions – [RUNTIME_REPORT](RUNTIME_REPORT.md).
 
 ## PROC-C28 – Pause/resume без HTTP admin; A23/A24
 
@@ -195,11 +195,11 @@ Finalized fresh failed с доказанно безопасным исходом
 
 Два queued Job разных kind и одна running Attempt. Trusted set_processing_paused(true) останавливает новые dispatch, POST count не растет, reason=service_paused; running может завершить settlement. Готовые Check/фото/review доступны, worker health жив. Red review не изменяет pause. Resume продолжает исходные Job без новых идентичностей, повтор операции no-op. HTTP admin не появляется, staff/teacher cookie не вызывает control.
 
-## PROC-C29 – Funding/reconciliation с доказательствами; A22–A24
+## PROC-C29 – Execution/billing uncertainty и сверка; A22–A24
 
 **Node:** `tests/pilot/processing/test_proc_contract.py::test_proc_c29`.
 
-Polza без проверенного initialize/pricing profile не dispatch и не seed400. Trusted fund_wallet initialize с проверенным остатком выполняется один раз, topup>0 с immutable evidence/request ID; replay no-op, иной payload409, отрицательный/NaN amount422, повтор initialize409. Fixture ledger изолирован и не переходит в polza. Для unknown Attempt reconcile без evidence/конечной стоимости settled отказывает без release; rejected с подтверждением отсутствия списания освобождает ровно hold; settled с actual cost дает один debit/settlement. Повтор same evidence возвращает changed=false, противоречащий 409. Полное evidence и секреты не появляются в общих логах; cancel Job не был доказательством rejected.
+Валидные checker/analytics с cost=null публикуются как succeeded, worker slot освобожден, billing_state=unknown и hold сохранен. Execution unknown не считается successful и не вызывает blind retry. Trusted reconciliation требует evidence reference/sha256/operator/request_id: settled с неизвестной стоимостью может завершить execution, но оставляет billing hold; последующий known finite cost дает один settlement и одно снятие hold. Доказанный rejected означает отсутствие списания; contradictory/reused request conflicts, точный replay no-op. Проверить обе Job kind, дедупликацию и отсутствие секретов в общих логах. Initialize/topup больше не prerequisites dispatch (R87); legacy APIs сохраняются только для совместимости. PASS и ограничения – [RUNTIME_REPORT](RUNTIME_REPORT.md).
 
 ## PROC-C30 – Масштаб/параллельность без teacher quota; A19/A25
 
@@ -223,4 +223,4 @@ Finalized stale queued/blocked без отправленной Attempt: can_refr
 
 Из корня `python project-context/pilot/planning/shared/check_shared.py` проверяет frozen hashes, OpenAPI/DTO/fixtures, analytics validator и UX strings, без приложения/БД/сети. Он не заменяет PROC-C01–C32. `python scripts/check_context.py` и обе команды git diff --check проверяют структуру/пробелы, не продуктовый runtime.
 
-После реализации дополнительно воспроизвести исходные backend tests из pinned source с учетом явных замен старых quota/register сценариев; сохранить список измененных ожиданий, не скрывать регрессию удалением тестов. Live smoke, Android/iPhone, внешний сервер/HTTPS и самостоятельная апробация отдельно от этой mock/PG-приемки; без их выполнения ставить not_run. В HANDOFF записать точные команды, commit, транспорт, результаты и ограничения, а не копировать прежний отчет как новый прогон.
+Исходные backend tests воспроизведены в составе99 PASS; перечень ожиданий переноса сохранен в `app/tests/pilot/source/`. Для следующей интеграции дополнительно воспроизвести исходные backend tests из pinned source с учетом явных замен старых quota/register сценариев; сохранить список измененных ожиданий, не скрывать регрессию удалением тестов. Live smoke, Android/iPhone, внешний сервер/HTTPS и самостоятельная апробация отдельно от этой mock/PG-приемки; без их выполнения ставить not_run. В HANDOFF записать точные команды, commit, транспорт, результаты и ограничения, а не копировать прежний отчет как новый прогон.
