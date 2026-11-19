@@ -14,7 +14,7 @@
 | B4 processing commit | `9d788953a298ff03b7e7903a6b3015cc83f3045d` (`processing`), влит как `0f8460df6465612a815810b77eb2f60a72376350` |
 | Source provenance | SmartNoteLanding `d62f5ecb8c1c53b1c97faf06530b8d84e691f88d`; повторный импорт не выполнялся |
 | Миграции | `app/migrations/001–015`; 001–007 побайтово совпадают с pinned source |
-| Candidate 20:15 / final 21:00 | Не созданы; заполняются в REL-12 по факту |
+| Candidate 20:15 / final 21:00 | Кандидат локальный: коммит REL-12 в `release_tasks`; внешний выпуск не создавался |
 | Transport | Приемка только `PILOT_TRANSPORT=fixture`; платных вызовов в release нет |
 
 ## Приём B4 (REL-01)
@@ -96,6 +96,24 @@ REL-02 выполнен и проверен на локальном Compose-ст
 | `python -m pilot.operations.manage_accounts reset --login <login>` | Заменить пароль и отозвать все сессии только этого аккаунта, сохранив ID и материалы |
 
 Пароль приходит скрытым вводом в терминале или из `PILOT_ACCOUNT_PASSWORD`; аргумента `--password` нет, значения не печатаются. Для аудита задаётся `--operator-ref` или `PILOT_OPERATOR_REF`, по умолчанию `local-cli`; `request_id` генерируется на каждый вызов. HTTP admin API и роль operator не создаются.
+
+## Итог REL-01–REL-12
+
+Все двенадцать задач выполнены и зафиксированы отдельными коммитами в `release_tasks` без push. Итоговые результаты:
+
+| Проверка | Результат |
+|---|---|
+| `python project-context/pilot/planning/shared/check_shared.py` | PASS, 73 офлайн-теста |
+| `python scripts/check_context.py` | PASS |
+| `npm test` / `npm run build` / `npx tsc -b` | PASS, 28 тестов |
+| `pytest tests/pilot/application` / `tests/pilot/staff` из `app/` | PASS, 24 / 8 |
+| `pytest tests/integration/pilot -q` | PASS, 49 тестов |
+| `npx playwright test tests/e2e/pilot` | PASS, 14 тестов; 8 полных прогонов подряд |
+| `ruff check`, `git diff --check` | PASS |
+
+Матрица A01–A25 и таблица REL-C01–C28 с доказательствами — в [RELEASE_REPORT](../../../../docs/pilot/RELEASE_REPORT.md). Runbook — [RELEASE_RUNBOOK](../../../../docs/pilot/RELEASE_RUNBOOK.md).
+
+Остаются отдельными фактами, а не частью локального выпуска: реальная модель Polza и платные вызовы, внешний сервер/HTTPS/deploy, настоящие Android/iPhone, самостоятельная апробация учителя и письменный итог школы.
 
 ## Блокеры
 

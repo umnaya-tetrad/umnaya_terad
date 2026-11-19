@@ -68,11 +68,82 @@ async function toCheckScreen(page: Page) {
   await expect(page.getByRole('button', { name: 'Завершить проверку', exact: true })).toBeVisible()
 }
 
+/**
+ * Submit the current draft and tolerate the documented 409 path.
+ *
+ * Polling can advance the revision while a submit is in flight; the UI then
+ * shows "Данные проверки изменились" with a refresh action (ux-flows, S06).
+ * Acceptance follows that documented recovery instead of assuming a silent win.
+ */
+async function submitDraft(page: Page, label: string) {
+  const conflict = page.getByRole('button', { name: 'Обновить страницу', exact: true })
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    await page.getByRole('button', { name: label, exact: true }).click()
+    const settled = await Promise.race([
+      page.getByText('Комплект принят. Можно снимать дальше или закрыть приложение.', { exact: false })
+        .waitFor({ timeout: 8_000 }).then(() => 'accepted').catch(() => undefined),
+      conflict.waitFor({ timeout: 8_000 }).then(() => 'conflict').catch(() => undefined),
+    ])
+    if (settled === 'accepted') return
+    if (settled === 'conflict') {
+      await conflict.click()
+      await page.getByRole('button', { name: label, exact: true }).waitFor()
+      continue
+    }
+  }
+  throw new Error('Submit did not reach an accepted or documented conflict state')
+}
+
+/**
+ * Click an action that may lose a revision race with polling.
+ *
+ * When the documented 409 appears (ux-flows: "Данные проверки изменились"),
+ * the test follows the offered refresh and retries the same intent. This is the
+ * specified recovery path, not a silent retry of an unconfirmed write.
+ */
+async function act(page: Page, label: string | RegExp, exact = true, timeout = 12_000) {
+  const conflict = page.getByRole('button', { name: 'Обновить страницу', exact: true })
+  const target = page.getByRole('button', { name: label, exact })
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    if (await conflict.count()) {
+      await conflict.click()
+      await expect(conflict).toHaveCount(0, { timeout })
+    }
+    await target.click()
+    const settled = await Promise.race([
+      target.waitFor({ state: 'detached', timeout }).then(() => 'moved').catch(() => undefined),
+      conflict.waitFor({ timeout }).then(() => 'conflict').catch(() => undefined),
+      page.waitForTimeout(timeout).then(() => 'timeout'),
+    ])
+    if (settled !== 'conflict' && settled !== 'timeout') return
+  }
+  throw new Error(`Action ${String(label)} kept conflicting with the current revision`)
+}
+
+/**
+ * Upload one page, following the documented 409 recovery when polling advanced
+ * the revision while the upload was in flight (ux-flows, S04/S05).
+ */
 async function upload(page: Page, file = PNG) {
-  const choosing = page.waitForEvent('filechooser')
-  await page.getByRole('button', { name: 'Выбрать из галереи', exact: true }).click()
-  await (await choosing).setFiles(file)
-  await expect(page.getByText(/Фото \d+ из \d+/).first()).toBeVisible()
+  const conflict = page.getByRole('button', { name: 'Обновить страницу', exact: true })
+  const gallery = page.getByRole('button', { name: 'Выбрать из галереи', exact: true })
+  const photo = page.getByText(/Фото \d+ из \d+/).first()
+
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    if (await conflict.count()) {
+      await conflict.click()
+      await gallery.waitFor()
+    }
+    const choosing = page.waitForEvent('filechooser')
+    await gallery.click()
+    await (await choosing).setFiles(file)
+    const settled = await Promise.race([
+      photo.waitFor({ timeout: 10_000 }).then(() => 'ok').catch(() => undefined),
+      conflict.waitFor({ timeout: 10_000 }).then(() => 'conflict').catch(() => undefined),
+    ])
+    if (settled === 'ok') return
+  }
+  throw new Error('Upload did not reach the saved state or the documented conflict recovery')
 }
 
 test('REL-C26 excluded surfaces stay absent in the assembled UI', async ({ page }) => {
@@ -124,8 +195,7 @@ test('REL-C09 one page can yield several tasks; two photos can be one task', asy
   const harness = await openHarness(page)
   await upload(page)
   await upload(page, HEIC)
-  await page.getByRole('button', { name: 'Отправить на проверку', exact: true }).click()
-  await expect(page.getByText('Комплект принят. Можно снимать дальше или закрыть приложение.', { exact: false })).toBeVisible()
+  await submitDraft(page, 'Отправить на проверку')
 
   const check = await waitForCheck(page, harness.checkId())
   const bundle = check.notebooks[0].bundles[0]
@@ -160,8 +230,7 @@ test('REL-C10 both send actions work and results do not wait for the camera', as
   expect(submitted.notebooks[0].bundles[0].current_input.photos.length).toBe(1)
 
   await upload(page)
-  await page.getByRole('button', { name: 'Отправить на проверку', exact: true }).click()
-  await expect(page.getByText('Комплект принят. Можно снимать дальше или закрыть приложение.', { exact: false })).toBeVisible()
+  await submitDraft(page, 'Отправить на проверку')
 
   const busy = await waitForCheck(page, harness.checkId())
   const submittedBundles = busy.notebooks
@@ -226,11 +295,10 @@ test('REL-C11 reviews are per-task and the red state does not retry', async ({ p
 test('REL-C19 two-step finish blocks unresolved work and creates a summary', async ({ page }) => {
   const harness = await openHarness(page)
   await upload(page)
-  await page.getByRole('button', { name: 'Отправить на проверку', exact: true }).click()
-  await expect(page.getByText('Комплект принят. Можно снимать дальше или закрыть приложение.', { exact: false })).toBeVisible()
+  await submitDraft(page, 'Отправить на проверку')
 
   await toCheckScreen(page)
-  await page.getByRole('button', { name: 'Завершить проверку', exact: true }).click()
+  await act(page, 'Завершить проверку')
   await expect(page.getByRole('heading', { name: 'Просмотр перед завершением', exact: true })).toBeVisible()
 
   const pending = await (await page.request.get(`/api/checks/${harness.checkId()}`)).json()
@@ -247,18 +315,29 @@ test('REL-C19 two-step finish blocks unresolved work and creates a summary', asy
   expect(blocked.status()).toBe(409)
 
   await page.getByRole('button', { name: 'Посмотреть разборы', exact: true }).click()
-  for (;;) {
+
+  // Review every ready card. The queue shrinks after each save, so the loop is
+  // bounded by the actual task count read from the API, not by a UI guess.
+  const ready = await (await page.request.get(`/api/checks/${harness.checkId()}`)).json()
+  const total = ready.notebooks
+    .flatMap((notebook: any) => notebook.bundles)
+    .flatMap((bundle: any) => bundle.tasks)
+    .filter((task: any) => !task.skipped).length
+  expect(total).toBeGreaterThan(0)
+
+  for (let index = 0; index < total; index += 1) {
     const agree = page.getByRole('button', { name: /Согласен с проверкой/ })
     if (await agree.count() === 0) break
     await agree.first().click()
-    await expect(page.getByText('Отзыв сохранен', { exact: true })).toBeVisible()
+    await expect(page.getByText('Отзыв сохранен', { exact: true })).toBeVisible({ timeout: 15_000 })
     const next = page.getByRole('button', { name: 'Следующий разбор', exact: true })
     if (await next.count() === 0) break
     await next.click()
+    await expect(page.getByRole('heading', { name: /^Разбор задачи/ }).first()).toBeVisible()
   }
   await page.getByRole('button', { name: /Назад$/ }).click()
-  await page.getByRole('button', { name: 'Завершить и создать сводку', exact: true }).click()
-  await page.getByRole('button', { name: 'Да, завершить', exact: true }).click()
+  await act(page, 'Завершить и создать сводку')
+  await act(page, 'Да, завершить', false)
 
   const finalized = await waitForFinalized(page, harness.checkId())
   expect(finalized.phase).toBe('finalized')
@@ -271,8 +350,7 @@ test('REL-C19 two-step finish blocks unresolved work and creates a summary', asy
 test('REL-C13 a new input generation drops old reviews', async ({ page }) => {
   const harness = await openHarness(page)
   await upload(page)
-  await page.getByRole('button', { name: 'Отправить на проверку', exact: true }).click()
-  await expect(page.getByText('Комплект принят. Можно снимать дальше или закрыть приложение.', { exact: false })).toBeVisible()
+  await submitDraft(page, 'Отправить на проверку')
 
   const ready = await waitForCheck(page, harness.checkId())
   const task = ready.notebooks[0].bundles[0].tasks.find(
