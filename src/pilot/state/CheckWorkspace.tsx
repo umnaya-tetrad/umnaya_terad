@@ -13,13 +13,16 @@ import { SummaryScreen } from '../screens/SummaryScreen'
 import type { Emit } from '../telemetry/useLifecycle'
 import { reviewQueue, skippable, tasksIn, type Mutate, type Run, type TaskLocation } from './flow'
 import { useCheckPolling } from './useCheckPolling'
+import { WORKBENCH_ENABLED, type WorkbenchView } from '../dev/workbench'
 
 type NotebookView = { page: 'notebook'; notebook: string; bundle?: string }
 type OriginView = { page: 'check' | 'completion' } | NotebookView
 type View = OriginView | { page: 'summary' } | { page: 'review'; task: string; origin: OriginView }
 
-export function CheckWorkspace({ id, api, intents, setup, done, deleted, emit }: {
+export function CheckWorkspace({ id, api, intents, setup, done, deleted, emit, initialWorkbenchView, workbenchContext }: {
   id: string; api: PilotApi; intents: Intents; setup: boolean; done: () => void; deleted: () => void; emit: Emit;
+  initialWorkbenchView?: WorkbenchView;
+  workbenchContext?: (notebookId?: string) => void;
 }) {
   const { check, readError, refresh, store } = useCheckPolling(api, id)
   const [view, setView] = useState<View>()
@@ -29,12 +32,34 @@ export function CheckWorkspace({ id, api, intents, setup, done, deleted, emit }:
   const [confirm, setConfirm] = useState<Confirmation>()
   const pendingRevision = useRef<number | null>(null)
   const attemptedSetup = useRef(false)
+  const appliedWorkbenchView = useRef(false)
   const onEvent = useRef(emit)
   onEvent.current = emit
   const screen = useRef<HTMLDivElement>(null)
 
   const activeView: View = view ?? { page: check?.phase === 'finalized' ? 'summary' : 'check' }
   const viewedTask = activeView.page === 'review' ? activeView.task : undefined
+  const workbenchNotebook = activeView.page === 'notebook' ? activeView.notebook
+    : activeView.page === 'review' ? check?.notebooks.find(notebook => tasksIn(notebook).some(entry => entry.task.task_id === activeView.task))?.id
+      : undefined
+
+  useEffect(() => {
+    if (WORKBENCH_ENABLED) workbenchContext?.(workbenchNotebook)
+  }, [workbenchContext, workbenchNotebook])
+
+  useEffect(() => {
+    if (!WORKBENCH_ENABLED || !initialWorkbenchView || !check || appliedWorkbenchView.current) return
+    appliedWorkbenchView.current = true
+    const requested = initialWorkbenchView
+    if (requested.page === 'notebook') {
+      const notebook = check.notebooks.find(item => item.id === requested.notebook) ?? check.notebooks[0]
+      if (notebook) setView({ page: 'notebook', notebook: notebook.id })
+    } else if (requested.page === 'review') {
+      const entry = check.notebooks.flatMap(tasksIn).find(item => item.task.task_id === requested.task)
+        ?? reviewQueue(check)[0]
+      if (entry) setView({ page: 'review', task: entry.task.task_id, origin: { page: 'check' } })
+    } else setView({ page: requested.page })
+  }, [check, initialWorkbenchView])
 
   useEffect(() => {
     if (!viewedTask) return

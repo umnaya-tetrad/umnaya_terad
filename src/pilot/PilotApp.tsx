@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import type { PilotApi } from './api/client'
 import type { Intents } from './api/intents'
 import { useAuth } from './auth'
@@ -10,6 +10,9 @@ import { StaffCheckScreen, StaffChecksScreen } from './staff/StaffScreens'
 import { CheckWorkspace } from './state/CheckWorkspace'
 import type { Telemetry } from './telemetry/client'
 import { useLifecycle } from './telemetry/useLifecycle'
+import { WORKBENCH_ENABLED, readWorkbenchView, type WorkbenchView } from './dev/workbench'
+
+const WorkbenchToolbar = WORKBENCH_ENABLED ? lazy(() => import('./dev/WorkbenchToolbar')) : undefined
 
 function readCheck() {
   const id = new URLSearchParams(location.search).get('check')
@@ -20,10 +23,16 @@ function TeacherApp({ api, intents, telemetry }: { api: PilotApi; intents: Inten
   const [id, setId] = useState(readCheck)
   const [newCheck, setNewCheck] = useState(false)
   const [setup, setSetup] = useState(false)
+  const [workbenchView, setWorkbenchView] = useState(() => readWorkbenchView(location.search))
+  const [workbenchKey, setWorkbenchKey] = useState(0)
+  const [workbenchNotebook, setWorkbenchNotebook] = useState<string>()
   useLifecycle(telemetry)
 
   useEffect(() => {
-    const update = () => { setSetup(false); setNewCheck(false); setId(readCheck()) }
+    const update = () => {
+      setSetup(false); setNewCheck(false); setId(readCheck())
+      if (WORKBENCH_ENABLED) { setWorkbenchView(readWorkbenchView(location.search)); setWorkbenchKey(value => value + 1) }
+    }
     window.addEventListener('popstate', update)
     return () => window.removeEventListener('popstate', update)
   }, [])
@@ -32,6 +41,10 @@ function TeacherApp({ api, intents, telemetry }: { api: PilotApi; intents: Inten
     const url = new URL(location.href)
     if (checkId) url.searchParams.set('check', checkId)
     else url.searchParams.delete('check')
+    if (WORKBENCH_ENABLED) {
+      for (const key of ['ux_view', 'ux_task', 'ux_notebook']) url.searchParams.delete(key)
+      setWorkbenchView(undefined)
+    }
     if (replace) history.replaceState(null, '', url)
     else history.pushState(null, '', url)
     setId(checkId)
@@ -39,10 +52,30 @@ function TeacherApp({ api, intents, telemetry }: { api: PilotApi; intents: Inten
     setNewCheck(false)
   }
 
-  if (id) return <CheckWorkspace key={id} id={id} api={api} intents={intents} setup={setup}
+  function openWorkbench(checkId: string, view: WorkbenchView) {
+    if (!WORKBENCH_ENABLED) return
+    const url = new URL(location.href)
+    url.searchParams.set('check', checkId)
+    url.searchParams.set('ux_view', view.page)
+    for (const [key, value] of [['ux_task', view.task], ['ux_notebook', view.notebook]] as const) {
+      if (value) url.searchParams.set(key, value)
+      else url.searchParams.delete(key)
+    }
+    history.pushState(null, '', url)
+    setSetup(false); setNewCheck(false); setId(checkId); setWorkbenchView(view); setWorkbenchKey(value => value + 1)
+  }
+
+  const content = id ? <CheckWorkspace key={id + (WORKBENCH_ENABLED ? `:${workbenchKey}` : '')} id={id} api={api} intents={intents} setup={setup}
+    initialWorkbenchView={workbenchView} workbenchContext={WORKBENCH_ENABLED ? setWorkbenchNotebook : undefined}
     done={() => navigate(null)} deleted={() => navigate(null, false, true)} emit={(...args) => telemetry.track(...args)} />
-  if (newCheck) return <NewCheckScreen intents={intents} open={checkId => navigate(checkId, true)} back={() => setNewCheck(false)} />
-  return <ChecksScreen api={api} open={item => navigate(item.id)} create={() => setNewCheck(true)} />
+    : newCheck ? <NewCheckScreen intents={intents} open={checkId => navigate(checkId, true)} back={() => setNewCheck(false)} />
+      : <ChecksScreen api={api} open={item => navigate(item.id)} create={() => setNewCheck(true)} />
+  return <>
+    {WorkbenchToolbar && <Suspense fallback={null}><WorkbenchToolbar api={api} intents={intents} currentId={id}
+      currentNotebookId={workbenchNotebook} selectNotebook={setWorkbenchNotebook}
+      open={openWorkbench} history={() => navigate(null)} create={() => { navigate(null); setNewCheck(true) }} /></Suspense>}
+    {content}
+  </>
 }
 
 function StaffApp({ api }: { api: PilotApi }) {
