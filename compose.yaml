@@ -1,0 +1,111 @@
+name: smartnote-pilot
+
+x-pilot-environment: &pilot-environment
+  PILOT_TRANSPORT: ${PILOT_TRANSPORT:-polza}
+  PILOT_STORAGE_ROOT: /var/lib/smartnote/photos
+  DATABASE_URL: postgresql://pilot:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@postgres:5432/pilot
+  VISITOR_COOKIE_SECRET: ${VISITOR_COOKIE_SECRET:?Set VISITOR_COOKIE_SECRET}
+  VISITOR_COOKIE_SECURE: ${VISITOR_COOKIE_SECURE:-false}
+  ALLOWED_BROWSER_ORIGINS: ${ALLOWED_BROWSER_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
+  REQUIRE_AUTH_FOR_ANALYSIS: "true"
+  POLZA_API_KEY: ${POLZA_API_KEY:-}
+  POLZA_BASE_URL: ${POLZA_BASE_URL:-https://polza.ai/api/v1}
+  POLZA_MODEL: ${POLZA_MODEL:-google/gemini-3.8-flash}
+  POLZA_PROVIDER: ${POLZA_PROVIDER:-google-ai-studio/flex}
+  POLZA_MAX_COMPLETION_TOKENS: ${POLZA_MAX_COMPLETION_TOKENS:-25000}
+  POLZA_TIMEOUT_SECONDS: ${POLZA_TIMEOUT_SECONDS:-300}
+  POLZA_CONNECT_TIMEOUT_SECONDS: ${POLZA_CONNECT_TIMEOUT_SECONDS:-15}
+  POLZA_MAX_PRICE_PROMPT: ${POLZA_MAX_PRICE_PROMPT:-50}
+  POLZA_MAX_PRICE_COMPLETION: ${POLZA_MAX_PRICE_COMPLETION:-250}
+  POLZA_MAX_PRICE_IMAGE: ${POLZA_MAX_PRICE_IMAGE:-50}
+  MAX_IMAGE_BYTES: "8000000"
+  MAX_IMAGE_PIXELS: "36000000"
+  MIN_IMAGE_EDGE: "32"
+
+x-python: &pilot-python
+  build:
+    context: .
+    dockerfile: app/Dockerfile
+  image: smartnote-pilot-python:local
+  working_dir: /app
+  init: true
+  environment: *pilot-environment
+
+services:
+  postgres:
+    image: postgres:16-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea
+    environment:
+      POSTGRES_DB: pilot
+      POSTGRES_USER: pilot
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: [CMD, pg_isready, -U, pilot, -d, pilot]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  migrate:
+    <<: *pilot-python
+    command: [python, -m, pilot.domain.migrate]
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  backend:
+    <<: *pilot-python
+    command: [uvicorn, "main:app", --host, 0.0.0.0, --port, "8000"]
+    environment:
+      <<: *pilot-environment
+      PILOT_FIXTURE_TEACHER_1_LOGIN: ${PILOT_FIXTURE_TEACHER_1_LOGIN:-}
+      PILOT_FIXTURE_TEACHER_1_PASSWORD: ${PILOT_FIXTURE_TEACHER_1_PASSWORD:-}
+      PILOT_FIXTURE_TEACHER_2_LOGIN: ${PILOT_FIXTURE_TEACHER_2_LOGIN:-}
+      PILOT_FIXTURE_TEACHER_2_PASSWORD: ${PILOT_FIXTURE_TEACHER_2_PASSWORD:-}
+      PILOT_FIXTURE_STAFF_LOGIN: ${PILOT_FIXTURE_STAFF_LOGIN:-}
+      PILOT_FIXTURE_STAFF_PASSWORD: ${PILOT_FIXTURE_STAFF_PASSWORD:-}
+    volumes: [pilot_photos:/var/lib/smartnote/photos]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: [CMD, python, -c, "from urllib.request import urlopen; urlopen('http://localhost:8000/health', timeout=2).close()"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  worker:
+    <<: *pilot-python
+    command: [python, -m, pilot.processing.worker]
+    volumes: [pilot_photos:/var/lib/smartnote/photos]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: [CMD, python, -m, pilot.processing.worker, --healthcheck]
+      interval: 5s
+      timeout: 4s
+      retries: 20
+
+  frontend:
+    build: .
+    init: true
+    environment:
+      VITE_BACKEND_URL: http://backend:8000
+      VITE_PILOT_TRANSPORT: ${PILOT_TRANSPORT:-polza}
+    ports: ["127.0.0.1:5173:5173"]
+    volumes: [frontend_node_modules:/app/node_modules]
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, "http://127.0.0.1:5173/"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    depends_on:
+      backend:
+        condition: service_healthy
+      worker:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  pilot_photos:
+  frontend_node_modules:

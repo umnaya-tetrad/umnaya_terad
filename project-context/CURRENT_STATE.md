@@ -1,6 +1,6 @@
 # Текущий этап проекта
 
-Срез 19.11.2026. **Документация готова к независимой реализации трех направлений. Само приложение еще не реализовано и не развернуто.**
+Срез 19.11.2026. **Application реализуется в локальной work/application. Фронтенд и HTTP-адаптеры проверены на контрактных данных. Совместный запуск пилота ожидает домен и worker processing.**
 
 ## Что строим
 
@@ -14,7 +14,8 @@
 - [Мобильный UX](pilot/planning/shared/MOBILE_UX.md): крупные элементы, короткие условные тексты, 158 copy ID, однозначная ошибка ИИ и отдельные состояния отказа/незавершенности.
 - [AI-пакет checker](pilot/ai/README.md): точный проверенный промпт/контракт page-check/1.2, portable adapter и dev-примеры. Локальный benchmark 175/175 на подготовленном наборе не равен качеству на всех школьных фото.
 - [Аналитика](pilot/planning/shared/analytics/README.md): отдельный prompt/schema/input/snapshot, правила средних/топа, validator и четыре пары fixtures. Q49 закрыт как спецификация. Live-валидации этого нового промпта пока нет.
-- [Три полных ТЗ](pilot/planning/README.md): application 15 задач/35 кейсов, processing 12/32, release 12/28; всего 39 задач/95 кейсов, HANDOFF planned/runtime not_run. Все A01–A25 имеют владельцев и проверки.
+- [Три полных ТЗ](pilot/planning/README.md): application 15 задач/35 кейсов, processing 12/32, release 12/28. Все A01–A25 имеют владельцев и проверки.
+- [Application HANDOFF](pilot/planning/application/HANDOFF.md) и [bootstrap](../docs/pilot/BOOTSTRAP.md): манифест импорта, учительский UI, auth/CRUD, Compose, тесты с fixtures и точные зависимости для B1/B3.
 - [Независимое ревью общего пакета](pilot/planning/shared/SHARED_REVIEW.md) и [перекрестное ревью ТЗ](pilot/planning/TASK_REVIEW.md) — PASS после исправлений. Отдельно от runtime.
 - Ранее подготовлены контекст, источники, исследования, макеты/питч, три проектных skills и CI; архивные references не переопределяют текущий пакет.
 
@@ -22,9 +23,11 @@
 
 19.11.2026: shared gate — 73 офлайн-теста PASS, schemas/fixtures/types/UX/frozen hashes PASS; check_tasks — 39/95/A01–A25/34 operation consumers PASS; check_context и оба diff check PASS. Проверки не обращаются к платной модели и не являются тестом реализованного HTTP/БД/worker/UI. В CI добавлены те же общие gates; удаленный результат проверяется по фактическому запуску, не по наличию YAML.
 
+В work/application исходный SmartNoteLanding прошёл npm test, сборку и 120 pytest на отдельной PostgreSQL 16. Учительский UI проверен в headless Chrome 320 CSS px с перехватом HTTP. ASGI-тесты application проверяют HTTP-адаптеры с явными doubles. Контейнерные образы frontend/backend собраны; запуск общего стека и Job остаются впереди.
+
 ## Следующий шаг
 
-Выполнять ТЗ по одному контракту, без нового проектирования API и без повторного опроса по закрытым требованиям. [MODULE_BOUNDARIES](pilot/planning/shared/MODULE_BOUNDARIES.md) фиксирует исходный SHA d62f5ecb8c1c53b1c97faf06530b8d84e691f88d из публичной ветки codex/direct-landing-experiment SmartNoteLanding; default main b8423b0 не выбран. Код в корень umnaya_terad еще не импортирован.
+Объединить локальный application-код с поставкой processing B1b на зафиксированном shared v1. Выбранные исходные blob SmartNoteLanding d62f5ecb8c1c53b1c97faf06530b8d84e691f88d импортированы по [манифесту](../docs/pilot/BOOTSTRAP.md). [INTEGRATION_STATE](../docs/pilot/INTEGRATION_STATE.md) перечисляет точки подключения и проверки для B1/B3.
 
 Bootstrap application + ранний domain processing дают B1; полное ядро/аналитика готовы к 17:00 и передаются до 18:00; release после B4 принимает общие entrypoints/Compose, подключает staff и ведет автономную интеграцию к 21:00. Ранний запуск не импортирует еще отсутствующий staff. Docker Compose, GitHub/HANDOFF, отдельные ветки; синхронные встречи не обязательны. Серверный выпуск — отдельный этап. Календарная дата рабочей сессии не назначена.
 

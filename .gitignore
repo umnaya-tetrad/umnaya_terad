@@ -11,3 +11,6 @@ Thumbs.db
 .playwright-mcp/
 .codex-cache/
 .pytest_cache/
+dist/
+playwright-report/
+test-results/
