@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import time
+import json
 from uuid import uuid4
 
 import pytest
@@ -332,26 +333,44 @@ def test_rel_c14_delete_during_run_blocks_new_paid_work():
     assert int(published) == 0, "A deleted check must not publish a new Report"
 
 
-def test_rel_c15_one_automatic_retry_only():
-    """REL-C15: a temporary failure gets exactly one automatic retry."""
+@pytest.mark.parametrize("second_outcome", ["success", "temporary_failure"])
+def test_rel_c15_one_automatic_retry_only(controlled_provider, second_outcome):
+    """Actual 429 POST -> retry_wait -> second POST; fresh worker process, no third."""
+    from decimal import Decimal
+
+    control = controlled_provider
     client = Client()
     client.login("TEACHER_1")
-    check, _ = new_check(client, "REL-C15 повтор")
+    check, _ = new_check(client, "REL-C15 controlled transient")
     _bundle, _key, _revision = submit(client, check)
-    job_id = job_from(check_of(client, check))["id"]
-
-    job = wait_job(client, job_id, {"succeeded", "failed"}, timeout=120)
-    assert job["state"] == "succeeded", job
-
-    attempts = int(psql(f"select count(*) from pilot_attempts where job_id='{job_id}'"))
-    assert attempts <= 2, f"A temporary path must not exceed two attempts, got {attempts}"
-    ordinals = psql(f"select count(distinct ordinal) from pilot_attempts where job_id='{job_id}'")
-    assert int(ordinals) == attempts
-
-    counters = psql(
-        f"select coalesce(max(ordinal),0) from pilot_attempts where job_id='{job_id}'"
-    )
-    assert int(counters) <= 2
+    job = job_from(check_of(client, check))
+    job_id = job["id"]
+    control.register(job, outcomes=("temporary_failure", second_outcome))
+    first = control.worker()
+    control.finish(first)
+    assert client.expect("GET", f"/jobs/{job_id}", 200).body["state"] == "retry_wait"
+    assert control.sql(f"SELECT auto_retry_count FROM pilot_jobs WHERE id='{job_id}'") == "1"
+    first_worker = control.sql(f"SELECT worker_id FROM pilot_jobs WHERE id='{job_id}'")
+    assert control.sql(f"SELECT count(*) FROM release_test_posts WHERE job_id='{job_id}' AND method='POST' AND http_status=429") == "1"
+    assert control.sql(f"SELECT ordinal || ':' || state FROM pilot_attempts WHERE job_id='{job_id}'") == "1:rejected"
+    # The first OS worker exits completely; the new process must recover the
+    # durable retry count from PostgreSQL instead of resetting it in memory.
+    time.sleep(1.1)
+    control.finish(control.worker())
+    expected = "succeeded" if second_outcome == "success" else "failed"
+    assert client.expect("GET", f"/jobs/{job_id}", 200).body["state"] == expected
+    assert control.sql(f"SELECT worker_id FROM pilot_jobs WHERE id='{job_id}'") != first_worker
+    assert control.sql(f"SELECT auto_retry_count FROM pilot_jobs WHERE id='{job_id}'") == "1"
+    assert control.sql(f"SELECT string_agg(ordinal::text,',' ORDER BY ordinal) FROM pilot_attempts WHERE job_id='{job_id}'") == "1,2"
+    assert control.sql(f"SELECT count(*) FROM release_test_posts WHERE job_id='{job_id}'") == "2"
+    assert json.loads(control.finish(control.worker()))["claimed"] is False
+    assert control.sql(f"SELECT count(*) FROM release_test_posts WHERE job_id='{job_id}'") == "2"
+    assert control.sql(f"SELECT count(*) FROM pilot_attempts WHERE job_id='{job_id}'") == "2"
+    settled = control.sql(f"SELECT coalesce(sum(l.amount_rub),0) FROM pilot_fund_ledger l JOIN pilot_attempts a ON a.id=l.attempt_id WHERE a.job_id='{job_id}' AND l.operation='settlement'")
+    assert Decimal(settled) == (Decimal("0.01") if second_outcome == "success" else Decimal(0))
+    assert control.sql(f"SELECT count(*) FROM pilot_fund_reservations r JOIN pilot_attempts a ON a.id=r.attempt_id WHERE a.job_id='{job_id}' AND r.active") == "0"
+    current = check_of(client, check)
+    assert len(current["notebooks"][0]["bundles"][0]["tasks"]) == (3 if second_outcome == "success" else 0)
 
 
 def test_rel_c15_red_review_does_not_retry():

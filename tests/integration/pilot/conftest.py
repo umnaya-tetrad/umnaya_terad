@@ -16,6 +16,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
 from http.cookiejar import CookieJar
 from pathlib import Path
 from urllib.error import HTTPError
@@ -35,17 +36,11 @@ ACCEPTANCE_PROJECT = os.environ.get("PILOT_ACCEPTANCE_PROJECT", "smartnote-relea
 ACCEPTANCE_PORT = os.environ.get("PILOT_ACCEPTANCE_PORT", "5273")
 # Local secrets live outside the repository: the structural context check rejects
 # a stray .env, and release acceptance must never commit credentials.
-DEFAULT_ENV_FILE = Path.home() / ".config/smartnote/pilot.env"
-
-
 def env_file() -> Path | None:
     explicit = os.environ.get("PILOT_ENV_FILE")
     if explicit:
         return Path(explicit).expanduser()
-    if DEFAULT_ENV_FILE.is_file():
-        return DEFAULT_ENV_FILE
-    legacy = ROOT / ".env"
-    return legacy if legacy.is_file() else None
+    return None
 
 
 ENV_PATH = env_file()
@@ -69,7 +64,11 @@ LOCAL_ENV = _local_env()
 
 
 def _compose_base() -> list[str]:
-    base = ["docker", "compose", "-f", "compose.yaml"]
+    base = ["docker", "compose", "-f", str(ROOT / "compose.yaml")]
+    for filename in os.environ.get("PILOT_COMPOSE_OVERRIDES", "").split(os.pathsep):
+        if filename:
+            path = Path(filename).expanduser().resolve(strict=True)
+            base.extend(["-f", str(path)])
     if ENV_PATH is not None and ENV_PATH.is_file():
         base.extend(["--env-file", str(ENV_PATH)])
     return base
@@ -104,9 +103,18 @@ def credentials(account: str) -> dict[str, str]:
     }
 
 
-def compose(*args: str, check: bool = True) -> subprocess.CompletedProcess:
+def compose_command(*args: str) -> list[str]:
+    return [*COMPOSE, *args]
+
+
+def compose(*args: str, check: bool = True, project: str | None = None) -> subprocess.CompletedProcess:
+    environment = compose_environment()
+    if project is not None:
+        if not project.startswith("smartnote-restore-"):
+            raise AssertionError("Only an explicit isolated restore project may override acceptance.")
+        environment["COMPOSE_PROJECT_NAME"] = project
     return subprocess.run(
-        [*COMPOSE, *args], cwd=ROOT, capture_output=True, text=True, check=check, env=compose_environment()
+        compose_command(*args), cwd=ROOT, capture_output=True, text=True, check=check, env=environment
     )
 
 
@@ -121,6 +129,8 @@ def run_host_script(*args: str, check: bool = False) -> subprocess.CompletedProc
 def compose_environment() -> dict[str, str]:
     environment = dict(os.environ)
     environment.update(COMPOSE_ENV)
+    if ENV_PATH is not None:
+        environment["PILOT_ENV_FILE"] = str(ENV_PATH)
     return environment
 
 
@@ -322,6 +332,80 @@ def reconcile_fixture_unknown(attempt_id: str) -> None:
     )
 
 
+class ControlledProvider:
+    """Two OS processes may execute the real worker against a mock HTTP POST boundary."""
+
+    def __init__(self):
+        self.processes = []
+
+    def sql(self, query):
+        return compose("exec", "-T", "postgres", "psql", "-U", "pilot", "-d", "pilot", "-tAc", query).stdout.strip()
+
+    def register(self, job, count=3, outcomes=("success",), *, released=True, delay_ms=0):
+        assert count in (3, 4, 5) and all(x in ("success", "temporary_failure") for x in outcomes)
+        self.sql(
+            "INSERT INTO release_test_jobs(job_id,task_count,outcomes,released,delay_ms) VALUES("
+            f"'{job['id']}',{count},'{json.dumps(list(outcomes))}',{str(released).lower()},{delay_ms})"
+        )
+
+    def worker(self, mode="once"):
+        process = subprocess.Popen(
+            compose_command("exec", "-T", "backend", "python", "/tmp/release_fixture_worker.py", mode),
+            cwd=ROOT, env=compose_environment(), stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+        )
+        self.processes.append(process)
+        return process
+
+    def finish(self, process, timeout=120):
+        output, error = process.communicate(timeout=timeout)
+        assert process.returncode == 0, error
+        return output
+
+    def wait(self, query, expected, timeout=60):
+        cutoff = time.monotonic() + timeout
+        while time.monotonic() < cutoff:
+            if self.sql(query) == str(expected):
+                return
+            time.sleep(0.05)
+        raise AssertionError(f"Controlled provider condition did not become {expected}: {self.sql(query)}")
+
+
+@pytest.fixture
+def controlled_provider(request):
+    """Restore the normal worker and release every test barrier even on failure."""
+    provider = ControlledProvider()
+    provider.wait("SELECT count(*) FROM pilot_jobs WHERE state IN ('queued','running','retry_wait','blocked')", 0)
+    compose("stop", "worker")
+    compose("cp", str(ROOT / "tests/integration/pilot/fixture_worker.py"), "backend:/tmp/release_fixture_worker.py")
+    provider.sql("""
+CREATE TABLE IF NOT EXISTS release_test_jobs(job_id UUID PRIMARY KEY,task_count INTEGER NOT NULL,outcomes JSONB NOT NULL,released BOOLEAN NOT NULL,delay_ms INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS release_test_posts(id BIGSERIAL PRIMARY KEY,job_id UUID NOT NULL,input_id UUID NOT NULL,ordinal INTEGER NOT NULL,method TEXT NOT NULL,outcome TEXT NOT NULL,active_slots INTEGER NOT NULL,image_count INTEGER NOT NULL,started_at TIMESTAMPTZ NOT NULL DEFAULT clock_timestamp(),ended_at TIMESTAMPTZ,http_status INTEGER);
+TRUNCATE release_test_posts,release_test_jobs RESTART IDENTITY;
+""")
+    try:
+        yield provider
+    finally:
+        provider.sql("UPDATE release_test_jobs SET released=true")
+        for process in provider.processes:
+            if process.poll() is None:
+                try:
+                    process.communicate(timeout=30)
+                except subprocess.TimeoutExpired:
+                    # Kill only our explicitly copied helper, never the application/worker.
+                    compose("exec", "-T", "backend", "python", "-c", "import os,signal; from pathlib import Path; [(os.kill(int(p.name),signal.SIGTERM)) for p in Path('/proc').iterdir() if p.name.isdigit() and int(p.name)!=os.getpid() and b'/tmp/release_fixture_worker.py' in (p/'cmdline').read_bytes()]", check=False)
+                    process.communicate(timeout=10)
+        evidence_dir = os.environ.get("PILOT_EVIDENCE_DIR")
+        if evidence_dir:
+            destination = Path(evidence_dir).resolve()
+            assert ROOT.resolve() not in destination.parents
+            destination.mkdir(parents=True, exist_ok=True)
+            posts = provider.sql("SELECT coalesce(json_agg(p ORDER BY p.id),'[]') FROM release_test_posts p")
+            state = provider.sql("SELECT json_build_object('attempts',(SELECT count(*) FROM pilot_attempts a JOIN release_test_jobs t ON t.job_id=a.job_id),'settlements',(SELECT count(*) FROM pilot_fund_ledger l JOIN pilot_attempts a ON a.id=l.attempt_id JOIN release_test_jobs t ON t.job_id=a.job_id WHERE l.operation='settlement'),'settled_rub',(SELECT coalesce(sum(l.amount_rub),0) FROM pilot_fund_ledger l JOIN pilot_attempts a ON a.id=l.attempt_id JOIN release_test_jobs t ON t.job_id=a.job_id WHERE l.operation='settlement'))")
+            (destination / f"{request.node.name}.json").write_text(json.dumps({"transport":"in-process HTTPX MockTransport; no network", "posts":json.loads(posts),"accounting":json.loads(state)}, indent=2), encoding="utf-8")
+        compose("start", "worker")
+        wait_healthy()
+
+
 @pytest.fixture(scope="session", autouse=True)
 def _stack() -> None:
     """Prepare a clean, isolated acceptance project.
@@ -331,9 +415,16 @@ def _stack() -> None:
     from its own empty volumes, so the session rebuilds *only* the dedicated
     acceptance project. The working project is refused explicitly.
     """
-    if ACCEPTANCE_PROJECT == "smartnote-pilot":
-        raise AssertionError("Acceptance must never run against the working Compose project.")
-    fixture_backend()
+    if not ACCEPTANCE_PROJECT.startswith("smartnote-release-"):
+        raise AssertionError("Acceptance requires its own smartnote-release-* project.")
+    if ENV_PATH is None or not ENV_PATH.is_file():
+        raise AssertionError("Set PILOT_ENV_FILE to an explicit private synthetic fixture env file.")
+    if ROOT.resolve() in ENV_PATH.resolve().parents:
+        raise AssertionError("Acceptance credentials must be outside the repository.")
+    configuration = compose_json()
+    assert configuration["services"]["backend"]["environment"]["PILOT_TRANSPORT"] == "fixture"
+    assert configuration["services"]["worker"]["environment"]["PILOT_TRANSPORT"] == "fixture"
+    assert configuration["services"]["frontend"]["environment"]["VITE_PILOT_TRANSPORT"] == "fixture"
     compose("down", "-v", "--remove-orphans", check=False)
     compose("run", "--rm", "migrate")
     compose("up", "-d", "--wait")

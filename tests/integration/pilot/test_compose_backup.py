@@ -6,6 +6,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 import pytest
 
@@ -14,6 +15,9 @@ from conftest import (
     PHOTO_FIXTURE,
     ROOT,
     Client,
+    compose,
+    compose_command,
+    compose_environment,
     mutation_key,
     new_check,
     wait_healthy,
@@ -21,14 +25,9 @@ from conftest import (
 
 pytestmark = pytest.mark.release
 
-RESTORE_PROJECT = "smartnote-restore-test"
-BACKUP_ENV = {
-    "PILOT_ENV_FILE": str(Path.home() / ".config/smartnote/pilot.env"),
-    # The scripts default to the working project; acceptance must point them at
-    # its own isolated project explicitly.
-    "COMPOSE_PROJECT_NAME": ACCEPTANCE_PROJECT,
-    "PILOT_BACKUP_PROJECT": ACCEPTANCE_PROJECT,
-}
+RESTORE_PROJECT = os.environ.get("PILOT_RESTORE_PROJECT", "smartnote-restore-" + ACCEPTANCE_PROJECT)
+assert RESTORE_PROJECT.startswith("smartnote-restore-")
+assert RESTORE_PROJECT != ACCEPTANCE_PROJECT
 
 
 def psql(project: str, sql: str) -> str:
@@ -36,20 +35,11 @@ def psql(project: str, sql: str) -> str:
 
 
 def _compose(project: str, *args: str, check: bool = True) -> subprocess.CompletedProcess:
-    command = ["docker", "compose", "-f", str(ROOT / "compose.yaml")]
-    env_file = Path.home() / ".config/smartnote/pilot.env"
-    if env_file.is_file():
-        command.extend(["--env-file", str(env_file)])
-    environment = dict(os.environ)
-    environment["COMPOSE_PROJECT_NAME"] = project
-    return subprocess.run(
-        [*command, *args], cwd=ROOT, capture_output=True, text=True, check=check, env=environment
-    )
+    return compose(*args, check=check, project=None if project == ACCEPTANCE_PROJECT else project)
 
 
 def run_script(*args: str, expect: int = 0) -> subprocess.CompletedProcess:
-    environment = dict(os.environ)
-    environment.update(BACKUP_ENV)
+    environment = compose_environment()
     result = subprocess.run(
         [sys.executable, *args], cwd=ROOT, capture_output=True, text=True, check=False, env=environment
     )
@@ -71,7 +61,35 @@ def prepare_source() -> dict:
         revision=current["revision"], key=mutation_key(),
         photo=(PHOTO_FIXTURE.name, "image/png", PHOTO_FIXTURE.read_bytes()),
     ).body
-    return {"check": check, "photo": photo["entity_id"]}
+    submitted = client.expect(
+        "POST", f"/bundles/{bundle['id']}/submit", 202,
+        payload={"input_version_id": bundle["draft"]["id"]},
+        revision=photo["check_revision"], key=mutation_key(),
+    ).body
+    cutoff = time.monotonic() + 60
+    while client.expect("GET", f"/jobs/{submitted['job']['id']}", 200).body["state"] != "succeeded":
+        assert time.monotonic() < cutoff
+        time.sleep(0.1)
+    current = client.expect("GET", check, 200).body
+    revision = client.expect("POST", f"{check}/begin-completion", 200,
+                             revision=current["revision"], key=mutation_key()).body["check_revision"]
+    for task in current["notebooks"][0]["bundles"][0]["tasks"]:
+        if task["analysis"]["result"] == "not_assessed":
+            response = client.expect("POST", f"/tasks/{task['task_id']}/skip", 200,
+                                     payload={"analysis_id": task["analysis_id"]}, revision=revision, key=mutation_key())
+        else:
+            response = client.expect("PUT", f"/tasks/{task['task_id']}/review", 200,
+                                     payload={"analysis_id": task["analysis_id"], "state": "confirmed", "comment": "backup synthetic review"},
+                                     revision=revision, key=mutation_key())
+        revision = response.body["check_revision"]
+    client.expect("POST", f"{check}/finalize", 202, revision=revision, key=mutation_key())
+    cutoff = time.monotonic() + 60
+    while client.expect("GET", f"{check}/summary", 200).body["state"] != "succeeded":
+        assert time.monotonic() < cutoff
+        time.sleep(0.1)
+    return {"check": check, "photo": photo["entity_id"],
+            "graph_hash": psql(ACCEPTANCE_PROJECT, f"select md5(graph::text) from pilot_checks where id='{check.rsplit('/', 1)[1]}'"),
+            "summary_job": psql(ACCEPTANCE_PROJECT, f"select selected_summary_job_id from pilot_checks where id='{check.rsplit('/', 1)[1]}'")}
 
 
 def test_rel_c28_backup_and_restore_into_separate_project(tmp_path: Path):
@@ -134,6 +152,13 @@ def test_rel_c28_backup_and_restore_into_separate_project(tmp_path: Path):
         RESTORE_PROJECT,
         "select count(*) from pilot_photo_assets where id='" + material["photo"] + "'",
     ) == "1"
+    material_id = material["check"].rsplit("/", 1)[1]
+    assert psql(RESTORE_PROJECT, f"select md5(graph::text) from pilot_checks where id='{material_id}'") == material["graph_hash"]
+    assert psql(RESTORE_PROJECT, f"select selected_summary_job_id from pilot_checks where id='{material_id}'") == material["summary_job"]
+    assert psql(RESTORE_PROJECT, f"select count(*) from pilot_analytics_results where job_id='{material['summary_job']}'") == "1"
+    path = psql(RESTORE_PROJECT, f"select normalized_path from pilot_photo_assets where id='{material['photo']}'")
+    digest_script = f"import hashlib;from pathlib import Path;print(hashlib.sha256(Path({path!r}).read_bytes()).hexdigest())"
+    assert _compose(RESTORE_PROJECT, "exec", "-T", "backend", "python", "-c", digest_script).stdout == _compose(ACCEPTANCE_PROJECT, "exec", "-T", "backend", "python", "-c", digest_script).stdout
 
     for path in psql(RESTORE_PROJECT, "select normalized_path from pilot_photo_assets").splitlines():
         if not path.strip():
@@ -155,8 +180,59 @@ def test_rel_c28_backup_and_restore_into_separate_project(tmp_path: Path):
         "--bundle", str(bundle), "--project", RESTORE_PROJECT, expect=2,
     )
     assert "already contains pilot data" in again.stderr
+    assert not again.stdout.strip(), "A refused restore must not print a success report"
+
+    # A stopped PostgreSQL with retained volumes is still an existing target.
+    # Verify refusal before any target process/container/data mutation.
+    target_check = material["check"].rsplit("/", 1)[1]
+    psql(RESTORE_PROJECT, f"update pilot_checks set title='STOPPED_TARGET_SENTINEL' where id='{target_check}'")
+    psql(RESTORE_PROJECT, "update pilot_processing_budget set spend_limit_rub=432 where mode='fixture'")
+    target_ids = _compose(RESTORE_PROJECT, "ps", "--all", "--format", "{{.ID}}").stdout.split()
+    _compose(RESTORE_PROJECT, "stop", "backend", "worker", "postgres")
+    stopped_state = _compose(RESTORE_PROJECT, "ps", "--all", "--format", "{{.ID}} {{.State}}").stdout
+    refused = run_script(
+        str(ROOT / "scripts/pilot/restore_local.py"),
+        "--bundle", str(bundle), "--project", RESTORE_PROJECT, expect=2,
+    )
+    assert "existing resources" in refused.stderr
+    assert not refused.stdout.strip()
+    assert _compose(RESTORE_PROJECT, "ps", "--all", "--format", "{{.ID}} {{.State}}").stdout == stopped_state
+    _compose(RESTORE_PROJECT, "up", "-d", "--wait", "postgres")
+    assert _compose(RESTORE_PROJECT, "ps", "--all", "--format", "{{.ID}}").stdout.split() == target_ids
+    assert psql(RESTORE_PROJECT, f"select title from pilot_checks where id='{target_check}'") == "STOPPED_TARGET_SENTINEL"
+    assert psql(RESTORE_PROJECT, "select spend_limit_rub from pilot_processing_budget where mode='fixture'") == "432"
+    assert psql(ACCEPTANCE_PROJECT, f"select count(*) from pilot_checks where id='{target_check}'") == "1"
+    assert psql(ACCEPTANCE_PROJECT, "select spend_limit_rub from pilot_processing_budget where mode='fixture'") == "500"
 
     _compose(RESTORE_PROJECT, "down", "-v", "--remove-orphans", check=False)
+
+
+def test_rel_c28_backup_project_argument_overrides_conflicting_environment(tmp_path: Path):
+    """The actual CLI must dump --project, not an unrelated ENV project."""
+    conflicting_project = RESTORE_PROJECT + "-env-conflict"
+    assert not _compose(conflicting_project, "ps", "--all", "--format", "{{.ID}}").stdout.strip()
+    source_ids = _compose(ACCEPTANCE_PROJECT, "ps", "--all", "--format", "{{.ID}}").stdout.split()
+    before = psql(ACCEPTANCE_PROJECT, "select count(*) from pilot_checks")
+    _compose(ACCEPTANCE_PROJECT, "stop", "backend", "worker")
+    try:
+        environment = compose_environment()
+        environment["COMPOSE_PROJECT_NAME"] = conflicting_project
+        environment["PILOT_BACKUP_PROJECT"] = conflicting_project
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "scripts/pilot/backup_local.py"),
+             "--destination", str(tmp_path / "project-choice"), "--project", ACCEPTANCE_PROJECT],
+            cwd=ROOT, env=environment, capture_output=True, text=True,
+        )
+        assert result.returncode == 0, result.stderr
+        manifest = json.loads(result.stdout)
+        assert manifest["project"] == ACCEPTANCE_PROJECT
+        assert (Path(manifest["bundle"]) / "database.dump").stat().st_size > 0
+        assert not _compose(conflicting_project, "ps", "--all", "--format", "{{.ID}}").stdout.strip()
+        assert psql(ACCEPTANCE_PROJECT, "select count(*) from pilot_checks") == before
+        assert _compose(ACCEPTANCE_PROJECT, "ps", "--all", "--format", "{{.ID}}").stdout.split() == source_ids
+    finally:
+        _compose(ACCEPTANCE_PROJECT, "start", "backend", "worker")
+        wait_healthy()
 
 
 def test_rel_c28_unknown_reserve_survives_backup_and_restore(tmp_path: Path):
@@ -250,13 +326,9 @@ def test_rel_c03_migrations_are_serialized_and_idempotent():
 
     parallel = [
         subprocess.Popen(
-            [
-                "docker", "compose", "-f", str(ROOT / "compose.yaml"),
-                "--env-file", str(Path.home() / ".config/smartnote/pilot.env"),
-                "exec", "-T", "backend", "python", "-m", "pilot.domain.migrate",
-            ],
+            compose_command("exec", "-T", "backend", "python", "-m", "pilot.domain.migrate"),
             cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
-            env={**os.environ, "COMPOSE_PROJECT_NAME": ACCEPTANCE_PROJECT},
+            env=compose_environment(),
         )
         for _ in range(2)
     ]
