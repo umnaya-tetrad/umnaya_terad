@@ -120,30 +120,43 @@ async function act(page: Page, label: string | RegExp, exact = true, timeout = 1
   throw new Error(`Action ${String(label)} kept conflicting with the current revision`)
 }
 
-/**
- * Upload one page, following the documented 409 recovery when polling advanced
- * the revision while the upload was in flight (ux-flows, S04/S05).
- */
+/** Confirm this upload's receipt and newly saved preview, never an older tile. */
 async function upload(page: Page, file = PNG) {
   const conflict = page.getByRole('button', { name: 'Обновить страницу', exact: true })
   const gallery = page.getByRole('button', { name: 'Выбрать из галереи', exact: true })
-  const photo = page.getByText(/Фото \d+ из \d+/).first()
-
-  for (let attempt = 1; attempt <= 3; attempt += 1) {
-    if (await conflict.count()) {
-      await conflict.click()
-      await gallery.waitFor()
-    }
+  const previews = page.locator('.photo-tile')
+  const before = await previews.count()
+  const conflictAlert = page.getByRole('alert').filter({ hasText: 'Данные проверки изменились.' })
+  const uploadAlert = page.getByRole('alert')
+  async function select() {
+    const receipt = page.waitForResponse(response => response.request().method() === 'POST' &&
+      /^\/api\/input-versions\/[^/]+\/photos$/.test(new URL(response.url()).pathname))
+      .then(response => ({ response })).catch(() => ({ response: undefined }))
+    const failure = uploadAlert.waitFor().then(() => ({ response: undefined })).catch(() => ({ response: undefined }))
     const choosing = page.waitForEvent('filechooser')
     await gallery.click()
     await (await choosing).setFiles(file)
-    const settled = await Promise.race([
-      photo.waitFor({ timeout: 10_000 }).then(() => 'ok').catch(() => undefined),
-      conflict.waitFor({ timeout: 10_000 }).then(() => 'conflict').catch(() => undefined),
-    ])
-    if (settled === 'ok') return
+    const { response } = await Promise.race([receipt, failure])
+    if (!response && !await conflictAlert.count()) {
+      throw new Error(`Upload failed before a receipt: ${await uploadAlert.textContent()}`)
+    }
+    if (!response || response.status() === 409) {
+      await expect(conflictAlert).toBeVisible()
+      return false
+    }
+    expect(response.status(), await response.text()).toBe(201)
+    await expect(previews).toHaveCount(before + 1)
+    await expect(page.getByText(`Фото ${before + 1} из ${before + 1}`, { exact: true })).toBeVisible()
+    return true
   }
-  throw new Error('Upload did not reach the saved state or the documented conflict recovery')
+  if (await select()) return
+  // One explicit recovery of the documented revision conflict. A failed file
+  // response (415/422/etc.) above fails immediately instead of being retried.
+  await test.step('Refresh after upload revision conflict and explicitly select the file again', async () => {
+    await conflict.click()
+    await expect(conflictAlert).toHaveCount(0)
+    expect(await select(), 'The explicit upload recovery must save the new file').toBe(true)
+  })
 }
 
 test('REL-C26 excluded surfaces stay absent in the assembled UI', async ({ page }) => {
@@ -180,6 +193,15 @@ test('REL-C08 uploads a page and rejects an unsupported file', async ({ page }) 
     },
   )
   expect(rejected.status(), await rejected.text()).toBe(415)
+
+  // A filename-derived hint must never bypass the server's image-byte checks.
+  const invalidPhoto = page.waitForResponse(response => response.request().method() === 'POST' &&
+    /^\/api\/input-versions\/[^/]+\/photos$/.test(new URL(response.url()).pathname))
+  const choosing = page.waitForEvent('filechooser')
+  await page.getByRole('button', { name: 'Выбрать из галереи', exact: true }).click()
+  await (await choosing).setFiles({ name: 'fake.heic', mimeType: '', buffer: Buffer.from('%PDF-1.4 synthetic') })
+  expect((await invalidPhoto).status()).toBe(422)
+  await expect(page.getByRole('alert')).toContainText('Фото не удалось прочитать.')
 
   const photos = await page.request.get(`/api/checks/${harness.checkId()}`)
   const check = await photos.json()
