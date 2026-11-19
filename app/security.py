@@ -17,8 +17,8 @@ def write_origin_allowed(request: Request, settings) -> bool:
         return False
     origin = request.headers.get('origin')
     if origin is None:
-        # Authorized CLI clients do not send browser metadata. This is not proof of a human.
-        return True
+        # Pilot writes require the exact browser origin, including login/logout.
+        return False
     allowed = {item.strip() for item in settings.allowed_browser_origins.split(',') if item.strip()}
     return origin in allowed
 

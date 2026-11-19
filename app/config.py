@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     polza_connect_timeout_seconds: float = Field(default=15, ge=2, le=30)
     pilot_transport: str = "polza"
     pilot_storage_root: str = "/data/pilot/photos"
+    pilot_pricing_profile_file: str | None = None
     polza_model: str = "google/gemini-3.8-flash"
     polza_provider: str = "google-ai-studio/flex"
     polza_max_completion_tokens: int = 25000
