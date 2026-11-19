@@ -2,6 +2,8 @@ import asyncio
 import io
 import json
 import shutil
+import os
+import sys
 from decimal import Decimal
 from uuid import UUID, uuid4
 
@@ -192,10 +194,37 @@ async def test_proc_c02(h):
     assert not any("/api/api/" in path for path in routes)
     await heartbeat(h.svc, uuid4())
     assert await healthcheck(h.svc)
+
+    async def cli(database_url):
+        env = {
+            **os.environ,
+            "DATABASE_URL": database_url,
+            "PILOT_TRANSPORT": "fixture",
+            "PYTHONPATH": str(ROOT / "app"),
+        }
+        child = await asyncio.create_subprocess_exec(
+            sys.executable,
+            "-m",
+            "pilot.processing.worker",
+            "--healthcheck",
+            cwd=ROOT / "app",
+            env=env,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        await asyncio.wait_for(child.communicate(), 15)
+        return child.returncode
+
+    assert await cli(h.svc.test_database_url) == 0
     await h.svc.pool.execute(
         "UPDATE pilot_workers SET heartbeat_at=now()-interval '60 seconds'"
     )
     assert not await healthcheck(h.svc)
+    assert await cli(h.svc.test_database_url) != 0
+    assert (
+        await cli("postgresql://pilot_test_admin@127.0.0.1:1/pilot_test_unavailable")
+        != 0
+    )
     assert (ROOT / "app/pilot/contracts.py").read_bytes() == (
         SHARED / "api/contracts.py"
     ).read_bytes()
@@ -209,6 +238,26 @@ async def test_proc_c03(h):
     await h.call("getCheck", actor="anon", check_id=ids[0], expected=401)
     await h.call("getBundleHistory", bundle_id=ids[2], expected=403)
     await h.call("getBundleHistory", actor="staff", bundle_id=ids[2], expected=200)
+    login = await h.call(
+        "login",
+        payload={"login": "test_t1", "password": "synthetic-test-password-47"},
+        expected=200,
+    )
+    cookie = login.headers["set-cookie"].lower()
+    assert "httponly" in cookie and "samesite=lax" in cookie
+    assert ("secure" in cookie) == h.svc.settings.visitor_cookie_secure
+    revision = (await h.check())["revision"]
+    denied = await h.clients["t1"].post(
+        "/api/checks/" + ids[0] + "/begin-completion",
+        headers={
+            "Origin": "https://synthetic-untrusted.invalid",
+            "Idempotency-Key": str(uuid4()),
+            "If-Match": f'"{revision}"',
+        },
+    )
+    assert denied.status_code == 403
+    assert (await h.check())["revision"] == revision
+    await h.call("createNotebook", actor="staff", check_id=ids[0], expected=403)
     await h.call(
         "login",
         actor="anon",
@@ -229,6 +278,15 @@ async def test_proc_c03(h):
     )
     await h.call("getSession", expected=401)
     await h.call("getSession", actor="t2", expected=200)
+    await h.svc.pool.execute(
+        "UPDATE auth_sessions SET expires_at=now()-interval '1 second' WHERE user_id=$1",
+        UUID(h.ids["t2"]),
+    )
+    await h.call("getSession", actor="t2", expected=401)
+    hashes = await h.svc.pool.fetch("SELECT password_hash FROM users")
+    assert all(
+        "synthetic-test-password-47" not in row["password_hash"] for row in hashes
+    )
     assert (await authenticate(h.svc, "test_t1", "new-synthetic-password-49")).session[
         "user_id"
     ] == h.ids["t1"]
@@ -238,12 +296,29 @@ async def test_proc_c03(h):
 
 
 async def test_proc_c04(h):
+    from ..harness import CommittedAckLostPool
+
     ids = await h.create()
     key = uuid4()
     revision = (await h.check())["revision"]
-    first = await h.submit(ids[2], ids[3], expected=202, key=key, revision=revision)
+    base = h.svc.pool
+    h.svc.pool = CommittedAckLostPool(base)
+    try:
+        with pytest.raises(ConnectionResetError, match="COMMIT"):
+            await h.submit(ids[2], ids[3], key=key, revision=revision)
+    finally:
+        h.svc.pool = base
+    first = json.loads(
+        await base.fetchval("SELECT body FROM pilot_idempotency WHERE key=$1", key)
+    )
     replay = await h.submit(ids[2], ids[3], expected=202, key=key, revision=revision)
-    assert first.json() == replay.json()
+    assert first == replay.json()
+    assert (
+        await base.fetchval(
+            "SELECT count(*) FROM pilot_outbox WHERE event_name='submit_bundle'"
+        )
+        == 1
+    )
     assert await h.svc.pool.fetchval("SELECT count(*) FROM pilot_jobs") == 1
     assert (
         await h.svc.pool.fetchval(
@@ -260,6 +335,7 @@ async def test_proc_c06(h):
     await ready(h)
     task = tasks(await h.check())[0]
     revision = (await h.check())["revision"]
+    data_revision = (await h.check())["data_revision"]
     payload = {"analysis_id": task["analysis_id"], "state": "confirmed", "comment": ""}
     await h.call(
         "saveReview",
@@ -268,6 +344,8 @@ async def test_proc_c06(h):
         revision=revision,
         expected=200,
     )
+    assert (await h.check())["revision"] == revision + 1
+    assert (await h.check())["data_revision"] == data_revision + 1
     await h.call(
         "saveReview",
         task_id=task["task_id"],
@@ -434,6 +512,16 @@ async def test_proc_c10(h):
 async def test_proc_c11(h):
     ids, gateway, _ = await ready(h, count=2, mixed=True)
     task = tasks(await h.check())[0]
+    await h.call(
+        "saveReview",
+        task_id=task["task_id"],
+        payload={
+            "analysis_id": task["analysis_id"],
+            "state": "confirmed",
+            "comment": "",
+        },
+        expected=200,
+    )
     await h.call("deleteTask", task_id=task["task_id"], expected=200)
     await h.call(
         "retryBundle",
@@ -448,6 +536,14 @@ async def test_proc_c11(h):
     ).json()
     assert len(history["versions"]) == 1 and len(history["versions"][0]["runs"]) == 2
     assert task["task_id"] in history["versions"][0]["runs"][0]["deleted_task_ids"]
+    assert (
+        await h.svc.pool.fetchval(
+            "SELECT state FROM pilot_reviews WHERE analysis_id=$1",
+            UUID(task["analysis_id"]),
+        )
+        == "confirmed"
+    )
+    assert all(t["review"] is None for t in tasks(await h.check()))
 
 
 async def test_proc_c12(h):
@@ -485,9 +581,25 @@ async def test_proc_c13(h):
     await h.call("getPhoto", photo_id=photo, expected=200)
     await h.call("deleteTask", task_id=items[1]["task_id"], expected=200)
     assert tasks(await h.check()) == []
-    await h.call("deleteNotebook", notebook_id=ids[1], expected=200)
-    created = await h.call("createNotebook", check_id=ids[0], expected=201)
-    assert (await h.check())["notebooks"][0]["number"] == 2
+    await h.call("beginCompletion", check_id=ids[0], expected=200)
+    await h.call("finalizeCheck", check_id=ids[0], expected=202)
+    h.svc.transport = None
+    await h.run()
+    summary = (await h.call("getSummary", check_id=ids[0], expected=200)).json()
+    assert (
+        summary["state"] == "succeeded" and summary["result"]["notebooks"]["empty"] == 1
+    )
+    assert (
+        summary["result"]["notebooks"]["without_errors"] == 0
+        and summary["result"]["average_errors_per_notebook"] is None
+    )
+    ids = await h.create(photos=0)
+    second = (await h.call("createNotebook", check_id=ids[0], expected=201)).json()[
+        "entity_id"
+    ]
+    await h.call("deleteNotebook", notebook_id=second, expected=200)
+    await h.call("createNotebook", check_id=ids[0], expected=201)
+    assert [n["number"] for n in (await h.check())["notebooks"]] == [1, 3]
 
 
 async def test_proc_c14(h):
@@ -508,7 +620,6 @@ async def test_proc_c14(h):
 
 
 async def test_proc_c20(h):
-    await wallet(h.svc)
     h.svc.transport = Gateway()
     ids = await h.create(photos=0)
     denied = await h.call("finalizeCheck", check_id=ids[0], expected=409)

@@ -43,6 +43,27 @@ async def main():
         value = json.loads(
             Path(os.environ["PILOT_TEST_REPORT"]).read_text(encoding="utf-8")
         )
+        if job["kind"] == "class_analytics":
+            value = {
+                "schema_version": "class-summary/1",
+                "notebooks": {
+                    "total": 1,
+                    "with_errors": 1,
+                    "without_errors": 0,
+                    "partial": 0,
+                    "empty": 0,
+                },
+                "average_errors_per_notebook": 1,
+                "incomplete_tasks": 0,
+                "disputed_tasks": 0,
+                "unassessed_tasks": 0,
+                "top_errors": [
+                    {
+                        "rule": "Синтетическое правило",
+                        "task_ids": [payload["notebooks"][0]["tasks"][0]["task_id"]],
+                    }
+                ],
+            }
         return TransportResult(
             "success",
             payload=value,

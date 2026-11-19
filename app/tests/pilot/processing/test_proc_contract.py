@@ -60,7 +60,6 @@ async def wait_sql(h, query, expected):
 
 
 async def test_proc_c05(h):
-    await wallet(h.svc)
     ids = await h.create()
     key = uuid4()
     revision = (await h.check())["revision"]
@@ -107,7 +106,6 @@ async def test_proc_c05(h):
 
 
 async def test_proc_c09(h):
-    await wallet(h.svc)
     for count, photos, continued in [
         (1, 1, False),
         (2, 1, False),
@@ -133,6 +131,30 @@ async def test_proc_c09(h):
     ).json()
     assert job["state"] == "failed" and job["reason"] == "invalid_response"
     assert tasks(await h.check()) == []
+    correct = report()
+    correct["tasks"][0].update(
+        result="all_steps_correct",
+        first_error=None,
+        completeness="incomplete",
+        completeness_note="Решение не завершено",
+    )
+    h.svc.transport = Gateway(page_report=correct)
+    ids = await h.create()
+    submitted = await h.submit(ids[2], ids[3], expected=202)
+    await h.run()
+    incomplete = tasks(await h.check())[0]["analysis"]
+    assert (
+        incomplete["result"] == "all_steps_correct"
+        and incomplete["completeness"] == "incomplete"
+        and incomplete["first_error"] is None
+    )
+    assert (
+        await h.svc.pool.fetchval(
+            "SELECT auto_retry_count FROM pilot_jobs WHERE id=$1",
+            UUID(submitted.json()["job"]["id"]),
+        )
+        == 0
+    )
 
 
 async def test_proc_c15(h):
@@ -141,7 +163,6 @@ async def test_proc_c15(h):
     from pilot.processing.attempts import complete
     from pilot.processing.transport import TransportResult
 
-    await wallet(h.svc)
     ids = await h.create()
     await h.submit(ids[2], ids[3], expected=202)
     await h.svc.pool.execute("CREATE TABLE test_gateway_calls(job_id UUID,kind TEXT)")
@@ -186,10 +207,56 @@ async def test_proc_c15(h):
     assert not await complete(h.svc, old, stale)
     assert (await h.check())["revision"] == before
     assert await h.svc.pool.fetchval("SELECT count(*) FROM test_gateway_calls") == 2
+    # Three genuinely separate processes contend for three different Jobs,
+    # including analytics. A process-local semaphore cannot satisfy this test.
+    await ready(h)
+    analytic = await finalize(h)
+    jobs = [UUID(analytic.json()["job"]["id"])]
+    for actor in ("t1", "t2"):
+        ids = await h.create(actor=actor)
+        accepted = await h.submit(ids[2], ids[3], actor=actor, expected=202)
+        jobs.append(UUID(accepted.json()["job"]["id"]))
+    await h.svc.pool.execute("TRUNCATE test_worker_ready")
+    await h.svc.pool.execute(
+        "UPDATE test_gateway_control SET start_released=false,dispatch_released=false"
+    )
+    h.svc.test_gateway_gate = True
+    workers = await asyncio.gather(child(h), child(h), child(h))
+    try:
+        await wait_sql(h, "SELECT count(*) FROM test_worker_ready", 3)
+        await h.svc.pool.execute("UPDATE test_gateway_control SET start_released=true")
+        await wait_sql(h, "SELECT count(*) FROM test_gateway_calls", 4)
+
+        async def one_declines():
+            while all(p.returncode is None for p in workers):
+                await asyncio.sleep(0.01)
+
+        await asyncio.wait_for(one_declines(), 15)
+        assert (
+            await h.svc.pool.fetchval(
+                "SELECT count(*) FROM pilot_slots WHERE attempt_id IS NOT NULL"
+            )
+            == 2
+        )
+        assert await h.svc.pool.fetchval("SELECT count(*) FROM test_gateway_calls") == 4
+    finally:
+        await h.svc.pool.execute(
+            "UPDATE test_gateway_control SET dispatch_released=true,start_released=true"
+        )
+        await asyncio.gather(*(finish(p) for p in workers))
+    last = await child(h)
+    await finish(last)
+    assert await h.svc.pool.fetchval("SELECT count(*) FROM test_gateway_calls") == 5
+    assert (
+        await h.svc.pool.fetchval(
+            "SELECT count(*) FROM pilot_jobs WHERE id=ANY($1::uuid[]) AND state='succeeded'",
+            jobs,
+        )
+        == 3
+    )
 
 
 async def test_proc_c16(h):
-    await wallet(h.svc)
     await h.svc.pool.execute("CREATE TABLE test_gateway_calls(job_id UUID,kind TEXT)")
     for outcomes, state in [
         (("temporary_failure", "success"), "succeeded"),
@@ -227,8 +294,8 @@ async def test_proc_c16(h):
 
 async def test_proc_c17(h):
     from pilot.processing.worker import recover_expired
+    from pilot.processing.budget import get_budget
 
-    await wallet(h.svc)
     ids = await h.create()
     response = await h.submit(ids[2], ids[3], expected=202)
     await h.svc.pool.execute("CREATE TABLE test_gateway_calls(job_id UUID,kind TEXT)")
@@ -251,10 +318,14 @@ async def test_proc_c17(h):
         await h.call("getJob", job_id=response.json()["job"]["id"], expected=200)
     ).json()
     assert job["state"] == "unknown" and not job["can_retry"]
-    hold = await h.svc.pool.fetchval(
-        "SELECT held_rub FROM pilot_funds WHERE mode='fixture'"
+    hold = (await get_budget(h.svc)).held_rub
+    assert hold == 1
+    assert (
+        await h.svc.pool.fetchval(
+            "SELECT count(*) FROM pilot_attempts WHERE state='unknown' AND actual_cost_rub IS NULL"
+        )
+        == 1
     )
-    assert hold > 0
     await recover_expired(h.svc)
     restarted = await child(h)
     await finish(restarted)
@@ -265,14 +336,9 @@ async def test_proc_c17(h):
         payload={"input_version_id": ids[3]},
         expected=200,
     )
-    assert (
-        await h.svc.pool.fetchval(
-            "SELECT held_rub FROM pilot_funds WHERE mode='fixture'"
-        )
-        == hold
-    )
+    assert (await get_budget(h.svc)).held_rub == hold
     # Repeat the crash-after-dispatch scenario for class analytics. Its immutable
-    # snapshot and reservation also survive a real worker process restart.
+    # snapshot and unknown cost survive a real worker process restart.
     await ready(h)
     finalized = await finalize(h)
     analytics_id = UUID(finalized.json()["job"]["id"])
@@ -304,17 +370,19 @@ async def test_proc_c17(h):
     restarted = await child(h)
     await finish(restarted)
     assert await h.svc.pool.fetchval("SELECT count(*) FROM test_gateway_calls") == 2
-    total_hold = await h.svc.pool.fetchval(
-        "SELECT held_rub FROM pilot_funds WHERE mode='fixture'"
+    unknown_before = await h.svc.pool.fetchval(
+        "SELECT count(*) FROM pilot_attempts WHERE state='unknown' AND actual_cost_rub IS NULL"
     )
-    assert total_hold == hold + 1
+    assert unknown_before == 2
+    assert (await get_budget(h.svc)).held_rub == hold + 1
     await h.call("deleteCheck", check_id=h.check_id, expected=200)
     assert (
         await h.svc.pool.fetchval(
-            "SELECT held_rub FROM pilot_funds WHERE mode='fixture'"
+            "SELECT count(*) FROM pilot_attempts WHERE state='unknown' AND actual_cost_rub IS NULL"
         )
-        == total_hold
+        == unknown_before
     )
+    assert (await get_budget(h.svc)).held_rub == hold + 1
 
 
 async def test_proc_c18(h):
@@ -322,12 +390,12 @@ async def test_proc_c18(h):
     from pilot.processing.worker import recover_expired
     from pilot.processing.attempts import complete
     from pilot.processing.transport import TransportResult
+    from pilot.processing.budget import get_budget
     from pilot.processing.reconciliation import (
         reconcile_attempt,
         ReconciliationEvidence,
     )
 
-    await wallet(h.svc)
     ids = await h.create()
     submitted = await h.submit(ids[2], ids[3], expected=202)
     claimed = await claim(h.svc, uuid4())
@@ -341,10 +409,15 @@ async def test_proc_c18(h):
         await h.call("getJob", job_id=submitted.json()["job"]["id"], expected=200)
     ).json()
     assert job["state"] == "unknown"
-    held = await h.svc.pool.fetchval(
-        "SELECT held_rub FROM pilot_funds WHERE mode='fixture'"
+    hold = (await get_budget(h.svc)).held_rub
+    assert hold == 1
+    assert (
+        await h.svc.pool.fetchval(
+            "SELECT actual_cost_rub FROM pilot_attempts WHERE id=$1",
+            claimed["attempt_id"],
+        )
+        is None
     )
-    assert held == 1
     await h.call(
         "skipBundle",
         bundle_id=ids[2],
@@ -375,11 +448,13 @@ async def test_proc_c18(h):
         raw=json.dumps(report()),
     )
     assert not await complete(h.svc, claimed, late)
+    assert (await get_budget(h.svc)).held_rub == hold
     assert (
         await h.svc.pool.fetchval(
-            "SELECT held_rub FROM pilot_funds WHERE mode='fixture'"
+            "SELECT actual_cost_rub FROM pilot_attempts WHERE id=$1",
+            claimed["attempt_id"],
         )
-        == held
+        is None
     )
     assert (
         await h.svc.pool.fetchval(
@@ -393,6 +468,7 @@ async def test_proc_c18(h):
     )
     assert (await h.check())["data_revision"] == baseline["data_revision"]
     assert tasks(await h.check()) == []
+    assert (await h.call("getSummary", check_id=ids[0], expected=200)).json() == summary
     evidence = ReconciliationEvidence(
         reference="synthetic verified late evidence",
         sha256="7" * 64,
@@ -417,6 +493,7 @@ async def test_proc_c18(h):
         request_id=rid,
     )
     assert first.changed and not second.changed
+    assert (await get_budget(h.svc)).held_rub == 0
     assert (
         await h.svc.pool.fetchval(
             "SELECT count(*) FROM pilot_fund_ledger WHERE attempt_id=$1 AND operation='settlement'",
@@ -424,12 +501,9 @@ async def test_proc_c18(h):
         )
         == 1
     )
-    assert (
-        await h.svc.pool.fetchval(
-            "SELECT held_rub FROM pilot_funds WHERE mode='fixture'"
-        )
-        == 0
-    )
+    assert await h.svc.pool.fetchval(
+        "SELECT actual_cost_rub FROM pilot_attempts WHERE id=$1", claimed["attempt_id"]
+    ) == Decimal(".2")
 
 
 async def test_proc_c19(h):
@@ -439,7 +513,6 @@ async def test_proc_c19(h):
     ids = await h.create(photos=2)
     await h.submit(ids[2], ids[3], expected=202)
     # Explicit fixture sends no external HTTP and is not selected by missing key.
-    await wallet(h.svc)
     gateway = Gateway()
     h.svc.transport = gateway
     await h.run()
@@ -457,69 +530,105 @@ async def test_proc_c19(h):
 
 
 async def test_proc_c27(h):
-    from pilot.processing.funds import fund_wallet, FundsEvidence
+    """Atomic shared cap, hot CLI update, and the original live worker identities."""
+    from pilot.processing.budget import get_budget, set_spend_limit
 
-    await wallet(h.svc, "10.01")
+    initial = await get_budget(h.svc)
+    assert (
+        initial.spend_limit_rub == 500
+        and initial.spent_rub == 0
+        and initial.held_rub == 0
+    )
     await ready(h)
     await finalize(h)
-    h.svc.fixture_request_bound = Decimal("6")
+    analytics_job = (
+        await h.call("getSummary", check_id=h.check_id, expected=200)
+    ).json()["job_id"]
     second = await h.create(actor="t2")
-    await h.submit(second[2], second[3], actor="t2", expected=202)
+    page = await h.submit(second[2], second[3], actor="t2", expected=202)
+    job_ids = {analytics_job, page.json()["job"]["id"]}
+    baseline = (await get_budget(h.svc)).spent_rub
+    await set_spend_limit(
+        h.svc, spend_limit_rub=baseline + 10, operator_ref="pytest", request_id=uuid4()
+    )
+    h.svc.fixture_request_bound = Decimal(6)
     gateway = Gateway()
     gateway.release = asyncio.Event()
     h.svc.transport = gateway
-    runs = [asyncio.create_task(h.run()), asyncio.create_task(h.run())]
+    worker_ids = [uuid4(), uuid4()]
+    runs = [asyncio.create_task(h.run(wid)) for wid in worker_ids]
     try:
         await asyncio.wait_for(gateway.entered.wait(), 10)
         done, pending = await asyncio.wait(
             runs, timeout=10, return_when=asyncio.FIRST_COMPLETED
         )
         assert len(done) == 1 and not next(iter(done)).result()
-        state = await h.svc.pool.fetchrow(
-            "SELECT * FROM pilot_funds WHERE mode='fixture'"
+        budget = await get_budget(h.svc)
+        assert (
+            budget.held_rub == 6
+            and budget.available_rub == 4
+            and len(gateway.calls) == 1
         )
-        assert state["held_rub"] == 6 and state["balance_rub"] - state["held_rub"] == 4
-        assert len(gateway.calls) == 1
-        req = uuid4()
-        evidence = FundsEvidence(
-            reference="synthetic topup", sha256="b" * 64, profile_id="fixture"
+        assert not await h.svc.pool.fetchval(
+            "SELECT initialized FROM pilot_funds WHERE mode='fixture'"
         )
+        # Change the canonical cap from an actual second Python process while
+        # the first worker is still waiting on its accepted provider request.
+        request = uuid4()
+        env = {
+            **os.environ,
+            "DATABASE_URL": h.svc.test_database_url,
+            "PILOT_TRANSPORT": "fixture",
+            "PYTHONPATH": str(ROOT / "app"),
+        }
         for _ in range(2):
-            await fund_wallet(
-                h.svc,
-                operation="topup",
-                amount_rub=Decimal(5),
-                evidence=evidence,
-                operator_ref="pytest",
-                request_id=req,
+            cli = await asyncio.create_subprocess_exec(
+                sys.executable,
+                "-m",
+                "pilot.processing.budget",
+                "set-limit",
+                "--rub",
+                str(baseline + 15),
+                "--request-id",
+                str(request),
+                "--operator-ref",
+                "pytest-container-shell",
+                cwd=ROOT / "app",
+                env=env,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
             )
-        state = await h.svc.pool.fetchrow(
-            "SELECT * FROM pilot_funds WHERE mode='fixture'"
+            out, err = await asyncio.wait_for(cli.communicate(), 15)
+            assert cli.returncode == 0, (out.decode(), err.decode())
+            assert Decimal(json.loads(out)["spend_limit_rub"]) == baseline + 15
+        assert (
+            await h.svc.pool.fetchval(
+                "SELECT count(*) FROM pilot_budget_changes WHERE request_id=$1", request
+            )
+            == 1
         )
-        assert state["balance_rub"] == 15 and state["held_rub"] == 6
+        assert gateway.active == 1
         gateway.entered.clear()
-        runs.append(asyncio.create_task(h.run()))
+        resumed_id = worker_ids[runs.index(next(iter(done)))]
+        runs.append(asyncio.create_task(h.run(resumed_id)))
         await asyncio.wait_for(gateway.entered.wait(), 10)
-        state = await h.svc.pool.fetchrow(
-            "SELECT * FROM pilot_funds WHERE mode='fixture'"
-        )
-        assert state["held_rub"] == 12 and state["balance_rub"] - state["held_rub"] == 3
+        budget = await get_budget(h.svc)
+        assert budget.held_rub == 12 and budget.available_rub == 3
+        assert {c[0] for c in gateway.calls} == job_ids
     finally:
         gateway.release.set()
         await asyncio.gather(*runs)
-    await h.run()
-    assert len(gateway.calls) == 2
-    assert {call[1] for call in gateway.calls} == {"page_check", "class_analytics"}
+    budget = await get_budget(h.svc)
+    assert budget.spent_rub == baseline + Decimal(".02") and budget.held_rub == 0
+    assert not budget.paused
+    assert {c[1] for c in gateway.calls} == {"page_check", "class_analytics"}
     assert (
         await h.svc.pool.fetchval(
-            "SELECT count(*) FROM pilot_fund_ledger WHERE operation='settlement'"
+            "SELECT count(*) FROM pilot_jobs WHERE id=ANY($1::uuid[])",
+            [UUID(x) for x in job_ids],
         )
-        == 3
+        == 2
     )
-    with pytest.raises(Exception):
-        await h.svc.pool.execute(
-            "UPDATE pilot_funds SET held_rub=balance_rub+1 WHERE mode='fixture'"
-        )
 
 
 async def test_proc_c28(h):
@@ -570,51 +679,44 @@ async def test_proc_c28(h):
 
 
 async def test_proc_c29(h):
-    from pilot.processing.funds import fund_wallet, FundsEvidence
+    """Useful output with missing billing is published, held, then reconciled once."""
     from pilot.processing.reconciliation import (
         reconcile_attempt,
         ReconciliationEvidence,
     )
+    from pilot.processing.budget import get_budget
 
-    await wallet(h.svc, "10")
-    h.svc.transport = Gateway("unknown")
+    gateway = Gateway()
+    gateway.actual_cost = None
+    h.svc.transport = gateway
     ids = await h.create()
-    await h.submit(ids[2], ids[3], expected=202)
+    submitted = await h.submit(ids[2], ids[3], expected=202)
     await h.run()
-    attempt = await h.svc.pool.fetchval(
-        "SELECT id FROM pilot_attempts WHERE state='unknown'"
+    assert len(tasks(await h.check())) == 1
+    assert (
+        await h.call("getJob", job_id=submitted.json()["job"]["id"], expected=200)
+    ).json()["state"] == "succeeded"
+    await finalize(h)
+    await h.run()
+    summary = (await h.call("getSummary", check_id=ids[0], expected=200)).json()
+    assert summary["state"] == "succeeded" and summary["result"] is not None
+    attempts = await h.svc.pool.fetch(
+        "SELECT * FROM pilot_attempts ORDER BY created_at"
     )
-    before = await h.svc.pool.fetchval(
-        "SELECT held_rub FROM pilot_funds WHERE mode='fixture'"
+    assert len(attempts) == 2
+    assert all(
+        a["state"] == "settled"
+        and a["billing_state"] == "unknown"
+        and a["actual_cost_rub"] is None
+        for a in attempts
     )
-    assert before > 0
-    evidence = ReconciliationEvidence(
-        reference="synthetic settled",
-        sha256="c" * 64,
-        actual_cost_rub=Decimal(".2"),
-        provider_request_id="synthetic",
+    budget = await get_budget(h.svc)
+    assert (
+        budget.spent_rub == 0 and budget.held_rub == 2 and budget.available_rub == 498
     )
-    req = uuid4()
-    one = await reconcile_attempt(
-        h.svc,
-        attempt_id=attempt,
-        outcome="settled",
-        evidence=evidence,
-        operator_ref="pytest",
-        request_id=req,
-    )
-    two = await reconcile_attempt(
-        h.svc,
-        attempt_id=attempt,
-        outcome="settled",
-        evidence=evidence,
-        operator_ref="pytest",
-        request_id=req,
-    )
-    assert one.changed and not two.changed
     assert (
         await h.svc.pool.fetchval(
-            "SELECT held_rub FROM pilot_funds WHERE mode='fixture'"
+            "SELECT count(*) FROM pilot_slots WHERE attempt_id IS NOT NULL"
         )
         == 0
     )
@@ -622,90 +724,94 @@ async def test_proc_c29(h):
         await h.svc.pool.fetchval(
             "SELECT count(*) FROM pilot_fund_ledger WHERE operation='settlement'"
         )
-        == 1
-    )
-    with pytest.raises(Exception):
-        await fund_wallet(
-            h.svc,
-            operation="topup",
-            amount_rub=Decimal("NaN"),
-            evidence=FundsEvidence(
-                reference="bad", sha256="d" * 64, profile_id="fixture"
-            ),
-            operator_ref="pytest",
-            request_id=uuid4(),
-        )
-    assert (
-        await h.svc.pool.fetchval(
-            "SELECT balance_rub FROM pilot_funds WHERE mode='polza'"
-        )
         == 0
     )
-    # An over-bound settlement must preserve another unknown attempt's reserve,
-    # record the full liability once, and leave no invented available funds.
-    h.svc.transport = Gateway("unknown", "unknown")
-    for _ in range(2):
-        ids = await h.create()
-        await h.submit(ids[2], ids[3], expected=202)
-        await h.run()
-    unknown = await h.svc.pool.fetch(
-        "SELECT id FROM pilot_attempts WHERE state='unknown' ORDER BY created_at"
+    task = tasks(await h.check())[0]
+    await h.call(
+        "saveReview",
+        task_id=task["task_id"],
+        payload={
+            "analysis_id": task["analysis_id"],
+            "state": "system_error",
+            "comment": "",
+        },
+        expected=200,
     )
-    assert len(unknown) == 2
-    over = ReconciliationEvidence(
-        reference="synthetic over-bound",
-        sha256="e" * 64,
-        actual_cost_rub=Decimal("20"),
-        provider_request_id="synthetic-over",
+    stale = (await h.call("getSummary", check_id=ids[0], expected=200)).json()
+    assert stale["stale"] and stale["can_refresh"]
+    await h.call("refreshSummary", check_id=ids[0], expected=202)
+    # A proven execution outcome without a bill does not fabricate a zero cost.
+    no_bill = ReconciliationEvidence(
+        reference="synthetic execution proved; billing pending",
+        sha256="c" * 64,
+        actual_cost_rub=None,
+        provider_request_id="synthetic-no-bill",
     )
-    request = uuid4()
-    for _ in range(2):
-        await reconcile_attempt(
-            h.svc,
-            attempt_id=unknown[0]["id"],
-            outcome="settled",
-            evidence=over,
-            operator_ref="pytest",
-            request_id=request,
-        )
-    state = await h.svc.pool.fetchrow("SELECT * FROM pilot_funds WHERE mode='fixture'")
-    assert (
-        state["held_rub"] == 1
-        and state["balance_rub"] == 1
-        and state["outstanding_debt_rub"] == Decimal("11.2")
-        and state["paused"]
-    )
-    assert await h.svc.pool.fetchval(
-        "SELECT active FROM pilot_fund_reservations WHERE attempt_id=$1",
-        unknown[1]["id"],
-    )
-    credits = await h.svc.pool.fetchval(
-        "SELECT sum(amount_rub) FROM pilot_fund_ledger WHERE operation IN ('initialize','topup')"
-    )
-    debits = await h.svc.pool.fetchval(
-        "SELECT sum(amount_rub) FROM pilot_fund_ledger WHERE operation='settlement'"
-    )
-    assert state["balance_rub"] - state["outstanding_debt_rub"] == credits - debits
-    await fund_wallet(
+    await reconcile_attempt(
         h.svc,
-        operation="topup",
-        amount_rub=Decimal(5),
-        evidence=FundsEvidence(
-            reference="synthetic debt payment", sha256="f" * 64, profile_id="fixture"
-        ),
+        attempt_id=attempts[0]["id"],
+        outcome="settled",
+        evidence=no_bill,
         operator_ref="pytest",
         request_id=uuid4(),
     )
-    state = await h.svc.pool.fetchrow("SELECT * FROM pilot_funds WHERE mode='fixture'")
+    assert (await get_budget(h.svc)).held_rub == 2
+    for a in attempts:
+        evidence = ReconciliationEvidence(
+            reference="synthetic final invoice",
+            sha256="d" * 64,
+            actual_cost_rub=Decimal(".2"),
+            provider_request_id="synthetic-known",
+        )
+        request = uuid4()
+        first = await reconcile_attempt(
+            h.svc,
+            attempt_id=a["id"],
+            outcome="settled",
+            evidence=evidence,
+            operator_ref="pytest",
+            request_id=request,
+        )
+        replay = await reconcile_attempt(
+            h.svc,
+            attempt_id=a["id"],
+            outcome="settled",
+            evidence=evidence,
+            operator_ref="pytest",
+            request_id=request,
+        )
+        assert first.changed and not replay.changed
+        assert await h.svc.pool.fetchval(
+            "SELECT actual_cost_rub FROM pilot_attempts WHERE id=$1", a["id"]
+        ) == Decimal(".2")
+        assert (
+            await h.svc.pool.fetchval(
+                "SELECT count(*) FROM pilot_fund_ledger WHERE attempt_id=$1 AND operation='settlement'",
+                a["id"],
+            )
+            == 1
+        )
+    budget = await get_budget(h.svc)
     assert (
-        state["held_rub"] == 1
-        and state["balance_rub"] == 1
-        and state["outstanding_debt_rub"] == Decimal("6.2")
+        budget.spent_rub == Decimal(".4") and budget.held_rub == 0 and not budget.paused
+    )
+    history = (
+        await h.call("getSummaryHistory", actor="staff", check_id=ids[0], expected=200)
+    ).json()
+    assert (
+        next(
+            x["summary"]
+            for x in history["items"]
+            if x["summary"]["job_id"] == summary["job_id"]
+        )["result"]
+        == summary["result"]
+    )
+    assert not await h.svc.pool.fetchval(
+        "SELECT initialized FROM pilot_funds WHERE mode='fixture'"
     )
 
 
 async def test_proc_c30(h):
-    await wallet(h.svc)
     gateway = Gateway(page_report=report(3))
     h.svc.transport = gateway
     for actor in ("t1", "t2"):
@@ -781,8 +887,8 @@ async def test_proc_c30(h):
                 cid,
                 jid,
             )
-    balance = await h.svc.pool.fetchval(
-        "SELECT balance_rub FROM pilot_funds WHERE mode='fixture'"
+    settlements_before = await h.svc.pool.fetchval(
+        "SELECT count(*) FROM pilot_fund_ledger WHERE operation='settlement'"
     )
     fresh = Gateway()
     h.svc.transport = fresh
@@ -805,5 +911,9 @@ async def test_proc_c30(h):
         )
         == 0
     )
-    after = await h.svc.pool.fetchrow("SELECT * FROM pilot_funds WHERE mode='fixture'")
-    assert after["balance_rub"] == balance - Decimal(".02") and after["held_rub"] == 0
+    assert (
+        await h.svc.pool.fetchval(
+            "SELECT count(*) FROM pilot_fund_ledger WHERE operation='settlement'"
+        )
+        == settlements_before + 2
+    )

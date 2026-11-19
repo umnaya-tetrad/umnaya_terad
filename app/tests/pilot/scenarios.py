@@ -97,7 +97,7 @@ class Gateway:
             return TransportResult(
                 "success",
                 payload=result,
-                actual_cost_rub=Decimal("0.01"),
+                actual_cost_rub=getattr(self, "actual_cost", Decimal("0.01")),
                 provider_request_id="synthetic-" + str(len(self.calls)),
                 raw=json.dumps(result),
             )
@@ -123,10 +123,6 @@ async def wallet(svc, amount="1000"):
 async def ready(h, *, count=1, mixed=False):
     gateway = Gateway(page_report=report(count, mixed))
     h.svc.transport = gateway
-    if not await h.svc.pool.fetchval(
-        "SELECT initialized FROM pilot_funds WHERE mode='fixture'"
-    ):
-        await wallet(h.svc)
     ids = await h.create()
     response = await h.submit(ids[2], ids[3], expected=202)
     job_id = response.json()["job"]["id"]

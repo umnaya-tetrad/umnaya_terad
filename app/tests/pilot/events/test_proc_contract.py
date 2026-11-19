@@ -38,4 +38,14 @@ async def test_proc_c23(h):
         expected=422,
     )
     await h.call("ingestEvents", payload={"events": [event] * 101}, expected=422)
+    await h.call(
+        "ingestEvents",
+        payload={
+            "events": [
+                {**event, "id": str(uuid4())},
+                {**event, "id": str(uuid4()), "check_id": str(uuid4())},
+            ]
+        },
+        expected=404,
+    )
     assert await h.svc.pool.fetchval("SELECT count(*) FROM pilot_events") == 1

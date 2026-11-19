@@ -346,10 +346,10 @@ class Harness:
             **kwargs,
         )
 
-    async def run(self):
+    async def run(self, worker_id=None):
         from pilot.processing.worker import run_once
 
-        return await run_once(self.svc)
+        return await run_once(self.svc, worker_id)
 
     async def review_all(self):
         for notebook in (await self.check())["notebooks"]:

@@ -161,8 +161,8 @@ async def h(svc, request, monkeypatch):
         ]:
             counts[table] = await svc.pool.fetchval(f"SELECT count(*) FROM {table}")
         checks = {
-            "wallet_nonnegative_holds_and_protected_balance": await svc.pool.fetchval(
-                "SELECT bool_and(held_rub>=0 AND balance_rub>=held_rub AND outstanding_debt_rub>=0) FROM pilot_funds"
+            "budget_nonnegative_and_spend_matches_immutable_cost_ledger": await svc.pool.fetchval(
+                "SELECT bool_and(b.spend_limit_rub>=0 AND b.spent_rub>=0 AND b.held_rub>=0 AND b.spent_rub=COALESCE((SELECT sum(l.amount_rub) FROM pilot_fund_ledger l WHERE l.mode=b.mode AND l.operation='settlement'),0)) FROM pilot_processing_budget b"
             ),
             "global_active_slots_at_most_two": await svc.pool.fetchval(
                 "SELECT count(*)<=2 FROM pilot_slots WHERE attempt_id IS NOT NULL"
