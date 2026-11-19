@@ -181,11 +181,11 @@ export default function WorkbenchToolbar({ api, intents, currentId, currentNoteb
           <button key={target} disabled={busy || !catalog} onClick={() => void run(() => navigate(target))}>{label}</button>,
         )}
       </div>
-      <label>Сценарий<select disabled={busy} value={scenario?.id ?? ''} onChange={event => setScenarioId(event.target.value)}>
+      <label>Сценарий<select aria-label="Сценарий" disabled={busy} value={scenario?.id ?? ''} onChange={event => setScenarioId(event.target.value)}>
         {catalog?.scenarios.map(item => <option key={item.id} value={item.id}>{item.title}</option>)}
       </select></label>
       {scenario && <p className="help">{scenario.description}</p>}
-      <label>Экран<select disabled={busy} value={screen} onChange={event => setScreen(event.target.value as Screen)}>
+      <label>Экран<select aria-label="Экран" disabled={busy} value={screen} onChange={event => setScreen(event.target.value as Screen)}>
         <option value="scenario">Выбранный сценарий</option><option value="history">История проверок</option>
         <option value="new">Новая проверка</option><option value="capture">Съемка / тетрадь</option>
         <option value="queue">Очередь / обработка — новая копия</option><option value="review">Разбор и отзыв учителя</option>
@@ -199,10 +199,10 @@ export default function WorkbenchToolbar({ api, intents, currentId, currentNoteb
         <button disabled={busy} onClick={() => { create(); setExpanded(false) }}>Пройти с начала</button>
         <button disabled={busy || !scenario} onClick={() => void run(async () => { if (scenario) await fresh(scenario) })}>Новая копия → обработка</button>
       </div>
-      <label>Демо-фото<select disabled={busy} value={photoSetId} onChange={event => setPhotoSetId(event.target.value)}>
+      <label>Демо-фото<select aria-label="Демо-фото" disabled={busy} value={photoSetId} onChange={event => setPhotoSetId(event.target.value)}>
         {(catalog?.photo_sets ?? catalog?.scenarios ?? []).map(item => <option key={item.id} value={item.id}>{item.title}</option>)}
       </select></label>
-      <label>Тетрадь для демо-фото<select disabled={busy || !notebooks.length} value={currentNotebookId ?? ''}
+      <label>Тетрадь для демо-фото<select aria-label="Тетрадь для демо-фото" disabled={busy || !notebooks.length} value={currentNotebookId ?? ''}
         onChange={event => selectNotebook(event.target.value)}>
         {!notebooks.length && <option value="">Сначала откройте съемку</option>}
         {notebooks.map(book => <option key={book.id} value={book.id}>Тетрадь {book.number}</option>)}
