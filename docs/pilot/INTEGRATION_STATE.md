@@ -115,3 +115,18 @@
 Полный прогон `npx playwright test tests/e2e/pilot` — 8 тестов, PASS.
 
 Не проверено этой задачей: реальные Android/iPhone и платная модель; это REL-10 и отдельный live-прогон.
+
+## Проверено в приёмке release (REL-07)
+
+| Проверка | Команда | Факт |
+| --- | --- | --- |
+| Потерянный ответ и повтор намерения | `pytest tests/integration/pilot/test_lifecycle_recovery.py -k rel_c12` | PASS: повтор с тем же ключом возвращает исходный Job, один `pilot_jobs` и одна строка `pilot_idempotency`; другой payload — 409 `idempotency_conflict`; устаревший `If-Match` — 409 `revision_conflict` с `current_revision`; второй клиент видит тот же Job |
+| Reload без нового Job | та же | PASS: открытие проверки не создаёт новых Job |
+| Поколение 2→3 | `-k rel_c13_replacement` | PASS: discard черновика не снимает отзывы, submit новой версии делает `current_input` новым и обнуляет отзывы, старый `analysis_id` даёт 404/409, в истории два sealed-поколения |
+| Похожая формула | `-k rel_c13_similar` | PASS: независимый комплект не наследует согласие |
+| Удаление задачи | `-k rel_c14_delete_task` | PASS: удалена ровно одна задача, общее фото и сохранённый Report остаются, tombstone есть, повторный проход не возвращает задачу |
+| Удаление проверки в работе | `-k rel_c14_delete_during` | PASS: Job не публикует Report, Check и Job дают 404, tombstone `deleted` сохраняется |
+| Один автоповтор | `-k rel_c15` | PASS: не более двух попыток, счётчик генераций долговечен; красный отзыв не создаёт попытку |
+| Истёкший lease и fencing | `-k rel_c16` | PASS: помеченная dispatched попытка переходит в `unknown`, резерв удерживается, поздний ответ старого epoch не публикуется, автоматического resend нет, позднее evidence остаётся для сверки |
+
+Полный набор `pytest tests/integration/pilot -q` — 27 тестов, PASS (109,4 с).

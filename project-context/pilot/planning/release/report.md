@@ -163,3 +163,24 @@
 | `pytest tests/integration/pilot -q` | PASS, 18 тестов, 76,1 с |
 
 Не проверено: реальные Android/iPhone, камера устройства и платная модель — REL-10 и отдельный live-прогон.
+
+## REL-07. Версии, дубли и восстановление
+
+**Статус: выполнено. Runtime проверен в изолированном Compose-проекте.**
+
+Сделано:
+
+- `tests/integration/pilot/test_lifecycle_recovery.py` покрывает REL-C12 (потерянный ответ, идемпотентный повтор, конфликт payload, stale guard, reload), REL-C13 (поколение 2→3, discard без потери отзывов, старый `analysis_id`, независимый комплект), REL-C14 (удаление задачи с сохранением общего фото и Report, tombstone, удаление проверки во время работы), REL-C15 (не более двух попыток, красный отзыв без retry) и REL-C16 (истёкший lease → unknown, удержанный резерв, fencing старого worker, отсутствие автоматического resend, сохранение позднего evidence).
+- Проверки идут через публичный HTTP и реальную PostgreSQL; имитатор ограничен явным fixture transport, платных вызовов нет.
+- Найдены и устранены дефекты самих тестов: чтение Job после удаления проверки (по контракту 404), неполный объект claim для `complete`, отсутствие `bundle_id`/`input_version_id` в ручном claim.
+- Обновлены [INTEGRATION_STATE](../../../../docs/pilot/INTEGRATION_STATE.md) и этот отчёт.
+
+Проверки:
+
+| Команда | Результат |
+|---|---|
+| `pytest tests/integration/pilot/test_lifecycle_recovery.py -q` | PASS, 9 тестов |
+| `pytest tests/integration/pilot -q` | PASS, 27 тестов, 109,4 с |
+| `ruff check tests/integration/pilot` | PASS |
+
+Не проверено: реальный внешний провайдер, поздний ответ настоящей модели и восстановление на внешнем сервере.
