@@ -1,0 +1,193 @@
+{
+  "$defs": {
+    "Error": {
+      "additionalProperties": false,
+      "properties": {
+        "photo_index": {
+          "minimum": 1,
+          "title": "Photo Index",
+          "type": "integer"
+        },
+        "wrong_latex": {
+          "title": "Wrong Latex",
+          "type": "string"
+        },
+        "rule": {
+          "title": "Rule",
+          "type": "string"
+        },
+        "explanation": {
+          "title": "Explanation",
+          "type": "string"
+        },
+        "corrected_latex": {
+          "title": "Corrected Latex",
+          "type": "string"
+        }
+      },
+      "required": [
+        "photo_index",
+        "wrong_latex",
+        "rule",
+        "explanation",
+        "corrected_latex"
+      ],
+      "title": "Error",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "photo_index": {
+          "minimum": 1,
+          "title": "Photo Index",
+          "type": "integer"
+        },
+        "latex": {
+          "title": "Latex",
+          "type": "string"
+        }
+      },
+      "required": [
+        "photo_index",
+        "latex"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "Task": {
+      "additionalProperties": false,
+      "properties": {
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        },
+        "locator": {
+          "title": "Locator",
+          "type": "string"
+        },
+        "photo_indices": {
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 1,
+          "title": "Photo Indices",
+          "type": "array"
+        },
+        "condition": {
+          "title": "Condition",
+          "type": "string"
+        },
+        "result": {
+          "enum": [
+            "all_steps_correct",
+            "first_error_found",
+            "not_assessed"
+          ],
+          "title": "Result",
+          "type": "string"
+        },
+        "completeness": {
+          "enum": [
+            "complete",
+            "incomplete",
+            "unknown"
+          ],
+          "title": "Completeness",
+          "type": "string"
+        },
+        "detail_level": {
+          "enum": [
+            "sufficient",
+            "omitted_steps",
+            "partial",
+            "unknown"
+          ],
+          "title": "Detail Level",
+          "type": "string"
+        },
+        "omitted_steps_note": {
+          "title": "Omitted Steps Note",
+          "type": "string"
+        },
+        "completeness_note": {
+          "title": "Completeness Note",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "maxItems": 4,
+          "title": "Evidence",
+          "type": "array"
+        },
+        "first_error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Error"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "uncheckable_reason": {
+          "title": "Uncheckable Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "task_id",
+        "locator",
+        "photo_indices",
+        "condition",
+        "result",
+        "completeness",
+        "detail_level",
+        "omitted_steps_note",
+        "completeness_note",
+        "evidence",
+        "first_error",
+        "uncheckable_reason"
+      ],
+      "title": "Task",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "page-check/1.2",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "uncheckable"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "tasks": {
+      "items": {
+        "$ref": "#/$defs/Task"
+      },
+      "title": "Tasks",
+      "type": "array"
+    },
+    "message": {
+      "title": "Message",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "status",
+    "tasks",
+    "message"
+  ],
+  "title": "Report",
+  "type": "object"
+}

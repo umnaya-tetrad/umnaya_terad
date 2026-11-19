@@ -1,0 +1,18 @@
+{
+  "schema_version": "summary-input/1",
+  "snapshot_id": "a07df899-0c5d-5ed8-b2a2-8be929ca13a2",
+  "check_id": "32486a53-9b8c-5244-99bf-faad9bcc4074",
+  "data_revision": 7,
+  "notebooks": [
+    {
+      "notebook_id": "7be0b263-4840-55d8-92e7-97f6ffc317ba",
+      "unresolved_bundles": 1,
+      "tasks": []
+    },
+    {
+      "notebook_id": "91747011-1007-53b4-933a-2015050f59c2",
+      "unresolved_bundles": 0,
+      "tasks": []
+    }
+  ]
+}

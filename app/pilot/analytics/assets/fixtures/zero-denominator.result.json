@@ -1,0 +1,15 @@
+{
+  "schema_version": "class-summary/1",
+  "notebooks": {
+    "total": 2,
+    "with_errors": 0,
+    "without_errors": 0,
+    "partial": 1,
+    "empty": 1
+  },
+  "average_errors_per_notebook": null,
+  "incomplete_tasks": 0,
+  "disputed_tasks": 0,
+  "unassessed_tasks": 0,
+  "top_errors": []
+}

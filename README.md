@@ -1,6 +1,6 @@
 # Умная тетрадь / SmartNote
 
-Общая база знаний проекта и спецификация первого учительского пилота. После обычного git clone в репозитории доступны требования, решения, технический план, исследования и сохраненные демонстрационные материалы. История чата для чтения не нужна.
+Общая база знаний, спецификация и проверенный backend processing первого учительского пилота. После обычного git clone в репозитории доступны требования, решения, технический план, исследования и сохраненные демонстрационные материалы. История чата для чтения не нужна.
 
 ## Коллеге и новому агенту
 
@@ -26,14 +26,14 @@
 - [Решения владельца](project-context/pilot/DECISIONS.md), [итоговые статусы вопросов](project-context/pilot/QUESTIONS.md).
 - [Архитектура и API](project-context/pilot/TECHNICAL_PLAN.md), [этапы реализации](project-context/pilot/IMPLEMENTATION_PLAN.md), [приемка](project-context/pilot/TRIAL_AND_ACCEPTANCE.md).
 - [AI-интеграция: проверенный промпт и контракт](project-context/pilot/AI_INTEGRATION.md), [reference-адаптер и поток съемки](project-context/pilot/ai/README.md).
-- [Направление AI-сводки класса](project-context/pilot/AI_ANALYTICS.md): детали отложены в Q49.
+- [AI-сводка класса](project-context/pilot/AI_ANALYTICS.md): контракт Q49 закрыт, backend и отдельный text-only live smoke проверены.
 - [Роли/данные](project-context/pilot/DATA_AND_ACCESS.md), [логи и время](project-context/pilot/ANALYTICS.md).
 - [Макеты, интерактивное демо и ролик](project-context/references/product-kit/START_HERE.html), [источники и ревизии](project-context/SOURCES.md).
 
-Текущее состояние: спецификация 1.1 согласована по R01–R83. Рабочий учительский пилот в этом репозитории еще не реализован; HTML-демо не является приложением с ИИ. Формат письменного итога апробации пока отложен. Локальный модельный эксперимент описан отдельно; интеграция с рабочим приложением и проверки окружения предстоят при реализации.
+Текущее состояние: processing backend готов к интеграции –99 PASS/32 случая на PostgreSQL16.15/ASGI/OS worker. [Переносимый отчет](project-context/pilot/planning/processing/RUNTIME_REPORT.md) отделяет выполненные проверки от not_run UI/Compose/мобильных устройств/сервера/апробации. R87: общий накопительный расходной cap 500 RUB в PostgreSQL, изменяемый без restart; это не баланс Polza и не месячный reset.
 
 ## Проверка комплекта
 
 Из корня: python scripts/check_context.py. Проверка также запускается в GitHub на push/PR. Она находит структурные ошибки; актуальность смысла кода и документации дополнительно проверяет агент по smartnote-preflight.
 
-Готовы [общий инженерный пакет](project-context/pilot/planning/shared/README.md) и [три подробных ТЗ](project-context/pilot/planning/README.md) с API/типами/примерами/мобильным UX/39 задачами/95 приемочными кейсами. Независимое ревью PASS; само приложение еще предстоит реализовать.
+Готовы [общий инженерный пакет](project-context/pilot/planning/shared/README.md) и [три подробных ТЗ](project-context/pilot/planning/README.md) с API/типами/примерами/мобильным UX/39 задачами/95 приемочными кейсами. Независимое ревью спецификации и кода processing PASS; полная сборка приложения и выпуск проверяются отдельно.

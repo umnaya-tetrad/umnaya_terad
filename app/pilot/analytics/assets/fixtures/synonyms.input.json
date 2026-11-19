@@ -1,0 +1,102 @@
+{
+  "schema_version": "summary-input/1",
+  "snapshot_id": "1815fa8e-86dc-5049-894b-fa043ce382d0",
+  "check_id": "3ac25658-18b3-5701-a749-76d310026044",
+  "data_revision": 7,
+  "notebooks": [
+    {
+      "notebook_id": "b9dc9c78-0a45-59f9-a57a-7ce018236463",
+      "unresolved_bundles": 0,
+      "tasks": [
+        {
+          "task_id": "c2cb5bf9-4754-5ee5-99c8-924617640774",
+          "analysis_id": "257b0fbc-1a62-5f88-9f65-31f3b7cf8963",
+          "review_state": "confirmed",
+          "analysis": {
+            "task_id": "task_1",
+            "locator": "Верхняя часть страницы, номер 21 в рамке",
+            "photo_indices": [
+              1
+            ],
+            "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+            "result": "first_error_found",
+            "completeness": "complete",
+            "detail_level": "sufficient",
+            "omitted_steps_note": "",
+            "completeness_note": "",
+            "evidence": [
+              {
+                "photo_index": 1,
+                "latex": "12x^2 - 4x - 1 = 0"
+              },
+              {
+                "photo_index": 1,
+                "latex": "12x^2 - 6x + 2x - 1 = 0"
+              },
+              {
+                "photo_index": 1,
+                "latex": "(2x-1)(6x-1)=0"
+              },
+              {
+                "photo_index": 1,
+                "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+              }
+            ],
+            "first_error": {
+              "photo_index": 1,
+              "wrong_latex": "(2x-1)(6x-1)=0",
+              "rule": "Вынесение общего множителя способом группировки: 6x(2x - 1) + 1(2x - 1) = (2x - 1)(6x + 1).",
+              "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+              "corrected_latex": "(2x-1)(6x+1)=0"
+            },
+            "uncheckable_reason": ""
+          }
+        },
+        {
+          "task_id": "ce841697-22cd-5683-9a5c-31cff1e51e14",
+          "analysis_id": "3e7ae528-1b7c-5e95-8afa-b90369b0155d",
+          "review_state": "confirmed",
+          "analysis": {
+            "task_id": "task_1",
+            "locator": "Верхняя часть страницы, номер 21 в рамке",
+            "photo_indices": [
+              1
+            ],
+            "condition": "\\frac{1}{x^2} + \\frac{4}{x} - 12 = 0",
+            "result": "first_error_found",
+            "completeness": "complete",
+            "detail_level": "sufficient",
+            "omitted_steps_note": "",
+            "completeness_note": "",
+            "evidence": [
+              {
+                "photo_index": 1,
+                "latex": "12x^2 - 4x - 1 = 0"
+              },
+              {
+                "photo_index": 1,
+                "latex": "12x^2 - 6x + 2x - 1 = 0"
+              },
+              {
+                "photo_index": 1,
+                "latex": "(2x-1)(6x-1)=0"
+              },
+              {
+                "photo_index": 1,
+                "latex": "x = \\frac{1}{2} = 0{,}5 \\lor x = \\frac{1}{6}"
+              }
+            ],
+            "first_error": {
+              "photo_index": 1,
+              "wrong_latex": "(2x-1)(6x-1)=0",
+              "rule": "Общий двучлен при группировке нужно вынести без изменения знака оставшегося множителя.",
+              "explanation": "При группировке слагаемых в выражении 6x(2x - 1) + (2x - 1) допущена ошибка со знаком во второй скобке: ошибочно записано (6x - 1) вместо (6x + 1), что привело к неверному корню 1/6 вместо -1/6.",
+              "corrected_latex": "(2x-1)(6x+1)=0"
+            },
+            "uncheckable_reason": ""
+          }
+        }
+      ]
+    }
+  ]
+}

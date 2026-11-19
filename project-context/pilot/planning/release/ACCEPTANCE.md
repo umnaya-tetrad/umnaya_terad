@@ -140,9 +140,9 @@ Backend regression из `app/`: `python -m pytest tests/pilot -q`. Устано�
 
 <a id="rel-c17"></a>
 
-## REL-C17 — последний остаток/пополнение
+## REL-C17 — общий cumulative cap и hot-change
 
-**Вход:** отдельный fixture wallet, доступно 1,00 условного рубля, два конкурентных Job разных kind требуют резерв по 1,00, slots=2. **Действие:** CLI initialize с локальным fixture evidence/profile, повтор request; одновременно dispatch; победитель тратит 0,40, usage доставлен дважды; CLI topup по отдельному evidence/request и возобновление. **Ожидается:** initial wallet не получает 400 автоматически; initialize повтор same evidence no-op, повторная новая инициализация запрещена; неверный Decimal/profile/evidence отклонен. До topup dispatch один, второй blocked/funds_unavailable; available/held≥0, slots≤2. Settlement один, 0,60 резерва освобожден; после достаточных средств продолжается прежний Job. Topup конечный>0, уникален по request, иное содержимое того же request — конфликт. Polza без проверенного фактического баланса/ценового профиля blocked, fixture баланс не переносится; проверка без реальных денег/сети. Teacher не видит квоту/баланс. **Команда:** `python -m pytest tests/integration/pilot/test_funds_control.py -k rel_c17 -q`.
+**Вход:** изолированный fixture budget, два конкурентных Job разных kind/teacher, slots=2. **Действие:** проверить default cap 500, уменьшить cap до границы одного reserve, одновременно dispatch; один usage доставить дважды; через контейнерный `python -m pilot.processing.budget set-limit --rub 500` поднять cap без restart. **Ожидается:** walletinitialize/topup/отдельный pricing-файл не prerequisite. Atomic spent+held допускает только разрешенный запрос; blocked Job сохраняет идентичность и продолжает после повышения. Spent/holds не сбрасываются, settlement один, два global slots соблюдены. Валидный cost=null ответ публикуется с billing hold; execution unknown не resend. Cap не является балансом Polza или месячной квотой; teacher не видит счетчик. **Команда:** `python -m pytest tests/integration/pilot/test_funds_control.py -k rel_c17 -q`. Этот release/container case пока not_run; локальный backend аналог PROC-C27/C29 PASS по [отчету](../processing/RUNTIME_REPORT.md).
 
 <a id="rel-c18"></a>
 

@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:smartnote:class-summary:1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "class-summary/1"
+    },
+    "notebooks": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "with_errors": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "without_errors": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "partial": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "empty": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "total",
+        "with_errors",
+        "without_errors",
+        "partial",
+        "empty"
+      ]
+    },
+    "average_errors_per_notebook": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "incomplete_tasks": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "disputed_tasks": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "unassessed_tasks": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "top_errors": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "rule": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "task_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "required": [
+          "rule",
+          "task_ids"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "notebooks",
+    "average_errors_per_notebook",
+    "incomplete_tasks",
+    "disputed_tasks",
+    "unassessed_tasks",
+    "top_errors"
+  ]
+}

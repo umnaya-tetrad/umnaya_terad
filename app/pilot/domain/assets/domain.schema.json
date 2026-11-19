@@ -1,0 +1,1164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "domain.schema.json",
+  "$defs": {
+    "Error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "message",
+        "current_revision"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "invalid_input",
+            "unauthenticated",
+            "forbidden",
+            "not_found",
+            "revision_conflict",
+            "idempotency_conflict",
+            "invalid_state",
+            "completion_blocked",
+            "stale_analysis",
+            "processing_unavailable"
+          ],
+          "description": "Клиент: выбрать действие после отказа."
+        },
+        "message": {
+          "type": "string",
+          "description": "Учитель: безопасное пояснение без traceback и секретов."
+        },
+        "current_revision": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Клиент: перечитать Check при конфликте; null вне контекста проверки."
+        }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "error"
+      ],
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/Error"
+        }
+      }
+    },
+    "Login": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "login",
+        "password"
+      ],
+      "properties": {
+        "login": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "description": "Auth: выданный логин."
+        },
+        "password": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "writeOnly": true,
+          "description": "Auth: пароль; никогда не логировать."
+        }
+      }
+    },
+    "Session": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "user_id",
+        "role"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Auth/UI: владелец; staff аудит сохраняет реального актора."
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "teacher",
+            "staff"
+          ],
+          "description": "Router: teacher свои материалы; staff только чтение команды. Пауза обработки — привилегированная CLI, без HTTP-роли оператора."
+        }
+      }
+    },
+    "Title": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Учитель: название проверки без ФИО; пробелы по краям удаляет сервер."
+        }
+      }
+    },
+    "Photo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "media_type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "UI: приватный GET /assets/{id}; идентификатор сохраненного файла."
+        },
+        "media_type": {
+          "type": "string",
+          "enum": [
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+          ],
+          "description": "UI/worker: фактический нормализованный формат."
+        }
+      }
+    },
+    "InputVersion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "state",
+        "photos"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Submit/worker: неизменяемый после submit вход."
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "sealed"
+          ],
+          "description": "UI: разрешены ли изменения фото."
+        },
+        "photos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Photo"
+          },
+          "description": "UI/worker: порядок массива задает photo_index от 1; отдельного order нет."
+        }
+      }
+    },
+    "PhotoOrder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "photo_ids"
+      ],
+      "properties": {
+        "photo_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uniqueItems": true,
+          "description": "Draft editor: точная перестановка всех существующих фото; не добавляет и не удаляет файл."
+        }
+      }
+    },
+    "VersionCreate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "photo_ids"
+      ],
+      "properties": {
+        "photo_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uniqueItems": true,
+          "description": "Draft replacement: копировать выбранные фото последней sealed версии в указанном порядке; [] для пересъемки."
+        }
+      }
+    },
+    "Submit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_version_id"
+      ],
+      "properties": {
+        "input_version_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Server: именно текущий draft, защищает от повторной отправки другого входа."
+        }
+      }
+    },
+    "ReviewWrite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "analysis_id",
+        "state",
+        "comment"
+      ],
+      "properties": {
+        "analysis_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Server: точный TaskAnalysis; чужой/старый анализ дает 409 stale_analysis."
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "confirmed",
+            "system_error"
+          ],
+          "description": "Учитель: согласие с ИИ либо ошибка ИИ; оба разрешают просмотр, только confirmed дает математический вклад."
+        },
+        "comment": {
+          "type": "string",
+          "maxLength": 4000,
+          "description": "Учитель/staff: необязательный комментарий, пустая строка очищает; в summary не передается."
+        }
+      }
+    },
+    "Review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "comment"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "confirmed",
+            "system_error"
+          ],
+          "description": "UI/summary: актуальная оценка одного анализа."
+        },
+        "comment": {
+          "type": "string",
+          "maxLength": 4000,
+          "description": "UI/staff: сохраненный текст; не общий лог и не чат."
+        }
+      }
+    },
+    "AnalysisTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "analysis_id"
+      ],
+      "properties": {
+        "analysis_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Server: пропустить только актуальный not_assessed анализ; соседние задачи не затронуты."
+        }
+      }
+    },
+    "InputTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_version_id"
+      ],
+      "properties": {
+        "input_version_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Server: retry/skip только актуального sealed входа; история сохраняется."
+        }
+      }
+    },
+    "TaskAnalysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task_id",
+        "analysis_id",
+        "analysis",
+        "review",
+        "skipped"
+      ],
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Review/delete/summary: серверная идентичность только внутри поколения."
+        },
+        "analysis_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Review: неизменяемый выделенный разбор; ID не равен task_id модели."
+        },
+        "analysis": {
+          "$ref": "../../../../ai/response-schema-v1.2.json#/$defs/Task",
+          "description": "UI/summary: неизмененный frozen Task, включая свободное rule; локальный analysis.task_id не ключ БД."
+        },
+        "review": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Review"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "UI/completion: null означает отсутствие явной оценки."
+        },
+        "skipped": {
+          "type": "boolean",
+          "description": "Completion: явный пропуск только not_assessed; никогда не означает математическое подтверждение."
+        }
+      }
+    },
+    "Job": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "input_id",
+        "state",
+        "reason",
+        "can_retry"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Polling/history: одна долговечная работа, несколько технических Attempt внутри."
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "page_check",
+            "class_analytics"
+          ],
+          "description": "Worker/telemetry: раздельные промпты, входы и стоимость."
+        },
+        "input_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Worker: InputVersion.id для checker, Snapshot.id для аналитики."
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "running",
+            "retry_wait",
+            "blocked",
+            "unknown",
+            "succeeded",
+            "failed",
+            "cancelled",
+            "superseded"
+          ],
+          "description": "UI/queue: succeeded не означает математически правильную работу."
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "funds_unavailable",
+                "service_paused",
+                "provider_outcome_unknown",
+                "temporary_failure",
+                "provider_rejected",
+                "invalid_response",
+                "input_uncheckable",
+                "deleted",
+                "replaced",
+                "skipped"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "UI/staff: безопасная причина состояния; математические объяснения находятся в Report."
+        },
+        "can_retry": {
+          "type": "boolean",
+          "description": "UI: только сервер решает, доступен ли ручной retry после сверки денег/исхода."
+        }
+      }
+    },
+    "BundleReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "input_version_id",
+        "report"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "History: неизменяемый ID поколения/полного отчета."
+        },
+        "input_version_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Worker/history: принадлежность результата точному sealed входу."
+        },
+        "report": {
+          "$ref": "../../../../ai/response-schema-v1.2.json",
+          "description": "UI/history: исходный Report без редактирования, в том числе удаленные впоследствии задачи."
+        }
+      }
+    },
+    "Bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "draft",
+        "current_input",
+        "job",
+        "result",
+        "tasks",
+        "skipped"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "UI/worker: логическая группа совместного запроса внутри тетради."
+        },
+        "draft": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/InputVersion"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Capture: единственный редактируемый draft либо null."
+        },
+        "current_input": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/InputVersion"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "UI/worker: текущий sealed вход; прежние версии только в history."
+        },
+        "job": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Job"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "UI: актуальная работа checker; старые попытки не создают задачи."
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BundleReport"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "UI: только опубликованное актуальное поколение."
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TaskAnalysis"
+          },
+          "description": "UI/completion: только активные задачи текущего поколения; tombstones и старые поколения не возвращаются здесь."
+        },
+        "skipped": {
+          "type": "boolean",
+          "description": "Completion: failed/uncheckable вход разрешен явным пропуском; не считается проверенным с нулем ошибок."
+        }
+      }
+    },
+    "Notebook": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "number",
+        "bundles"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "UI/summary: условная работа внутри проверки, не постоянный профиль ученика."
+        },
+        "number": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "UI: серверный монотонный номер внутри Check; после удаления не переиспользуется. Подпись Тетрадь N форматирует UI, переименования нет."
+        },
+        "bundles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Bundle"
+          },
+          "description": "UI: порядок создания; фото разных комплектов модель не объединяет."
+        }
+      }
+    },
+    "Completion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pending_jobs",
+        "unreviewed_tasks",
+        "unresolved_tasks",
+        "unresolved_bundles",
+        "unsent_drafts",
+        "can_finalize"
+      ],
+      "properties": {
+        "pending_jobs": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "UI: queued/running/retry_wait/blocked/unknown checker jobs; ожидание не ноль ошибок."
+        },
+        "unreviewed_tasks": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "UI: assessable задачи без confirmed/system_error."
+        },
+        "unresolved_tasks": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "UI: not_assessed задачи без явного skipped."
+        },
+        "unresolved_bundles": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "UI: failed/uncheckable без skipped; skip не делает тетрадь полной в summary."
+        },
+        "unsent_drafts": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "UI: число непустых draft, которые нужно отправить либо явно удалить."
+        },
+        "can_finalize": {
+          "type": "boolean",
+          "description": "UI: phase=review, есть хотя бы один активный sealed вход и все пять счетчиков равны 0; сервер перепроверяет транзакционно."
+        }
+      }
+    },
+    "Summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "stale",
+        "snapshot_id",
+        "job_id",
+        "data_revision",
+        "can_retry",
+        "can_refresh",
+        "result"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "not_started",
+            "queued",
+            "running",
+            "retry_wait",
+            "blocked",
+            "unknown",
+            "succeeded",
+            "failed",
+            "cancelled",
+            "superseded"
+          ],
+          "description": "UI: состояние выбранного последнего запуска, GET не создает job."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "UI: snapshot.data_revision отличается от Check.data_revision; нельзя показывать как актуальный итог."
+        },
+        "snapshot_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "UI/history: точный неизменяемый вход LLM."
+        },
+        "job_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Polling/retry: выбранная аналитическая работа."
+        },
+        "data_revision": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "History/UI: версия математически значимого основания выбранного запуска."
+        },
+        "can_retry": {
+          "type": "boolean",
+          "description": "UI: только finalized, failed, свежий snapshot и подтвержденная сервером безопасность новой попытки; blocked/unknown не дают retry."
+        },
+        "can_refresh": {
+          "type": "boolean",
+          "description": "UI: finalized+stale; прежний Job терминален либо queued/blocked гарантированно не отправлен без in-flight/unknown Attempt. Сервер перепроверяет под guard."
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "../../analytics/result.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "UI: JSON отдельного LLM; null пока валидного результата нет."
+        }
+      }
+    },
+    "CheckListItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "phase",
+        "revision",
+        "created_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "UI: перейти к сохраненной проверке."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "UI: название."
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "editing",
+            "review",
+            "finalized"
+          ],
+          "description": "UI: двухэтапное завершение; finalized запрещает изменение состава."
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Concurrency: общий guard всех изменений проверки; ETag повторяет это число."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "History: время создания UTC, порядок списка по времени/id."
+        }
+      }
+    },
+    "Check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "phase",
+        "revision",
+        "created_at",
+        "data_revision",
+        "notebooks",
+        "completion",
+        "summary"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "UI: перейти к сохраненной проверке."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "UI: название."
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "editing",
+            "review",
+            "finalized"
+          ],
+          "description": "UI: двухэтапное завершение; finalized запрещает изменение состава."
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Concurrency: общий guard всех изменений проверки; ETag повторяет это число."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "History: время создания UTC, порядок списка по времени/id."
+        },
+        "data_revision": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Summary: меняется при изменении состава/актуального анализа/review.state, но не комментария или job-progress."
+        },
+        "notebooks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Notebook"
+          },
+          "description": "UI/restore: весь текущий состав без удаленных объектов."
+        },
+        "completion": {
+          "$ref": "#/$defs/Completion",
+          "description": "UI: производные блокеры окончательного согласия."
+        },
+        "summary": {
+          "$ref": "#/$defs/Summary",
+          "description": "UI: состояние сохраненной аналитики; отдельный GET не запускает LLM."
+        }
+      }
+    },
+    "Checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "items",
+        "next_cursor"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CheckListItem"
+          },
+          "description": "UI: страницы истории в порядке created_at desc,id desc."
+        },
+        "next_cursor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "UI: непрозрачный серверный курсор следующей страницы, null если конец."
+        }
+      }
+    },
+    "Owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "user_id",
+        "login"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Staff: определить владельца материала для поддержки."
+        },
+        "login": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "description": "Staff: найти учителя по выданному логину; ФИО и контактов нет."
+        }
+      }
+    },
+    "StaffCheckListItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "check"
+      ],
+      "properties": {
+        "owner": {
+          "$ref": "#/$defs/Owner"
+        },
+        "check": {
+          "$ref": "#/$defs/CheckListItem"
+        }
+      }
+    },
+    "StaffChecks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "items",
+        "next_cursor"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/StaffCheckListItem"
+          }
+        },
+        "next_cursor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "StaffCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "check"
+      ],
+      "properties": {
+        "owner": {
+          "$ref": "#/$defs/Owner"
+        },
+        "check": {
+          "$ref": "#/$defs/Check"
+        }
+      }
+    },
+    "Mutation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "check_id",
+        "check_revision",
+        "entity_id",
+        "job"
+      ],
+      "properties": {
+        "check_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Клиент: какая проверка изменилась."
+        },
+        "check_revision": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Клиент: новый If-Match; после ответа перечитать детали, включая completion."
+        },
+        "entity_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Клиент: созданный/измененный/удаленный объект; null для изменения самой проверки."
+        },
+        "job": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Job"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Клиент: принятый checker/analytics job, null для изменения без обработки."
+        }
+      }
+    },
+    "HistoryRun": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "job",
+        "result",
+        "tasks",
+        "deleted_task_ids"
+      ],
+      "properties": {
+        "job": {
+          "$ref": "#/$defs/Job",
+          "description": "Staff: job.id однозначно идентифицирует поколение, включая retry того же InputVersion."
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BundleReport"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Staff: исходный отчет только этого поколения либо null, если ответа не было."
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TaskAnalysis"
+          },
+          "description": "Staff: разборы и последние отзывы только этого поколения, включая удаленные задачи."
+        },
+        "deleted_task_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uniqueItems": true,
+          "description": "Staff: tombstones этого поколения; остальные элементы tasks были активны до замещения."
+        }
+      }
+    },
+    "HistoryVersion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input",
+        "runs"
+      ],
+      "properties": {
+        "input": {
+          "$ref": "#/$defs/InputVersion",
+          "description": "Staff: одна неизменяемая версия входа."
+        },
+        "runs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/HistoryRun"
+          },
+          "description": "Staff: все поколения этой версии по времени создания Job, даже при нескольких успешных retry."
+        }
+      }
+    },
+    "BundleHistory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bundle_id",
+        "versions"
+      ],
+      "properties": {
+        "bundle_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "versions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/HistoryVersion"
+          }
+        }
+      }
+    },
+    "SummaryHistoryItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "created_at",
+        "summary"
+      ],
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "summary": {
+          "$ref": "#/$defs/Summary"
+        }
+      }
+    },
+    "SummaryHistory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SummaryHistoryItem"
+          }
+        }
+      }
+    },
+    "Event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "session_id",
+        "occurred_at",
+        "name",
+        "check_id",
+        "entity_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Ingest: дедупликация одного наблюдения, повторный ID с другим payload дает 409."
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Telemetry: клиентская вкладка/сессия наблюдений, не cookie auth."
+        },
+        "occurred_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Telemetry: клиентское приблизительное время, сервер отдельно пишет received_at."
+        },
+        "name": {
+          "type": "string",
+          "enum": [
+            "capture_opened",
+            "photo_selected",
+            "result_opened",
+            "result_closed",
+            "app_visible",
+            "app_hidden",
+            "heartbeat"
+          ],
+          "description": "Telemetry: только клиентские наблюдения; серверные факты фиксирует сам сервер."
+        },
+        "check_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Access/telemetry: контекст своей проверки, null вне проверки."
+        },
+        "entity_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Telemetry: Bundle/Task ID при наблюдении; null если отсутствует."
+        }
+      }
+    },
+    "Events": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "events"
+      ],
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Event"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      }
+    },
+    "EventsAccepted": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accepted_ids"
+      ],
+      "properties": {
+        "accepted_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uniqueItems": true,
+          "description": "Клиент: все надежно сохраненные ID, включая уже принятые идентичные дубли."
+        }
+      }
+    }
+  }
+}

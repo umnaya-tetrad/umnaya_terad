@@ -1,12 +1,12 @@
 # Документация и контекст SmartNote
 
-Самодостаточная база знаний для коллег и нового агента. Каноническая текущая спецификация — [pilot/README.md](pilot/README.md). Вход для агента — [корневой AGENTS.md](../AGENTS.md) и skill smartnote-pilot; текущая стадия — [CURRENT_STATE.md](CURRENT_STATE.md).
+Самодостаточная база знаний для коллег и нового агента. Processing backend локально проверен:99 PASS/32 случая; [передача и ограничения](pilot/planning/processing/HANDOFF.md). Полное приложение/Compose/сервер и школьная апробация этим фактом не подтверждены. Каноническая текущая спецификация — [pilot/README.md](pilot/README.md). Вход для агента — [корневой AGENTS.md](../AGENTS.md) и skill smartnote-pilot; текущая стадия — [CURRENT_STATE.md](CURRENT_STATE.md).
 
 | Слой | Содержание |
 |---|---|
 | [pilot/](pilot/README.md) | Согласованные требования R01–R83, пользовательский поток, формулы, технический план, этапы и приемка |
 | [pilot/AI_INTEGRATION.md](pilot/AI_INTEGRATION.md), [pilot/ai/](pilot/ai/README.md) | Проверенный промпт, контракт и reference-адаптер, параметры и границы локального эксперимента; поток комплектов R81 |
-| [pilot/AI_ANALYTICS.md](pilot/AI_ANALYTICS.md) | Отложенное проектирование отдельной AI-сводки класса R83/Q49 |
+| [pilot/AI_ANALYTICS.md](pilot/AI_ANALYTICS.md) | Контракт отдельной AI-сводки класса R83/Q49, реализованный backend и отдельный text-only live smoke |
 | [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md), [PRODUCT_DESCRIPTION.md](PRODUCT_DESCRIPTION.md), [SCHOOL_PROCESS.md](SCHOOL_PROCESS.md) | Общая концепция, контекст команды и школьный маршрут; раздел 1 контекста актуализирован |
 | [docs/](docs/KNOWLEDGE_MAP.md) | Карта источников, статический аудит исходного кода, интеграционная передача и архив ранних планов |
 | [research-garden/](research-garden/README.md) | Датированные исследования, источники, школьные материалы и диаграммы |
