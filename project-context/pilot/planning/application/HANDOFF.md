@@ -10,7 +10,7 @@
 | Pinned source | SmartNoteLanding d62f5ecb8c1c53b1c97faf06530b8d84e691f88d. Импорт и проверка blob описаны в [BOOTSTRAP](../../../../docs/pilot/BOOTSTRAP.md). |
 | База и контракт B0 | 1144c498b4aba1e4e4fe118abe7c3f6f1b940198. Shared v1, API 1.0.0. |
 | Processing | origin/main 0f8460df6465612a815810b77eb2f60a72376350, SQL 001–015. Сгенерированные DTO совпадают с B0. |
-| Application / B1 | Локальная work/application. Родитель кода application 92fd1e83ea17b2002b195ea0e555f8b75c8da899. Интеграционный commit INTEGRATION_COMMIT_SHA. |
+| Application / B1 | Локальная work/application. Родитель кода application 92fd1e83ea17b2002b195ea0e555f8b75c8da899. Интеграционный commit fe3d741dc92fd7d2d6c24500fd4e824775563e80. |
 | B4 / B5 | Доказательства application и перечень передачи подготовлены. Приём release и вечерний кандидат **not_run**. |
 | Transport | Настоящий локальный HTTP, PostgreSQL и отдельный worker в явном режиме fixture. Есть отдельные проверки с перехватом HTTP и двойниками. Paid Polza **not_run** в application. |
 
@@ -27,7 +27,7 @@
 | --- | --- |
 | Исходный npm test и npm run build из pinned SmartNoteLanding | PASS, 31 тест и сборка. Предупреждение Vite о чанке больше 500 КБ. |
 | Исходный python -m pytest -q из pinned app с отдельной PostgreSQL 16.15 | PASS, 120 тестов. Первый запуск дал 6 ошибок ZoneInfo на Windows, после установки tzdata==2025.2 на временное окружение — PASS. |
-| npm test и npm run build | PASS, 19 unit-тестов и сборка на Windows. Production build основной реализации также прошёл внутри frontend-образа с отключённой сетью. Предупреждение Vite о чанке больше 500 КБ. |
+| npm test и npm run build | PASS, 19 unit-тестов и сборка. Production build итогового frontend прошёл внутри Compose. Vite предупреждает о чанке больше 500 КБ. |
 | python -m pytest --confcutdir tests/pilot/application tests/pilot/application -q из app | PASS, 24 ASGI-теста с общим валидатором, обработчиками ошибок и явными сервисными двойниками. |
 | npm run test:browser | PASS, Chrome на Windows, headless mobile 320 CSS px, увеличение текста до 200%, перехват HTTP. Вход, история, разбор и отзыв, reload, загрузка PNG и submit-next, конкурентная 409, двухэтапный финал и показ готовой сводки. |
 | docker compose -f compose.yaml config -q с синтетическими значениями | PASS. |
