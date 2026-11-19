@@ -1,0 +1,2780 @@
+{
+  "schema_version": "smartnote-pilot-eval-inputs/1.0",
+  "packaged_local_date": "2026-11-20",
+  "scope": "Final full v2 onepass and staged inputs; direct_v2 repeated only the first 25 ordered cases.",
+  "source_manifest_sha256": "f3f6bb266e24e3e38e0007f3839dfc3d36617a4e77cfb23cd5faff5eb7d514c2",
+  "source_private_mapping_sha256": "53f6b65c0cd267aae4eef0ace0d8056609db49eef22fb853cd79633bd4834179",
+  "license_status": "Third-party images: public redistribution license not established by preparation manifests; no grant implied. Keep publisher attribution and source URLs. Synthetic derivatives retain source attribution.",
+  "summary": {
+    "cases": 76,
+    "attachments": 84,
+    "unique_sha256": 83,
+    "bytes": 69642405,
+    "format_groups": {
+      "one_photo_one_task": 20,
+      "one_photo_many_tasks": 48,
+      "one_task_two_photos": 4,
+      "mixed_two_photos": 4
+    },
+    "expected_math_unit_appearances": 178
+  },
+  "image_bytes_unchanged": true,
+  "upload_limits_checked": {
+    "max_bytes": 8000000,
+    "max_pixels": 36000000,
+    "min_edge": 32
+  },
+  "reference_policy": "Human/offline evaluation only. Do not send reference or expected fields to a model.",
+  "cases": [
+    {
+      "input_order": 1,
+      "input_id": "R057",
+      "case_id": "K01",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent M01",
+      "joint_evaluation_required": false,
+      "parent_case": "M01",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "b5919bb829f979ea2577f641f6ad16ce0179f14d1f3f7635789d70d9d78921f5",
+          "width": 2091,
+          "height": 1959,
+          "bytes": 653272,
+          "path": "inputs/K01/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p46_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 46,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "самостоятельная работа экспертов,задание4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 2,
+      "input_id": "R001",
+      "case_id": "B_N01",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "unchanged source JPEG",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "3eec80667b556c372a7a084b51cc3e9bc1278ffbbad3c8048dbd46d06bcacf2e",
+          "width": 1200,
+          "height": 496,
+          "bytes": 197621,
+          "path": "inputs/B_N01/photo_01.jpg",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-150",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-150-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/150.jpg",
+              "exercise": "150",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 3,
+      "input_id": "R021",
+      "case_id": "E_N01",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "4716c7ff84ed1b89f2e475b2f16ef0b4638b9bec692d2b0dde81d6993548af63",
+          "width": 1950,
+          "height": 807,
+          "bytes": 1661129,
+          "path": "inputs/E_N01/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-150",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-150-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/150.jpg",
+              "exercise": "150",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 4,
+      "input_id": "R058",
+      "case_id": "K02",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent M02",
+      "joint_evaluation_required": false,
+      "parent_case": "M02",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "cb5cb0eaf060e788a05e412d2d42c8aa74f636d448c69e700b97ac8defbc319d",
+          "width": 1018,
+          "height": 508,
+          "bytes": 298878,
+          "path": "inputs/K02/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2024_p86",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 86,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 4, вариант 1, задание 20"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 5,
+      "input_id": "R002",
+      "case_id": "B_N02",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "unchanged source JPEG",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "827c6760404b8beaab68496aaa2194df7a7437901d7eac22d12a701748aad723",
+          "width": 1200,
+          "height": 478,
+          "bytes": 227068,
+          "path": "inputs/B_N02/photo_01.jpg",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-421",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-421-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/421.jpg",
+              "exercise": "421",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 6,
+      "input_id": "R022",
+      "case_id": "E_N02",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "b6ffaef9f82eb3d6a2522daf855ed70e3ef57551647c639624d88e9421906dfa",
+          "width": 1986,
+          "height": 792,
+          "bytes": 1983028,
+          "path": "inputs/E_N02/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-421",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-421-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/421.jpg",
+              "exercise": "421",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 7,
+      "input_id": "R050",
+      "case_id": "M02",
+      "format_group": "one_task_two_photos",
+      "scenario": "single_task",
+      "derivation": "synthetic rectangular cropping/splitting/recomposition; no resize; two ordered photos",
+      "joint_evaluation_required": true,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "aa931633817ea67c05af5a39873a891668535e79596611521f6adc7dfe480717",
+          "width": 1018,
+          "height": 241,
+          "bytes": 112477,
+          "path": "inputs/M02/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2024_p86",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 86,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 4, вариант 1, задание 20"
+            }
+          ]
+        },
+        {
+          "photo_index": 2,
+          "sha256": "21ea9492e08b5510ad09aed573bc79e038c5cd82c0804124654cf5d4a44f8f5a",
+          "width": 1018,
+          "height": 315,
+          "bytes": 187925,
+          "path": "inputs/M02/photo_02.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2024_p86",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 86,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 4, вариант 1, задание 20"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 8,
+      "input_id": "R059",
+      "case_id": "K03",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent M03",
+      "joint_evaluation_required": false,
+      "parent_case": "M03",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "44066d1eb5ad7aa2f4f435001e1712e4938ca39456c799265d464a06a2811b04",
+          "width": 1163,
+          "height": 228,
+          "bytes": 333220,
+          "path": "inputs/K03/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-521",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-521-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/521.jpg",
+              "exercise": "521",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 9,
+      "input_id": "R003",
+      "case_id": "B_N03",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "unchanged source JPEG",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "570a81eafb0be24f0c246c35e3227aa6dfc0ca14c2b3549d0aba568a0e1d35a6",
+          "width": 1200,
+          "height": 367,
+          "bytes": 164133,
+          "path": "inputs/B_N03/photo_01.jpg",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-448",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-448-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/448.jpg",
+              "exercise": "448",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 10,
+      "input_id": "R023",
+      "case_id": "E_N03",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "535265fca77179df3a46cbb9c71f0c9293bdd30152f38ac0aac66f1bfb8bb92d",
+          "width": 2172,
+          "height": 724,
+          "bytes": 1731544,
+          "path": "inputs/E_N03/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-448",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-448-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/448.jpg",
+              "exercise": "448",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 11,
+      "input_id": "R060",
+      "case_id": "K04",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent M04",
+      "joint_evaluation_required": false,
+      "parent_case": "M04",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "8f67fe85bd59c54d23fee0efa5c14e58cb64257ed2671c44d5bf7816ea63d5a9",
+          "width": 438,
+          "height": 338,
+          "bytes": 103457,
+          "path": "inputs/K04/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2024_p15",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 15,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 7, рис.8"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 12,
+      "input_id": "R011",
+      "case_id": "B_C01",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "composed FIPI sheets with calibrated handwriting size",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "24590bc58baf83ea81c89be13816d00f65a0110a41113effc96bcd2fb47d3ec4",
+          "width": 2700,
+          "height": 2746,
+          "bytes": 760283,
+          "path": "inputs/B_C01/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p23_eqA",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 23,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.1,пример2"
+            },
+            {
+              "source_id": "fipi2024_p12",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 12,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 4, рис.5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 13,
+      "input_id": "R031",
+      "case_id": "E_C01",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "8aaeef3f47fe444d73a7b91c5a21968a13acf133fc02f2985b256d8ce6871a37",
+          "width": 1244,
+          "height": 1265,
+          "bytes": 1254580,
+          "path": "inputs/E_C01/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p23_eqA",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 23,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.1,пример2"
+            },
+            {
+              "source_id": "fipi2024_p12",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 12,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 4, рис.5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 14,
+      "input_id": "R067",
+      "case_id": "K11",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent E_N02",
+      "joint_evaluation_required": false,
+      "parent_case": "E_N02",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "7436fcf460fe77be75aa967a8b9e9d08f28812c379ec3fdf0147803d5d461db5",
+          "width": 1986,
+          "height": 125,
+          "bytes": 311989,
+          "path": "inputs/K11/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-421",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-421-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/421.jpg",
+              "exercise": "421",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 15,
+      "input_id": "R012",
+      "case_id": "B_C02",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "composed FIPI sheets with calibrated handwriting size",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "19cca1123e404f0bd716709afd54201e1c183f331d53007ad424400769f3fee2",
+          "width": 4269,
+          "height": 2784,
+          "bytes": 564486,
+          "path": "inputs/B_C02/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p81_eqA",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 81,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "тренировочный вариант2,№2"
+            },
+            {
+              "source_id": "fipi2024_p14",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 14,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 6, рис.7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 16,
+      "input_id": "R032",
+      "case_id": "E_C02",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "bfbed73b5a350c868c442469685e3e09f0e5e638931e6efeea55e2310ede2478",
+          "width": 1553,
+          "height": 1013,
+          "bytes": 1197445,
+          "path": "inputs/E_C02/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p81_eqA",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 81,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "тренировочный вариант2,№2"
+            },
+            {
+              "source_id": "fipi2024_p14",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 14,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 6, рис.7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 17,
+      "input_id": "R056",
+      "case_id": "M08",
+      "format_group": "mixed_two_photos",
+      "scenario": "one_and_half",
+      "derivation": "synthetic rectangular cropping/splitting/recomposition; no resize; two ordered photos",
+      "joint_evaluation_required": true,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "6c5cf9e32b5035a756e8f557c01a995303003a33fe9729be492ae2651e032add",
+          "width": 1128,
+          "height": 1108,
+          "bytes": 923882,
+          "path": "inputs/M08/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p28_work700",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 28,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.2,пример3"
+            },
+            {
+              "source_id": "fipi2024_p15",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 15,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 7, рис.8"
+            }
+          ]
+        },
+        {
+          "photo_index": 2,
+          "sha256": "25506e9e2dfb8bb52dd32189c68163551b9fe8c0520ad61cdda6268cf3a670e3",
+          "width": 1128,
+          "height": 444,
+          "bytes": 197284,
+          "path": "inputs/M08/photo_02.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p28_work700",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 28,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.2,пример3"
+            },
+            {
+              "source_id": "fipi2024_p15",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 15,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 7, рис.8"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 18,
+      "input_id": "R075",
+      "case_id": "K19",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent S_C01",
+      "joint_evaluation_required": false,
+      "parent_case": "S_C01",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "027b51abda3864ef96823020ce60babdb99bb15e36421b7ec45ccde78fd5f19f",
+          "width": 1244,
+          "height": 375,
+          "bytes": 258485,
+          "path": "inputs/K19/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p23_eqA",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 23,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.1,пример2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 19,
+      "input_id": "R041",
+      "case_id": "U_N07",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "incomplete",
+      "derivation": "ImageGen synthetic edit: incomplete",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "029a6b71121ee7274f707ae24e851ed4e6a9e74b0296752b62993cfce235fe3e",
+          "width": 1549,
+          "height": 1015,
+          "bytes": 2042963,
+          "path": "inputs/U_N07/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "g8-makarichev-handwritten-541",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-541-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/541.jpg",
+              "exercise": "541",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 20,
+      "input_id": "R043",
+      "case_id": "U_C03",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "incomplete",
+      "derivation": "ImageGen synthetic edit: incomplete",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "09f5d3736226a610180511de7691ad125ef02320997f18ea13ec45ca06f8f9e5",
+          "width": 1080,
+          "height": 1456,
+          "bytes": 1378039,
+          "path": "inputs/U_C03/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p28_work700",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 28,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.2,пример3"
+            },
+            {
+              "source_id": "fipi2024_p15",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 15,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 7, рис.8"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 21,
+      "input_id": "R045",
+      "case_id": "S_N01",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "valid_shortened",
+      "derivation": "ImageGen synthetic edit: valid_shortened",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "378f9c717d76799d216c6d515a03ffe33a49ee31862bb4b0825fda1d6423c91b",
+          "width": 1950,
+          "height": 807,
+          "bytes": 1626261,
+          "path": "inputs/S_N01/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-150",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-150-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/150.jpg",
+              "exercise": "150",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 22,
+      "input_id": "R048",
+      "case_id": "S_C06",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "valid_shortened",
+      "derivation": "ImageGen synthetic edit: valid_shortened",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "8392e7874b31e292164257c6bcbc3fd84fb997bd8fc6ff61ebd00efbb4dc3ee7",
+          "width": 1870,
+          "height": 841,
+          "bytes": 1148818,
+          "path": "inputs/S_C06/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p81_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 81,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "тренировочный вариант2,№3"
+            },
+            {
+              "source_id": "fipi2024_p86",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 86,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 4, вариант 1, задание 20"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 23,
+      "input_id": "R074",
+      "case_id": "K18",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent S_N08",
+      "joint_evaluation_required": false,
+      "parent_case": "S_N08",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "89196eeb2d4db1c0e6a6cf4ca637e343ba7c7bd301158fe3712ba75b2d585398",
+          "width": 1422,
+          "height": 130,
+          "bytes": 201867,
+          "path": "inputs/K18/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "g8-makarichev-handwritten-543",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-543-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/543.jpg",
+              "exercise": "543",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 24,
+      "input_id": "R007",
+      "case_id": "B_N07",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "unchanged source JPEG",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "d9c2d0c9cbe19a6220ab5642f70f20e8f077bc54e4526f2303ce919b88d63038",
+          "width": 1200,
+          "height": 786,
+          "bytes": 330092,
+          "path": "inputs/B_N07/photo_01.jpg",
+          "source_attribution": [
+            {
+              "source_id": "g8-makarichev-handwritten-541",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-541-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/541.jpg",
+              "exercise": "541",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 25,
+      "input_id": "R027",
+      "case_id": "E_N07",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "56ffee6f84fb8d3bba4e2db2157aac69703aecb91d333edce56ae56996c73b10",
+          "width": 1549,
+          "height": 1015,
+          "bytes": 2009467,
+          "path": "inputs/E_N07/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "g8-makarichev-handwritten-541",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-541-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/541.jpg",
+              "exercise": "541",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 26,
+      "input_id": "R004",
+      "case_id": "B_N04",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "unchanged source JPEG",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "adde376fd862e070f6f89222406936ca3b42d3cd2eb3dc2be2bb9973b40dedb9",
+          "width": 1200,
+          "height": 504,
+          "bytes": 158673,
+          "path": "inputs/B_N04/photo_01.jpg",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-449",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-449-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/449.jpg",
+              "exercise": "449",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 27,
+      "input_id": "R005",
+      "case_id": "B_N05",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "unchanged source JPEG",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "9619b90aab294f8352de7345d5249f6b22db92d2f613de27079abd372134fd74",
+          "width": 1200,
+          "height": 335,
+          "bytes": 150298,
+          "path": "inputs/B_N05/photo_01.jpg",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-451",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-451-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/451.jpg",
+              "exercise": "451",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 28,
+      "input_id": "R006",
+      "case_id": "B_N06",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "unchanged source JPEG",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "578ec463d495cb9e208fb9130b3f5afe381af99c58ce26f730351d5a2d892916",
+          "width": 1200,
+          "height": 611,
+          "bytes": 265944,
+          "path": "inputs/B_N06/photo_01.jpg",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-521",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-521-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/521.jpg",
+              "exercise": "521",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 29,
+      "input_id": "R008",
+      "case_id": "B_N08",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "unchanged source JPEG",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "f292dadcf67463aa9f19c48eeec142027771ab518e3bac552e496e3c4a68812a",
+          "width": 1200,
+          "height": 933,
+          "bytes": 382688,
+          "path": "inputs/B_N08/photo_01.jpg",
+          "source_attribution": [
+            {
+              "source_id": "g8-makarichev-handwritten-543",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-543-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/543.jpg",
+              "exercise": "543",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 30,
+      "input_id": "R009",
+      "case_id": "B_N09",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "unchanged source JPEG",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "39966a46e8905bf5c8de4ddd1f6cf212c37d8f806acd9dfbbfc8acb4c64cef18",
+          "width": 1200,
+          "height": 944,
+          "bytes": 398927,
+          "path": "inputs/B_N09/photo_01.jpg",
+          "source_attribution": [
+            {
+              "source_id": "g8-makarichev-handwritten-546",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-546-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/546.jpg",
+              "exercise": "546",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 31,
+      "input_id": "R010",
+      "case_id": "B_N10",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "unchanged source JPEG",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "bf80e794e91f38cd46b1be3f737b39fc57f17a2b1b70e7ddb52a7a6809f7f325",
+          "width": 1200,
+          "height": 1182,
+          "bytes": 467645,
+          "path": "inputs/B_N10/photo_01.jpg",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-886",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-886-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/886.jpg",
+              "exercise": "886",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 32,
+      "input_id": "R013",
+      "case_id": "B_C03",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "composed FIPI sheets with calibrated handwriting size",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "28c7022c3e0a547944978575bdb28549d071e3cd30bcd7bc60d387dce79db5ab",
+          "width": 2330,
+          "height": 3141,
+          "bytes": 1233428,
+          "path": "inputs/B_C03/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p28_work700",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 28,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.2,пример3"
+            },
+            {
+              "source_id": "fipi2024_p15",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 15,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 7, рис.8"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 33,
+      "input_id": "R014",
+      "case_id": "B_C04",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "composed FIPI sheets with calibrated handwriting size",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "b576b89da0432dafcbe116635acd817155131d7dbb47e6629a3078f3dc808b6a",
+          "width": 4375,
+          "height": 2220,
+          "bytes": 1418430,
+          "path": "inputs/B_C04/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p46_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 46,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "самостоятельная работа экспертов,задание4"
+            },
+            {
+              "source_id": "fipi2024_p59",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 59,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 3, упражнение 22.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 34,
+      "input_id": "R015",
+      "case_id": "B_C05",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "composed FIPI sheets with calibrated handwriting size",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "93a49ad4bf6c82e3819a10b026a77120a713a8df4e1f66a25de631685efd28b1",
+          "width": 1845,
+          "height": 4637,
+          "bytes": 1426781,
+          "path": "inputs/B_C05/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p67_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 67,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "тренировочный вариант1,№2"
+            },
+            {
+              "source_id": "fipi2024_p60",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 60,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 3, упражнение 22.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 35,
+      "input_id": "R016",
+      "case_id": "B_C06",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "composed FIPI sheets with calibrated handwriting size",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "52fe9aee51aa197feb8944588bb7304b567e86caa41fa3c7caac45bafc3b3638",
+          "width": 3319,
+          "height": 1493,
+          "bytes": 633094,
+          "path": "inputs/B_C06/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p81_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 81,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "тренировочный вариант2,№3"
+            },
+            {
+              "source_id": "fipi2024_p86",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 86,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 4, вариант 1, задание 20"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 36,
+      "input_id": "R017",
+      "case_id": "B_C07",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "composed FIPI sheets with calibrated handwriting size",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "2081bfc930f0ed2f1a6ae4b67bcfc91ca7b52ebbc9db58d706913098dc35746b",
+          "width": 2538,
+          "height": 6587,
+          "bytes": 2266850,
+          "path": "inputs/B_C07/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p82_83_work900",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 82,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "тренировочный вариант2,№4,две страницы одной работы"
+            },
+            {
+              "source_id": "fipi2024_p87",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 87,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 4, вариант 1, задание 21"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 37,
+      "input_id": "R018",
+      "case_id": "B_C08",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "composed FIPI sheets with calibrated handwriting size",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "73cb98306e4d961e6b82c5b2c4fd0acd1dc262a5c397a1186ee8b43e77ac384e",
+          "width": 4775,
+          "height": 1554,
+          "bytes": 844923,
+          "path": "inputs/B_C08/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p85_graph049",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 85,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "тренировочный вариант2,№7"
+            },
+            {
+              "source_id": "fipi2024_p96",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 96,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 4, вариант 3, задание 20"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 38,
+      "input_id": "R019",
+      "case_id": "B_C09",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "composed FIPI sheets with calibrated handwriting size",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "d665a25cb7cc8402fbf2270f6fe84c3fd07eea2c126855a6f84ec42deda70ea0",
+          "width": 2268,
+          "height": 3022,
+          "bytes": 940255,
+          "path": "inputs/B_C09/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p23_eqA",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 23,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.1,пример2"
+            },
+            {
+              "source_id": "fipi2024_p59",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 59,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 3, упражнение 22.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 39,
+      "input_id": "R020",
+      "case_id": "B_C10",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "original_correct",
+      "derivation": "composed FIPI sheets with calibrated handwriting size",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "f0d51e16605b98ae20719951fb61abcfebf8fab52eb6019bf9593fe8e75a0c31",
+          "width": 4437,
+          "height": 2784,
+          "bytes": 844001,
+          "path": "inputs/B_C10/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p46_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 46,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "самостоятельная работа экспертов,задание4"
+            },
+            {
+              "source_id": "fipi2024_p14",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 14,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 6, рис.7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 40,
+      "input_id": "R024",
+      "case_id": "E_N04",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "b05ac2fdeea53eac35bad186ebd8833b04db2c8a670ee1de4be73a185ff478bf",
+          "width": 1935,
+          "height": 813,
+          "bytes": 1781587,
+          "path": "inputs/E_N04/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-449",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-449-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/449.jpg",
+              "exercise": "449",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 41,
+      "input_id": "R025",
+      "case_id": "E_N05",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "7655fb1e3c04cd376135622bbc4e37d8cb71c1082ad499f709b11dbdb2fba290",
+          "width": 2172,
+          "height": 724,
+          "bytes": 1670050,
+          "path": "inputs/E_N05/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-451",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-451-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/451.jpg",
+              "exercise": "451",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 42,
+      "input_id": "R026",
+      "case_id": "E_N06",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "d5d9cded5bb9d7b82b15cd512c63f084e2de73e9f970482f89fdaa86c661717a",
+          "width": 1758,
+          "height": 895,
+          "bytes": 1882192,
+          "path": "inputs/E_N06/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-521",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-521-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/521.jpg",
+              "exercise": "521",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 43,
+      "input_id": "R028",
+      "case_id": "E_N08",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "2b763564f8c73d9619628ce563da85a36173bb071f6e833c7a812938a432d624",
+          "width": 1422,
+          "height": 1106,
+          "bytes": 2141369,
+          "path": "inputs/E_N08/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "g8-makarichev-handwritten-543",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-543-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/543.jpg",
+              "exercise": "543",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 44,
+      "input_id": "R029",
+      "case_id": "E_N09",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "ba7eb556d116ecdba46b20b1ea8165046fcb13775afa2e580c2518b3f95c3f46",
+          "width": 1414,
+          "height": 1112,
+          "bytes": 2013848,
+          "path": "inputs/E_N09/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "g8-makarichev-handwritten-546",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-546-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/546.jpg",
+              "exercise": "546",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 45,
+      "input_id": "R030",
+      "case_id": "E_N10",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "20959191f3b95a4e30f79ad9eb2dddd4ca8a7cdf3958d97945e73b708a93920b",
+          "width": 1264,
+          "height": 1244,
+          "bytes": 1944908,
+          "path": "inputs/E_N10/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-886",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-886-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/886.jpg",
+              "exercise": "886",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 46,
+      "input_id": "R033",
+      "case_id": "E_C03",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "68035e11c4004bf5062dc880d97fe00c67ad43483cfcc7648d42a248333c4771",
+          "width": 1080,
+          "height": 1456,
+          "bytes": 1231686,
+          "path": "inputs/E_C03/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p28_work700",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 28,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.2,пример3"
+            },
+            {
+              "source_id": "fipi2024_p15",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 15,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 7, рис.8"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 47,
+      "input_id": "R034",
+      "case_id": "E_C04",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "fe731c9490b5ea76c2306cc9186c1d69401e0a7f9016e6c4aed35a9ab849f452",
+          "width": 1760,
+          "height": 893,
+          "bytes": 1132597,
+          "path": "inputs/E_C04/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p46_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 46,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "самостоятельная работа экспертов,задание4"
+            },
+            {
+              "source_id": "fipi2024_p59",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 59,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 3, упражнение 22.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 48,
+      "input_id": "R035",
+      "case_id": "E_C05",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "b8e164df04507bc2cc3d5eedb18f581720e49ca123c9d5b1ffa454bc587ef849",
+          "width": 791,
+          "height": 1989,
+          "bytes": 1370968,
+          "path": "inputs/E_C05/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p67_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 67,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "тренировочный вариант1,№2"
+            },
+            {
+              "source_id": "fipi2024_p60",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 60,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 3, упражнение 22.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 49,
+      "input_id": "R036",
+      "case_id": "E_C06",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "26e5bdece2d37ba848e38c57afbbdf37ef9d4d6feda50a855b4d1821d1d2657d",
+          "width": 1870,
+          "height": 841,
+          "bytes": 1207393,
+          "path": "inputs/E_C06/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p81_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 81,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "тренировочный вариант2,№3"
+            },
+            {
+              "source_id": "fipi2024_p86",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 86,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 4, вариант 1, задание 20"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 50,
+      "input_id": "R037",
+      "case_id": "E_C07",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "0cf93cfa9dbac87e2958c7b1c11c52d782ad6e12bd309404460082e6190214e5",
+          "width": 779,
+          "height": 2020,
+          "bytes": 1349577,
+          "path": "inputs/E_C07/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p82_83_work900",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 82,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "тренировочный вариант2,№4,две страницы одной работы"
+            },
+            {
+              "source_id": "fipi2024_p87",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 87,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 4, вариант 1, задание 21"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 51,
+      "input_id": "R038",
+      "case_id": "E_C08",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "42c99fa945d4bcfd3504bab02070dd5fffa92629dfb7cfed328f1d58bfd7ba36",
+          "width": 2171,
+          "height": 724,
+          "bytes": 1084610,
+          "path": "inputs/E_C08/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p85_graph049",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 85,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "тренировочный вариант2,№7"
+            },
+            {
+              "source_id": "fipi2024_p96",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 96,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 4, вариант 3, задание 20"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 52,
+      "input_id": "R039",
+      "case_id": "E_C09",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "042e8b272d0b99ca54165787c423759397aecd2098b0b9d9d356e780e8d374c1",
+          "width": 1087,
+          "height": 1447,
+          "bytes": 1334007,
+          "path": "inputs/E_C09/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p23_eqA",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 23,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.1,пример2"
+            },
+            {
+              "source_id": "fipi2024_p59",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 59,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 3, упражнение 22.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 53,
+      "input_id": "R040",
+      "case_id": "E_C10",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "math_error",
+      "derivation": "ImageGen synthetic edit: math_error",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "c3c8991e1d6756f795eb13630784a2668939479de75525b50d50bc58dad90c50",
+          "width": 1584,
+          "height": 993,
+          "bytes": 1117378,
+          "path": "inputs/E_C10/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p46_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 46,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "самостоятельная работа экспертов,задание4"
+            },
+            {
+              "source_id": "fipi2024_p14",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 14,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 6, рис.7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 54,
+      "input_id": "R042",
+      "case_id": "U_N09",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "incomplete",
+      "derivation": "ImageGen synthetic edit: incomplete",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "7d96ce094b55c59cfc57d9d1e4c1a5dc61af1abec004b5bb68949ac42756e6c4",
+          "width": 1414,
+          "height": 1112,
+          "bytes": 2118392,
+          "path": "inputs/U_N09/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "g8-makarichev-handwritten-546",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-546-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/546.jpg",
+              "exercise": "546",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 55,
+      "input_id": "R044",
+      "case_id": "U_C07",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "incomplete",
+      "derivation": "ImageGen synthetic edit: incomplete",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "6f27661e28d66f4d36a56378fe1ff9f1c6142b786d6faca8dd5f601aa38dc5fa",
+          "width": 779,
+          "height": 2020,
+          "bytes": 1290710,
+          "path": "inputs/U_C07/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p82_83_work900",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 82,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "тренировочный вариант2,№4,две страницы одной работы"
+            },
+            {
+              "source_id": "fipi2024_p87",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 87,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 4, вариант 1, задание 21"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 56,
+      "input_id": "R046",
+      "case_id": "S_N08",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "valid_shortened",
+      "derivation": "ImageGen synthetic edit: valid_shortened",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "e20e2e064960338d787f913c710cf867c9a4d702b310f458d814280e06dd8be5",
+          "width": 1422,
+          "height": 1106,
+          "bytes": 1922429,
+          "path": "inputs/S_N08/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "g8-makarichev-handwritten-543",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-543-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/543.jpg",
+              "exercise": "543",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 57,
+      "input_id": "R047",
+      "case_id": "S_C01",
+      "format_group": "one_photo_many_tasks",
+      "scenario": "valid_shortened",
+      "derivation": "ImageGen synthetic edit: valid_shortened",
+      "joint_evaluation_required": false,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "05f91671ad30147b8694bfd00c4b92fed92dbbebc29f1bcfa7d7987709eb0682",
+          "width": 1244,
+          "height": 1265,
+          "bytes": 1222932,
+          "path": "inputs/S_C01/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p23_eqA",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 23,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.1,пример2"
+            },
+            {
+              "source_id": "fipi2024_p12",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 12,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 4, рис.5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 58,
+      "input_id": "R049",
+      "case_id": "M01",
+      "format_group": "one_task_two_photos",
+      "scenario": "single_task",
+      "derivation": "synthetic rectangular cropping/splitting/recomposition; no resize; two ordered photos",
+      "joint_evaluation_required": true,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "f584eaaf26cfad8bbd1e1a7b19888edab9953b6881ac3e422ad336f82b815ae6",
+          "width": 2091,
+          "height": 1078,
+          "bytes": 268429,
+          "path": "inputs/M01/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p46_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 46,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "самостоятельная работа экспертов,задание4"
+            }
+          ]
+        },
+        {
+          "photo_index": 2,
+          "sha256": "f6a7ef36e15855f68695c2ecee30fa9db6a5c0f79e96b4168b651b65726fc9aa",
+          "width": 2091,
+          "height": 929,
+          "bytes": 385306,
+          "path": "inputs/M01/photo_02.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p46_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 46,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "самостоятельная работа экспертов,задание4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 59,
+      "input_id": "R051",
+      "case_id": "M03",
+      "format_group": "one_task_two_photos",
+      "scenario": "single_task",
+      "derivation": "synthetic rectangular cropping/splitting/recomposition; no resize; two ordered photos",
+      "joint_evaluation_required": true,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "30d45b6e6d1b5a6c963eeaaaa43cb8e7c11320fbd05e66534b701aba34681bc5",
+          "width": 1163,
+          "height": 159,
+          "bytes": 208661,
+          "path": "inputs/M03/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-521",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-521-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/521.jpg",
+              "exercise": "521",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        },
+        {
+          "photo_index": 2,
+          "sha256": "d878b347c989e1b8d5cdcec1ee6198edf6ec4dccbfc53466b704f3f1671ae3c1",
+          "width": 1163,
+          "height": 117,
+          "bytes": 125749,
+          "path": "inputs/M03/photo_02.png",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-521",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-521-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/521.jpg",
+              "exercise": "521",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 60,
+      "input_id": "R052",
+      "case_id": "M04",
+      "format_group": "one_task_two_photos",
+      "scenario": "single_task",
+      "derivation": "synthetic rectangular cropping/splitting/recomposition; no resize; two ordered photos",
+      "joint_evaluation_required": true,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "9e13783f9c1c1884697ca6ee5dd4a458a1059d4368c52c4e7779dacb2fe99f05",
+          "width": 438,
+          "height": 228,
+          "bytes": 61702,
+          "path": "inputs/M04/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2024_p15",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 15,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 7, рис.8"
+            }
+          ]
+        },
+        {
+          "photo_index": 2,
+          "sha256": "72d22f65feb072656b287ceb18ab1e21795b67719cd400580f215d2d3dbc8fd4",
+          "width": 438,
+          "height": 158,
+          "bytes": 42755,
+          "path": "inputs/M04/photo_02.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2024_p15",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 15,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 7, рис.8"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 61,
+      "input_id": "R053",
+      "case_id": "M05",
+      "format_group": "mixed_two_photos",
+      "scenario": "one_and_half",
+      "derivation": "synthetic rectangular cropping/splitting/recomposition; no resize; two ordered photos",
+      "joint_evaluation_required": true,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "037e4026945cf4b5bdfd212ae27fa37955877d14a6321acd4f76cdc567e50a8e",
+          "width": 2748,
+          "height": 1836,
+          "bytes": 497866,
+          "path": "inputs/M05/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p23_eqA",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 23,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.1,пример2"
+            },
+            {
+              "source_id": "fipi2024_p12",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 12,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 4, рис.5"
+            }
+          ]
+        },
+        {
+          "photo_index": 2,
+          "sha256": "f78bda966c2b0d2138a51449b84ca68dbf636c387e72699e3bf626f46e906d00",
+          "width": 2748,
+          "height": 1006,
+          "bytes": 274881,
+          "path": "inputs/M05/photo_02.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p23_eqA",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 23,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.1,пример2"
+            },
+            {
+              "source_id": "fipi2024_p12",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 12,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 4, рис.5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 62,
+      "input_id": "R054",
+      "case_id": "M06",
+      "format_group": "mixed_two_photos",
+      "scenario": "one_and_half",
+      "derivation": "synthetic rectangular cropping/splitting/recomposition; no resize; two ordered photos",
+      "joint_evaluation_required": true,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "dc59db52212028e9618c4a2042b3486671f6d25e1be6c7bcfbfb6fc0c9978b87",
+          "width": 1018,
+          "height": 1130,
+          "bytes": 574820,
+          "path": "inputs/M06/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p81_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 81,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "тренировочный вариант2,№3"
+            },
+            {
+              "source_id": "fipi2024_p86",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 86,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 4, вариант 1, задание 20"
+            }
+          ]
+        },
+        {
+          "photo_index": 2,
+          "sha256": "21ea9492e08b5510ad09aed573bc79e038c5cd82c0804124654cf5d4a44f8f5a",
+          "width": 1018,
+          "height": 315,
+          "bytes": 187925,
+          "path": "inputs/M06/photo_02.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p81_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 81,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "тренировочный вариант2,№3"
+            },
+            {
+              "source_id": "fipi2024_p86",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 86,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 4, вариант 1, задание 20"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 63,
+      "input_id": "R055",
+      "case_id": "M07",
+      "format_group": "mixed_two_photos",
+      "scenario": "one_and_half",
+      "derivation": "synthetic rectangular cropping/splitting/recomposition; no resize; two ordered photos",
+      "joint_evaluation_required": true,
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "d61489b62fafaa1213dd0f8a30fa1eae861befa2a16f8f0c016031ad57a5a198",
+          "width": 1292,
+          "height": 872,
+          "bytes": 622843,
+          "path": "inputs/M07/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p23_eqA",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 23,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.1,пример2"
+            },
+            {
+              "source_id": "fipi2024_p12",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 12,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 4, рис.5"
+            }
+          ]
+        },
+        {
+          "photo_index": 2,
+          "sha256": "2096fb497c00711e519886bd81ca3e9ccc0dbb2b696862796ec5816d68117e5c",
+          "width": 1292,
+          "height": 489,
+          "bytes": 347943,
+          "path": "inputs/M07/photo_02.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p23_eqA",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 23,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.1,пример2"
+            },
+            {
+              "source_id": "fipi2024_p12",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 12,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 4, рис.5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 64,
+      "input_id": "R061",
+      "case_id": "K05",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent B_C01",
+      "joint_evaluation_required": false,
+      "parent_case": "B_C01",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "38d5dff9476d831aec3546fb3149fec681f0a9a3ea3f9b8920efde863159006a",
+          "width": 1543,
+          "height": 738,
+          "bytes": 230837,
+          "path": "inputs/K05/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p23_eqA",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 23,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.1,пример2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 65,
+      "input_id": "R062",
+      "case_id": "K06",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent B_C03",
+      "joint_evaluation_required": false,
+      "parent_case": "B_C03",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "b2e236803f6ec5e5ac1f89b79ccdb0bf4bbb2b74fc72b0cc9bb182ef3430d887",
+          "width": 2282,
+          "height": 1825,
+          "bytes": 899403,
+          "path": "inputs/K06/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p28_work700",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 28,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "4.2,пример3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 66,
+      "input_id": "R063",
+      "case_id": "K07",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent B_C06",
+      "joint_evaluation_required": false,
+      "parent_case": "B_C06",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "3afd5bd45a1707b0593b5f166e7cda368fdb5ad89b4cdfcb8daca644ffad156a",
+          "width": 1492,
+          "height": 1445,
+          "bytes": 395575,
+          "path": "inputs/K07/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p81_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 81,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "тренировочный вариант2,№3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 67,
+      "input_id": "R064",
+      "case_id": "K08",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent B_C02",
+      "joint_evaluation_required": false,
+      "parent_case": "B_C02",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "d1a9b1cca366b34d731f2a9b1ea91c4ea22a830958fcaee3945bfe36b15c2ba2",
+          "width": 2282,
+          "height": 2736,
+          "bytes": 128782,
+          "path": "inputs/K08/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2024_p14",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 14,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 6, рис.7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 68,
+      "input_id": "R065",
+      "case_id": "K09",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent B_C03",
+      "joint_evaluation_required": false,
+      "parent_case": "B_C03",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "c70d813b77648e4ef700df586c42204c4912cc4f3a9be169f0c534f57841ead6",
+          "width": 784,
+          "height": 1204,
+          "bytes": 274205,
+          "path": "inputs/K09/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2024_p15",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 15,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 1, пример 7, рис.8"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 69,
+      "input_id": "R066",
+      "case_id": "K10",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent B_C07",
+      "joint_evaluation_required": false,
+      "parent_case": "B_C07",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "8ad3bc70f787a305fc810e7cbaa5becca80500f2c1ed59c0fcf85413b31bcf2b",
+          "width": 1884,
+          "height": 2156,
+          "bytes": 710283,
+          "path": "inputs/K10/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2024_p87",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 87,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 4, вариант 1, задание 21"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 70,
+      "input_id": "R068",
+      "case_id": "K12",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent E_N05",
+      "joint_evaluation_required": false,
+      "parent_case": "E_N05",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "d9db639ca8375ac04915b93fcb2bc6464cacf53dd2b25d738a31f5107c171311",
+          "width": 2172,
+          "height": 229,
+          "bytes": 537360,
+          "path": "inputs/K12/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-451",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-451-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/451.jpg",
+              "exercise": "451",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 71,
+      "input_id": "R069",
+      "case_id": "K13",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent E_C04",
+      "joint_evaluation_required": false,
+      "parent_case": "E_C04",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "b0c606d5d1fa254b5baaec2fb400df83e6241d6a5dc5a17c53d4a360b955fc04",
+          "width": 800,
+          "height": 595,
+          "bytes": 204195,
+          "path": "inputs/K13/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p46_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 46,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "самостоятельная работа экспертов,задание4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 72,
+      "input_id": "R070",
+      "case_id": "K14",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent E_C10",
+      "joint_evaluation_required": false,
+      "parent_case": "E_C10",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "997df74f2f388856897ec2d03e4c08e351e97864cbc45dc9e1f28e478664ad79",
+          "width": 750,
+          "height": 650,
+          "bytes": 248170,
+          "path": "inputs/K14/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2022_p46_eqB",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://100ballnik.com/wp-content/uploads/2022/02/Метод-указания-для-предметных-комиссий-ОГЭ-2022.pdf",
+              "pdf_page_1based": 46,
+              "pdf_sha256": "383a4f4cab6d049c0b52445f3be10bf93047cf97535cb7031376edae0d215ec9",
+              "exercise": "самостоятельная работа экспертов,задание4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 73,
+      "input_id": "R071",
+      "case_id": "K15",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent U_N09",
+      "joint_evaluation_required": false,
+      "parent_case": "U_N09",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "c0311c72616e61d921e5a08ff36ee9bafda06bb3dacbeac18d6c27c198e06ace",
+          "width": 1414,
+          "height": 205,
+          "bytes": 353038,
+          "path": "inputs/K15/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "g8-makarichev-handwritten-546",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-546-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/546.jpg",
+              "exercise": "546",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 74,
+      "input_id": "R072",
+      "case_id": "K16",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent U_C07",
+      "joint_evaluation_required": false,
+      "parent_case": "U_C07",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "0fe7c39f6ee9e5847210c3fbc1ae3d758a63db96dc420d3bbab2a16dd3708c7f",
+          "width": 779,
+          "height": 680,
+          "bytes": 307579,
+          "path": "inputs/K16/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2024_p87",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 87,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 4, вариант 1, задание 21"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 75,
+      "input_id": "R073",
+      "case_id": "K17",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent S_N01",
+      "joint_evaluation_required": false,
+      "parent_case": "S_N01",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "70e28c7cb5fe5888b8402026aad515e09a7bf379fc44f7302893fc2827f338c9",
+          "width": 1950,
+          "height": 280,
+          "bytes": 497030,
+          "path": "inputs/K17/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "bakulin-g8-old-150",
+              "publisher": "GDZBakulin",
+              "source_kind": "native_handwritten_multi_example",
+              "page_url": "https://gdzbakulin.ru/8-klass/algebra/makarichev-fgos/1-prt-150-2699/",
+              "image_url": "https://gdzbakulin.ru/content/uploads/subitem/2699/49/150.jpg",
+              "exercise": "150",
+              "edition": "old2013-2022 handwritten variant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input_order": 76,
+      "input_id": "R076",
+      "case_id": "K20",
+      "format_group": "one_photo_one_task",
+      "scenario": "single_task_control",
+      "derivation": "single-task control crop with known framing; parent S_C06",
+      "joint_evaluation_required": false,
+      "parent_case": "S_C06",
+      "images": [
+        {
+          "photo_index": 1,
+          "sha256": "e4fbd31689b0d7d2d061f4384742479c3d40147c016c337dddbcefabd74e9e9a",
+          "width": 970,
+          "height": 280,
+          "bytes": 148805,
+          "path": "inputs/K20/photo_01.png",
+          "source_attribution": [
+            {
+              "source_id": "fipi2024_p86",
+              "publisher": "FIPI",
+              "source_kind": "native_handwritten_pdf_solution",
+              "source_pdf_url": "https://doc.fipi.ru/oge/dlya-predmetnyh-komissiy-subektov-rf/2024/mr_oge_matematika_2024.pdf",
+              "pdf_page_1based": 86,
+              "pdf_sha256": "add6c252701bc3f60af79ce6ed2f27bf6301578e5822c08ef99f13c592f80a16",
+              "exercise": "Часть 4, вариант 1, задание 20"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "reference_files": [
+    {
+      "path": "reference/truth.json",
+      "sha256": "883ac1e117a5b1c64cc62f052a30946607c060ef03363479dd39cd5339e5df2c"
+    },
+    {
+      "path": "reference/truth_errata.json",
+      "sha256": "e9c27026a00cfcf979eca335a3441726901a6b4db1d5ffaa29603a42fc0cc6a1"
+    }
+  ]
+}

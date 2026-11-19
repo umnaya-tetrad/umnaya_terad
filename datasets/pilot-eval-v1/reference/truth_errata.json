@@ -1,0 +1,56 @@
+{
+  "schema_version": "source-truth-errata/1.0",
+  "recorded_local_date": "2026-11-19",
+  "status": "approved_by_root_after_visual_source_check",
+  "original_gold_immutable": true,
+  "cases_private_sha256": "53f6b65c0cd267aae4eef0ace0d8056609db49eef22fb853cd79633bd4834179",
+  "quality_policy": "Исключены только3спорныеединицыизпервичныхматематическихметрик;175надежныхиз178. Все178остаютсявсопоставлении,разбиении,каталоге,стоимости/времени. Чувствительностькнеизменномуgold178показываетсяотдельно. Этообнаружениедефектаисточникапослепросмотраответа,невнешняянезависимаяпредметнаявалидация.",
+  "eligible_content_counts": {
+    "mathematical_error": 28,
+    "unfinished_correct_prefix": 8,
+    "correct_omitted_steps": 8,
+    "ordinary_correct_complete": 131,
+    "clean_total": 147
+  },
+  "excluded_units": [
+    {
+      "case_id": "B_N07",
+      "truth_id": "B_N07__h",
+      "reason": "На исходной рукописи видимо 100x²−160+63=0 без x после160. Далее D1=80²−63·100=100 рассчитан для подразумеваемого100x²−160x+63=0. Исходное gold трактует подразумеваемый линейный член; буквальная запись и математический эталон расходятся. Само намерение автора по фото не известно.",
+      "source_image": "inputs/B_N07/photo_01.jpg",
+      "source_sha256": "d9c2d0c9cbe19a6220ab5642f70f20e8f077bc54e4526f2303ce919b88d63038"
+    },
+    {
+      "case_id": "E_N07",
+      "truth_id": "E_N07__h",
+      "reason": "На исходной рукописи видимо 100x²−160+63=0 без x после160. Далее D1=80²−63·100=100 рассчитан для подразумеваемого100x²−160x+63=0. Исходное gold трактует подразумеваемый линейный член; буквальная запись и математический эталон расходятся. Само намерение автора по фото не известно.",
+      "source_image": "inputs/E_N07/photo_01.png",
+      "source_sha256": "56ffee6f84fb8d3bba4e2db2157aac69703aecb91d333edce56ae56996c73b10"
+    },
+    {
+      "case_id": "U_N07",
+      "truth_id": "U_N07__h",
+      "reason": "На исходной рукописи видимо 100x²−160+63=0 без x после160. Далее D1=80²−63·100=100 рассчитан для подразумеваемого100x²−160x+63=0. Исходное gold трактует подразумеваемый линейный член; буквальная запись и математический эталон расходятся. Само намерение автора по фото не известно.",
+      "source_image": "inputs/U_N07/photo_01.png",
+      "source_sha256": "029a6b71121ee7274f707ae24e851ed4e6a9e74b0296752b62993cfce235fe3e"
+    }
+  ],
+  "non_excluding_observations": [
+    {
+      "truth_id": "B_N08__f",
+      "visible_condition": "25x²−13x=10x²−7; 15x²−13x+7=0",
+      "frozen_gold_condition": "25x²+13x=10x²−7; 15x²+13x+7=0",
+      "reason": "На исходном фото перед13x виден минус, модель onepassv2 передает его верно. Эталонный плюс—неточность нотации gold. В обоих случаях D=−251 и действительных корней нет; ожидаемые verdict/completeness не меняются, исключения из основных метрик нет.",
+      "quality_exclusion": false
+    },
+    {
+      "truth_id": "B_N06__b",
+      "visible_condition": "-5y²+8y+8=8y+3 (probable8 after native handwriting comparison)",
+      "frozen_gold_condition": "-5y²+2y+8=2y+3",
+      "reason": "Визуальное сравнение с константой8 в той же строке и цифрами2 в других строках поддерживает8; независимо подтверждено root и control_dataset_audit. Оба линейных коэффициента сокращаются, поэтому verdict/completeness и y=±1 не меняются. Нет основания штрафовать модель только за отличие от нотации gold.",
+      "quality_exclusion": false
+    }
+  ],
+  "source_errata_sha256": "f38588dc3ae5654cae091d192c1236737131ed111fb1b43f0ddbb7c226e96162",
+  "publication_note": "Portable projection: source image paths now point to inputs; unshipped local evidence files omitted. Original gold is unchanged. No new mathematical review was performed while packaging."
+}
