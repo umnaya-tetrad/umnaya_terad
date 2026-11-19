@@ -97,3 +97,21 @@
 | Нет HTTP admin | та же | PASS: `/processing/pause`, `/budget`, `/admin/processing` недоступны teacher и staff |
 
 Полный набор `pytest tests/integration/pilot -q` — 18 тестов, PASS дважды подряд (75,9 с и 75,7 с).
+
+## Проверено в приёмке release (REL-06)
+
+Сквозной учительский путь проверяется в том же изолированном проекте (`smartnote-release-accept`, порт 5273) через Playwright на реальном HTTP/PostgreSQL/worker. Подмены HTTP нет: проверяются сохранённые Job, фото и отзывы.
+
+| Проверка | Команда | Факт |
+| --- | --- | --- |
+| Исключённые функции | `npx playwright test tests/e2e/pilot --grep REL-C26` | PASS: нет класса/темы/варианта/экспорта/оценок/тарифов/регистрации/чата/корзины; `/api/auth/register`, `/api/analyze`, `/analyze` отвечают 404/405 |
+| Загрузка фото | `--grep REL-C08` | PASS: JPEG принят, PDF отклонён 415, приватный asset `private, no-store` |
+| Одна страница — несколько задач | `--grep REL-C09` | PASS: два фото (PNG+HEIC) в одном комплекте, evidence ≤4 строк с корректными `photo_index`, исправленный первый шаг присутствует |
+| Три действия и фон | `--grep REL-C10` | PASS: до submit Job нет, оба submit = 202, следующая тетрадь доступна до ответа модели, оба комплекта сохранили свой вход |
+| Отзывы и красная отметка | `--grep REL-C11` | PASS: отзыв сохраняется только для своей задачи, `system_error` не запускает retry, Job остаётся `succeeded` |
+| Два этапа финала | `--grep REL-C19` | PASS: `begin-completion` даёт `review` без AnalyticsJob, прямой finalize с нерешёнными отзывами — 409, после оценок создаётся один AnalyticsJob и сохранённая сводка |
+| Новая версия входа | `--grep REL-C13` | PASS: после submit новой версии все отзывы `null`, текущий вход заменён |
+
+Полный прогон `npx playwright test tests/e2e/pilot` — 8 тестов, PASS.
+
+Не проверено этой задачей: реальные Android/iPhone и платная модель; это REL-10 и отдельный live-прогон.
