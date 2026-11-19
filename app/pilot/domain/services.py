@@ -24,15 +24,9 @@ class Services:
 def create_services(pool, storage_root, settings):
     if settings.pilot_transport not in ("fixture", "polza"):
         raise ValueError("PILOT_TRANSPORT must be fixture or polza")
-    profile = None
-    if settings.pilot_pricing_profile_file:
-        path = Path(settings.pilot_pricing_profile_file)
-        # Trusted local operator input only. Malformed configuration fails closed.
-        from ..processing.transport import strict_json
+    from ..processing.pricing import default_pricing_profile
 
-        profile = strict_json(path.read_text(encoding="utf-8"))
-        if not isinstance(profile, dict):
-            raise ValueError("Pricing profile must be an object")
+    profile = default_pricing_profile()
     service = Services(pool, Path(storage_root), settings, pricing_profile=profile)
     from . import auth
 

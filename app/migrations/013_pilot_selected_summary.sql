@@ -1,0 +1,4 @@
+ALTER TABLE pilot_jobs ADD CONSTRAINT pilot_job_check_unique UNIQUE(id,check_id);
+ALTER TABLE pilot_checks ADD CONSTRAINT pilot_selected_summary_lineage FOREIGN KEY(selected_summary_job_id,id) REFERENCES pilot_jobs(id,check_id) DEFERRABLE INITIALLY DEFERRED;
+CREATE FUNCTION pilot_selected_analytics_kind() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.selected_summary_job_id IS NOT NULL AND NOT EXISTS(SELECT 1 FROM pilot_jobs WHERE id=NEW.selected_summary_job_id AND check_id=NEW.id AND kind='class_analytics') THEN RAISE EXCEPTION 'selected summary must be an analytics job of this check' USING ERRCODE='23503'; END IF; RETURN NEW; END $$;
+CREATE CONSTRAINT TRIGGER pilot_selected_summary_kind AFTER INSERT OR UPDATE OF selected_summary_job_id ON pilot_checks DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION pilot_selected_analytics_kind();

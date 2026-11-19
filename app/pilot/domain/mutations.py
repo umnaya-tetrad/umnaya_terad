@@ -100,7 +100,7 @@ async def _cancel_jobs(con, c, bundle_ids=None, *, reason="deleted"):
     await con.execute(sql, *args)
     # Cancellation is never proof that a dispatched provider call was free.
     await con.execute(
-        "UPDATE pilot_attempts SET state='unknown' WHERE state='started' AND dispatched AND job_id IN (SELECT id FROM pilot_jobs WHERE check_id=$1 AND state='cancelled')",
+        "UPDATE pilot_attempts SET state='unknown',billing_state='unknown' WHERE state='started' AND dispatched AND job_id IN (SELECT id FROM pilot_jobs WHERE check_id=$1 AND state='cancelled')",
         c["id"],
     )
 

@@ -1,0 +1,10 @@
+CREATE TABLE pilot_processing_budget(mode TEXT PRIMARY KEY REFERENCES pilot_funds(mode),spend_limit_rub NUMERIC NOT NULL DEFAULT 500,spent_rub NUMERIC NOT NULL DEFAULT 0,held_rub NUMERIC NOT NULL DEFAULT 0,paused BOOLEAN NOT NULL DEFAULT false,CHECK(spend_limit_rub>=0 AND spent_rub>=0 AND held_rub>=0),CHECK(spend_limit_rub NOT IN ('NaN'::numeric,'Infinity'::numeric,'-Infinity'::numeric) AND spent_rub NOT IN ('NaN'::numeric,'Infinity'::numeric,'-Infinity'::numeric) AND held_rub NOT IN ('NaN'::numeric,'Infinity'::numeric,'-Infinity'::numeric)));
+INSERT INTO pilot_processing_budget(mode,spent_rub,held_rub) SELECT f.mode,COALESCE((SELECT SUM(l.amount_rub) FROM pilot_fund_ledger l WHERE l.mode=f.mode AND l.operation='settlement'),0),COALESCE((SELECT SUM(r.amount_rub) FROM pilot_fund_reservations r WHERE r.mode=f.mode AND r.active),0) FROM pilot_funds f;
+ALTER TABLE pilot_attempts ADD COLUMN transport_mode TEXT CHECK(transport_mode IN ('fixture','polza'));
+ALTER TABLE pilot_attempts ADD COLUMN billing_state TEXT NOT NULL DEFAULT 'pending' CHECK(billing_state IN ('pending','unknown','settled'));
+UPDATE pilot_attempts a SET transport_mode=r.mode FROM pilot_fund_reservations r WHERE a.id=r.attempt_id;
+UPDATE pilot_attempts SET billing_state=CASE WHEN actual_cost_rub IS NOT NULL THEN 'settled' WHEN state IN ('settled','rejected','unknown') THEN 'unknown' ELSE 'pending' END;
+CREATE TABLE pilot_budget_changes(request_id UUID PRIMARY KEY,mode TEXT NOT NULL REFERENCES pilot_processing_budget(mode),payload_hash TEXT NOT NULL,spend_limit_rub NUMERIC NOT NULL,created_at TIMESTAMPTZ NOT NULL DEFAULT now());
+CREATE TABLE pilot_reconciliations(request_id UUID PRIMARY KEY,attempt_id UUID NOT NULL REFERENCES pilot_attempts(id),payload_hash TEXT NOT NULL,created_at TIMESTAMPTZ NOT NULL DEFAULT now());
+CREATE TRIGGER pilot_budget_changes_immutable BEFORE UPDATE OR DELETE ON pilot_budget_changes FOR EACH ROW EXECUTE FUNCTION pilot_immutable();
+CREATE TRIGGER pilot_reconciliation_immutable BEFORE UPDATE OR DELETE ON pilot_reconciliations FOR EACH ROW EXECUTE FUNCTION pilot_immutable();

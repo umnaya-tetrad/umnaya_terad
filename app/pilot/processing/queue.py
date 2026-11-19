@@ -44,126 +44,141 @@ async def _job_lock(con, job):
 
 
 async def claim(svc, worker_id):
-    candidates = await svc.pool.fetch(
-        "SELECT * FROM pilot_jobs WHERE state IN ('queued','blocked','retry_wait') AND next_run_at<=$1 ORDER BY next_run_at,created_at,id LIMIT 100",
-        now(svc),
-    )
-    for candidate in candidates:
-        async with svc.pool.acquire() as con, con.transaction():
-            row = await con.fetchrow(
-                "SELECT * FROM pilot_checks WHERE id=$1 FOR UPDATE SKIP LOCKED",
-                candidate["check_id"],
+    # Page through all eligible work: stale or expensive blocked jobs must not
+    # monopolize the first bounded chunk and starve another teacher/kind.
+    after = None
+    while True:
+        candidates = await svc.pool.fetch(
+            "SELECT j.* FROM pilot_jobs j JOIN pilot_checks c ON c.id=j.check_id "
+            "LEFT JOIN pilot_snapshots s ON s.id=j.snapshot_id "
+            "WHERE j.state IN ('queued','blocked','retry_wait') AND j.next_run_at<=$1 "
+            "AND (j.kind='page_check' OR (c.selected_summary_job_id=j.id AND s.data_revision=c.data_revision)) "
+            "AND ($2::timestamptz IS NULL OR (j.next_run_at,j.created_at,j.id)>($2,$3,$4)) "
+            "ORDER BY j.next_run_at,j.created_at,j.id LIMIT 100",
+            now(svc),
+            after[0] if after else None,
+            after[1] if after else None,
+            after[2] if after else None,
+        )
+        if not candidates:
+            return None
+        for candidate in candidates:
+            item = await _claim_candidate(svc, worker_id, candidate)
+            if item is not None:
+                return item
+        last = candidates[-1]
+        after = (last["next_run_at"], last["created_at"], last["id"])
+
+
+async def _claim_candidate(svc, worker_id, candidate):
+    async with svc.pool.acquire() as con, con.transaction():
+        row = await con.fetchrow(
+            "SELECT * FROM pilot_checks WHERE id=$1 FOR UPDATE SKIP LOCKED",
+            candidate["check_id"],
+        )
+        if not row:
+            return None
+        c = r.record_check(row)
+        job = await _job_lock(con, candidate)
+        if (
+            not job
+            or job["state"] not in ("queued", "blocked", "retry_wait")
+            or job["next_run_at"] > now(svc)
+        ):
+            return None
+        if not await r.current_job(con, c, job):
+            await con.execute(
+                "UPDATE pilot_jobs SET state='cancelled',reason='deleted',epoch=epoch+1 WHERE id=$1",
+                job["id"],
             )
-            if not row:
-                continue
-            c = r.record_check(row)
-            job = await _job_lock(con, candidate)
-            if (
-                not job
-                or job["state"] not in ("queued", "blocked", "retry_wait")
-                or job["next_run_at"] > now(svc)
-            ):
-                continue
-            if not await r.current_job(con, c, job):
+            return None
+        if job["kind"] == "class_analytics":
+            revision = await con.fetchval(
+                "SELECT data_revision FROM pilot_snapshots WHERE id=$1",
+                job["snapshot_id"],
+            )
+            if revision != c["data_revision"]:
+                return None
+        payload = await input_payload(con, job)
+        bound = bound_for_request(svc, dict(job), payload)
+        wallet = await con.fetchrow(
+            "SELECT * FROM pilot_processing_budget WHERE mode=$1 FOR UPDATE", svc.mode
+        )
+        reason = "service_paused" if wallet["paused"] else "funds_unavailable"
+        funded = (
+            bound is not None
+            and not wallet["paused"]
+            and wallet["spend_limit_rub"] - wallet["spent_rub"] - wallet["held_rub"]
+            >= bound
+        )
+        if not funded:
+            if job["state"] != "blocked" or job["reason"] != reason:
                 await con.execute(
-                    "UPDATE pilot_jobs SET state='cancelled',reason='deleted',epoch=epoch+1 WHERE id=$1",
+                    "UPDATE pilot_jobs SET state='blocked',reason=$2 WHERE id=$1",
                     job["id"],
+                    reason,
                 )
-                continue
-            if job["kind"] == "class_analytics":
-                revision = await con.fetchval(
-                    "SELECT data_revision FROM pilot_snapshots WHERE id=$1",
-                    job["snapshot_id"],
+                await r.save_check(con, c)
+                await audit(
+                    con,
+                    "job_blocked",
+                    check_id=c["id"],
+                    entity_id=job["id"],
+                    payload={"reason": reason},
                 )
-                if revision != c["data_revision"]:
-                    continue
-            payload = await input_payload(con, job)
-            bound = bound_for_request(svc, dict(job), payload)
-            wallet = await con.fetchrow(
-                "SELECT * FROM pilot_funds WHERE mode=$1 FOR UPDATE", svc.mode
-            )
-            reason = "service_paused" if wallet["paused"] else "funds_unavailable"
-            # A polza wallet profile and the verified runtime profile must match.
-            profile_ok = svc.mode == "fixture" or bool(
-                svc.pricing_profile
-                and svc.pricing_profile.get("profile_id") == wallet["profile_id"]
-                and svc.settings.polza_api_key
-            )
-            funded = (
-                bound is not None
-                and wallet["initialized"]
-                and not wallet["paused"]
-                and wallet["outstanding_debt_rub"] == 0
-                and wallet["balance_rub"] - wallet["held_rub"] >= bound
-                and profile_ok
-            )
-            if not funded:
-                if job["state"] != "blocked" or job["reason"] != reason:
-                    await con.execute(
-                        "UPDATE pilot_jobs SET state='blocked',reason=$2 WHERE id=$1",
-                        job["id"],
-                        reason,
-                    )
-                    await r.save_check(con, c)
-                    await audit(
-                        con,
-                        "job_blocked",
-                        check_id=c["id"],
-                        entity_id=job["id"],
-                        payload={"reason": reason},
-                    )
-                continue
-            slot = await con.fetchrow(
-                "SELECT id FROM pilot_slots WHERE attempt_id IS NULL ORDER BY id FOR UPDATE SKIP LOCKED LIMIT 1"
-            )
-            if not slot:
-                continue
-            ordinal = await con.fetchval(
-                "SELECT COALESCE(max(ordinal),0)+1 FROM pilot_attempts WHERE job_id=$1",
-                job["id"],
-            )
-            aid = uuid4()
-            epoch = job["epoch"] + 1
-            await con.execute(
-                "INSERT INTO pilot_attempts(id,job_id,ordinal,epoch,state,dispatched) VALUES($1,$2,$3,$4,'started',true)",
-                aid,
-                job["id"],
-                ordinal,
-                epoch,
-            )
-            await reserve(con, svc, aid, bound, wallet)
-            await con.execute(
-                "UPDATE pilot_slots SET attempt_id=$2,job_id=$3,epoch=$4 WHERE id=$1",
-                slot["id"],
-                aid,
-                job["id"],
-                epoch,
-            )
-            await con.execute(
-                "UPDATE pilot_jobs SET state='running',reason=NULL,epoch=$2,worker_id=$3,lease_until=$4 WHERE id=$1",
-                job["id"],
-                epoch,
-                worker_id,
-                now(svc) + timedelta(seconds=LEASE_SECONDS),
-            )
-            await r.save_check(con, c)
-            await audit(
-                con,
-                "attempt_dispatch",
-                check_id=c["id"],
-                entity_id=aid,
-                payload={"job_id": str(job["id"]), "epoch": epoch},
-            )
-            return {
-                "job": {
-                    **dict(job),
-                    "epoch": epoch,
-                    "state": "running",
-                    "worker_id": worker_id,
-                },
-                "attempt_id": aid,
-                "payload": payload,
-            }
+            return None
+        slot = await con.fetchrow(
+            "SELECT id FROM pilot_slots WHERE attempt_id IS NULL ORDER BY id FOR UPDATE SKIP LOCKED LIMIT 1"
+        )
+        if not slot:
+            return None
+        ordinal = await con.fetchval(
+            "SELECT COALESCE(max(ordinal),0)+1 FROM pilot_attempts WHERE job_id=$1",
+            job["id"],
+        )
+        aid = uuid4()
+        epoch = job["epoch"] + 1
+        await con.execute(
+            "INSERT INTO pilot_attempts(id,job_id,ordinal,epoch,state,dispatched,transport_mode) VALUES($1,$2,$3,$4,'started',true,$5)",
+            aid,
+            job["id"],
+            ordinal,
+            epoch,
+            svc.mode,
+        )
+        await reserve(con, svc, aid, bound, wallet)
+        await con.execute(
+            "UPDATE pilot_slots SET attempt_id=$2,job_id=$3,epoch=$4 WHERE id=$1",
+            slot["id"],
+            aid,
+            job["id"],
+            epoch,
+        )
+        await con.execute(
+            "UPDATE pilot_jobs SET state='running',reason=NULL,epoch=$2,worker_id=$3,lease_until=$4 WHERE id=$1",
+            job["id"],
+            epoch,
+            worker_id,
+            now(svc) + timedelta(seconds=LEASE_SECONDS),
+        )
+        await r.save_check(con, c)
+        await audit(
+            con,
+            "attempt_dispatch",
+            check_id=c["id"],
+            entity_id=aid,
+            payload={"job_id": str(job["id"]), "epoch": epoch},
+        )
+        return {
+            "job": {
+                **dict(job),
+                "epoch": epoch,
+                "state": "running",
+                "worker_id": worker_id,
+            },
+            "attempt_id": aid,
+            "payload": payload,
+        }
     return None
 
 
@@ -200,7 +215,20 @@ async def recover_expired(svc):
                 continue
             if a["dispatched"]:
                 await con.execute(
-                    "UPDATE pilot_attempts SET state='unknown' WHERE id=$1", a["id"]
+                    "UPDATE pilot_attempts SET state='unknown',billing_state='unknown',ended_at=$2,diagnostics=$3::jsonb WHERE id=$1",
+                    a["id"],
+                    now(svc),
+                    json.dumps(
+                        {
+                            "outcome": "unknown",
+                            "error_code": "lease_expired",
+                            "usage": {},
+                            "http_status": None,
+                            "elapsed_seconds": None,
+                            "finish_reason": None,
+                            "actual_cost_rub": None,
+                        }
+                    ),
                 )
                 await con.execute(
                     "UPDATE pilot_jobs SET state='unknown',reason='provider_outcome_unknown',epoch=epoch+1 WHERE id=$1",
