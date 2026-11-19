@@ -41,7 +41,7 @@ export function TaskCard({ value, photoCount }: { value: CheckerTask; photoCount
       <div className="task-lines-content">{leadingLines.map((line, index) =>
         <div className="task-key-line" key={index}>
           <div className="task-equation"><MathFormula latex={line.latex} wrap /></div>
-          <small className="task-photo-ref">{copy('capture.photo', { number: line.photo_index, total: photoCount })}</small>
+          {photoCount > 1 && <small className="task-photo-ref">{copy('capture.photo', { number: line.photo_index, total: photoCount })}</small>}
         </div>,
       )}</div>
     </section>}
@@ -52,7 +52,7 @@ export function TaskCard({ value, photoCount }: { value: CheckerTask; photoCount
         <div className="task-wrong-content">
           <h3>{copy('result.first_error')}</h3>
           <div className="task-equation"><MathFormula latex={first.wrong_latex} wrap /></div>
-          <small className="task-photo-ref">{copy('capture.photo', { number: first.photo_index, total: photoCount })}</small>
+          {photoCount > 1 && <small className="task-photo-ref">{copy('capture.photo', { number: first.photo_index, total: photoCount })}</small>}
         </div>
       </section>
       <section className="task-error-explanation task-frame">

@@ -9,9 +9,9 @@ import { TaskCard } from '../components/TaskCard'
 import { copy } from '../copy'
 import { type Mutate, type Run, type TaskLocation } from '../state/flow'
 
-export function ReviewScreen({ api, check, entry, busy, run, mutate, back, next, replacement }: {
+export function ReviewScreen({ api, check, entry, busy, run, mutate, back, next, report, replacement }: {
   api: PilotApi; check: Check; entry: TaskLocation; busy: boolean; run: Run; mutate: Mutate;
-  back: () => void; next?: () => void; replacement: (bundleId: string) => void
+  back: () => void; next?: () => void; report?: () => void; replacement: (bundleId: string) => void
 }) {
   const { notebook, bundle, task, number } = entry
   const [photo, setPhoto] = useState<{ id: string; label: string }>()
@@ -37,7 +37,8 @@ export function ReviewScreen({ api, check, entry, busy, run, mutate, back, next,
     {eligible && <ReviewControls key={task.analysis_id} busy={busy} review={task.review} save={(state, comment) => run(async () => {
       await mutate(actions.saveReview(task.task_id, { analysis_id: task.analysis_id, state, comment }))
     })} />}
-    {next && <button className="primary" onClick={next}>{copy('review.next')}</button>}
+    {next && <button className={report ? undefined : 'primary'} onClick={next}>{copy('review.next')}</button>}
+    {report && <button className="primary" disabled={busy} onClick={report}>{copy('review.report')}</button>}
     {editable && <div className="button-row">
       {!eligible && !task.skipped && <button disabled={busy} onClick={() => void run(async () => {
         await mutate(actions.skipTask(task.task_id, { analysis_id: task.analysis_id }))

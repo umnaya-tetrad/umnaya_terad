@@ -226,6 +226,13 @@ export function CheckWorkspace({ id, api, intents, setup, done, deleted, emit, i
     content = entry ? <ReviewScreen key={entry.task.analysis_id} api={api} check={check} entry={entry} busy={busy}
       run={run} mutate={mutate} back={() => setView(activeView.origin)}
       next={following && (() => review(following, activeView.origin))}
+      report={entry.task.review && check.completion.unreviewed_tasks === 0 ? () => {
+        if (check.phase === 'finalized') { setView({ page: 'summary' }); return }
+        void run(async () => {
+          if (check.phase === 'editing') await mutate(actions.beginCompletion(id))
+          setView({ page: 'completion' })
+        })
+      } : undefined}
       replacement={bundleId => openNotebook(entry.notebook.id, bundleId)} />
       : <Unavailable back={() => setView(activeView.origin)} />
   } else {
