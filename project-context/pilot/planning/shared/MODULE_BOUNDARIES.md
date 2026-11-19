@@ -1,6 +1,6 @@
 # Границы модулей и файлов
 
-19.11.2026. **Спецификация для реализации.** Код пилота этим документом не создан. Три направления: **application** — приложение; **processing** — обработка; **release** — локальный выпуск и интеграция. Продукт задают [PRODUCT](../../PRODUCT.md) и R01–R86; HTTP/данные — [API_CONTRACT](API_CONTRACT.md) и `api/`. Эти решения уточняют инженерные вопросы [черновика](../CONTRACT_DRAFT.md), не вводят новый продукт.
+19.11.2026. **Спецификация границ.** Processing реализован и локально проверен: [передача и отчет](../processing/HANDOFF.md); application/release не объявляются готовыми этим фактом. Три направления: **application** — приложение; **processing** — обработка; **release** — локальный выпуск и интеграция. Продукт задают [PRODUCT](../../PRODUCT.md) и R01–R86; HTTP/данные — [API_CONTRACT](API_CONTRACT.md) и `api/`. Эти решения уточняют инженерные вопросы [черновика](../CONTRACT_DRAFT.md), не вводят новый продукт.
 
 ## Основа и размещение
 
@@ -8,7 +8,7 @@
 
 19.11.2026 read-only проверкой установлен чистый checkout `C:\Users\User\Desktop\3_year\SmartNoteLanding`, HEAD **`d62f5ecb8c1c53b1c97faf06530b8d84e691f88d`**. Это выбранная исходная ревизия будущего bootstrap вместо более старого снимка `b8423b0…`. Прочитаны AGENTS, package.json, compose.yaml, наличие auth и миграций; программа не запускалась. Источник содержит frontend/backend/postgres, но не worker пилота. Правило источника о несохранении оригиналов противоречит актуальному пилоту: в новом приложении оригиналы сохраняются приватно. Публичная регистрация, рекламные квоты/тарифы и обработка без входа из источника не переносятся в доступный поток пилота.
 
-До импорта application сохраняет SHA и перечень выбранных файлов в `docs/pilot/BOOTSTRAP.md`. Переносятся только необходимые отслеживаемые код/конфиги/зависимости: `src/`, Python-модули `app/`, `app/migrations/001–007`, соответствующие unit-тесты, package/lock, tsconfig/Vite, index.html, Dockerfile и Compose как основа переработки. Нельзя копировать каталоги целиком без проверки состава: исключены `.env*` кроме заново проверенного безопасного шаблона, `.git`, node_modules, virtualenv, dist, кэши, inputExamples, benchmark-results, outputs, реальные фото и сырые ответы. Не повторять импорт поверх `project-context/`. Сначала проверяется содержимое manifest, затем импортируется именно закрепленная ревизия; незакоммиченные файлы источника не являются входом. Сейчас импорт не выполняется.
+До импорта application сохраняет SHA и перечень выбранных файлов в `docs/pilot/BOOTSTRAP.md`. Переносятся только необходимые отслеживаемые код/конфиги/зависимости: `src/`, Python-модули `app/`, `app/migrations/001–007`, соответствующие unit-тесты, package/lock, tsconfig/Vite, index.html, Dockerfile и Compose как основа переработки. Нельзя копировать каталоги целиком без проверки состава: исключены `.env*` кроме заново проверенного безопасного шаблона, `.git`, node_modules, virtualenv, dist, кэши, inputExamples, benchmark-results, outputs, реальные фото и сырые ответы. Не повторять импорт поверх `project-context/`. Сначала проверяется содержимое manifest, затем импортируется именно закрепленная ревизия; незакоммиченные файлы источника не являются входом. Backend source 001–007 и нужный auth/config задел перенесены processing с проверкой pinned bytes; полный frontend/Compose bootstrap этим не подтвержден. Повторный импорт поверх working tree запрещен.
 
 ## Целевое дерево и единственный владелец
 
@@ -27,7 +27,7 @@ app/
     contracts.py              processing: генерация из api/
     domain/                   processing: модели, repository, access, revision,
                               storage, mutations, migration runner
-    processing/               processing: jobs, worker, transport, funds, pause
+    processing/               processing: jobs, worker, transport, budget/cap, funds, pause
     analytics/                processing: snapshot, prompt, schema, validation
     events/                   processing: receiver, dedupe, audit, server events
     routes/
@@ -92,6 +92,8 @@ Application выполняет HTTP/UI и стандартный CRUD через
 Сессии используют общий auth/access processing; application отвечает за cookie endpoints и UI входа. Контрактные роли — `teacher`, `staff`; `staff` реализует область read-only доступа T09, названную в техническом плане `staff_read`, и никогда не меняет отзывы. Публичной регистрации, роли operator и HTTP endpoint управления обработкой нет.
 
 До B1 application создает минимальный `app/pilot/operations/create_fixture_accounts.py` и пакетный `__init__.py`: локальные два учителя и staff через общие auth/schema processing, без собственной модели паролей/SQL. Команда из корня: `docker compose -f compose.yaml exec backend python -m pilot.operations.create_fixture_accounts`. Секреты берутся из локального окружения, не из аргументов CLI и не из Git; CLI не печатает пароли. Ранний seed и тестовая сессия не зависят от работы release. Эти два файла остаются у application до B4; после 18:00 release принимает их по commit и HANDOFF и доводит безопасное создание/сброс аккаунтов. Передача однократная, раннее владение не распространяется на весь `operations/`.
+
+Cap500 по R87 принадлежит processing: `budget.py` предоставляет готовые `status`/`set-limit --rub 500` без restart, walletinitialize/topup/pricing-file gate нет. Расход и holds общие для обоих kind/teacher, режимы изолированы; execution unknown и billing unknown различаются. Release не создает второй лимит или собственный SQL.
 
 Ручная пауза/возобновление выполняется release через `scripts/pilot/processing_control.py` с локальным привилегированным доступом к Compose/БД и аудитом. CLI вызывает одну доменную функцию processing, а не вторую реализацию очереди/финансов; учительская cookie и read-only staff роль не дают права менять режим. Processing передает функцию/тесты паузы до 18:00, release дает локальную оболочку и инструкцию.
 
