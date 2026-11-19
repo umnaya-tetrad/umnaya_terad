@@ -30,7 +30,7 @@
 - [Роли/данные](project-context/pilot/DATA_AND_ACCESS.md), [логи и время](project-context/pilot/ANALYTICS.md).
 - [Макеты, интерактивное демо и ролик](project-context/references/product-kit/START_HERE.html), [источники и ревизии](project-context/SOURCES.md).
 
-Локальный учительский сценарий прошёл в Docker Compose на PostgreSQL 16 и отдельном fixture-worker. [Команды запуска](docs/pilot/BOOTSTRAP.md) и [приёмка application](project-context/pilot/planning/application/HANDOFF.md). Отдельная проверка processing включает 99 тестов и 32 случая. [Отчёт processing](project-context/pilot/planning/processing/RUNTIME_REPORT.md).
+Локальный учительский сценарий прошёл в Docker Compose на PostgreSQL 16 и отдельном fixture-worker. Начните с [какие env-файлы реально используются](docs/pilot/ENVIRONMENT.md), затем [команды запуска](docs/pilot/RELEASE_RUNBOOK.md) и [происхождение сборки](docs/pilot/BOOTSTRAP.md). [Приемка application](project-context/pilot/planning/application/HANDOFF.md); отдельная проверка processing включает 99 тестов и 32 случая: [отчет](project-context/pilot/planning/processing/RUNTIME_REPORT.md).
 
 ## Проверка комплекта
 

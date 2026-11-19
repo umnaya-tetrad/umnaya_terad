@@ -75,18 +75,20 @@ python -m pytest --confcutdir tests/pilot/application tests/pilot/application -q
 
 ## Старт совместного стека
 
-Скопировать [.env.example](../../.env.example) в локальный .env. Выставить PILOT_TRANSPORT=fixture, случайный URL-safe POSTGRES_PASSWORD, VISITOR_COOKIE_SECRET длиной от 32 символов и отдельные реквизиты всех трёх fixture аккаунтов. Файлы с рабочими реквизитами хранить вне Git. Проверить, что ALLOWED_BROWSER_ORIGINS содержит точный origin браузера. Compose связывает PILOT_TRANSPORT и VITE_PILOT_TRANSPORT. Браузер открывает http://127.0.0.1:5173.
+Актуальный маршрут 20.11.2026: [ENVIRONMENT](ENVIRONMENT.md) объясняет файлы, приоритеты и подготовку на Bash/PowerShell; [RELEASE_RUNBOOK](RELEASE_RUNBOOK.md) дает операторские команды. Корневой [.env.example](../../.env.example) копируется в **приватный файл вне checkout**, например `$HOME/.config/smartnote/pilot.env`, и заполняется локально. Файл не создается по факту clone. `PILOT_TRANSPORT=fixture`, секреты БД/сессии и первоначальные fixture-реквизиты задаются в этом файле; origin соответствует выбранному порту. Compose связывает `PILOT_TRANSPORT` и `VITE_PILOT_TRANSPORT`.
 
 ```sh
-docker compose -f compose.yaml build
-docker compose -f compose.yaml run --rm migrate
-docker compose -f compose.yaml up -d --wait
-docker compose -f compose.yaml exec backend python -m pilot.operations.create_fixture_accounts
-docker compose -f compose.yaml ps
+export PILOT_ENV_FILE="$HOME/.config/smartnote/pilot.env"
+export COMPOSE_PROJECT_NAME=smartnote-local
+export PILOT_FRONTEND_PORT=5173
+docker compose -p "$COMPOSE_PROJECT_NAME" -f compose.yaml --env-file "$PILOT_ENV_FILE" config --quiet
+docker compose -p "$COMPOSE_PROJECT_NAME" -f compose.yaml --env-file "$PILOT_ENV_FILE" build
+docker compose -p "$COMPOSE_PROJECT_NAME" -f compose.yaml --env-file "$PILOT_ENV_FILE" run --rm migrate
+docker compose -p "$COMPOSE_PROJECT_NAME" -f compose.yaml --env-file "$PILOT_ENV_FILE" up -d --wait
+docker compose -p "$COMPOSE_PROJECT_NAME" -f compose.yaml --env-file "$PILOT_ENV_FILE" exec -T backend python -m pilot.operations.manage_accounts seed
+docker compose -p "$COMPOSE_PROJECT_NAME" -f compose.yaml --env-file "$PILOT_ENV_FILE" ps
 ```
 
-Для [API smoke](../../scripts/pilot/smoke_application.py) передать в окружение процесса шесть переменных PILOT_FIXTURE_* из .env и выполнить python scripts/pilot/smoke_application.py. Он проверяет вход и приватность, пять форматов фото, ошибки загрузки, сортировку, замену, повторы submit и finalize, сводку и обновление после изменения отзыва. В изолированном проекте флаг --retry временно останавливает обычный worker и запускает одну ошибочную fixture-попытку, затем проверяет повтор для того же snapshot.
-
-Для браузерного прогона выполнить npm run test:browser:compose с PILOT_FIXTURE_TEACHER_1_LOGIN и PILOT_FIXTURE_TEACHER_1_PASSWORD в окружении. Вариант npm run test:browser:compose -- --restart проверяет сохранность заданий при остановке worker и перезапуске backend и worker. Этот вариант предназначен для отдельного fixture-проекта Compose. Оба прогона проверяют режим backend через Compose. Если тестовый стек создан с отдельным COMPOSE_PROJECT_NAME, передать то же значение при прогоне.
+Прежние [API smoke](../../scripts/pilot/smoke_application.py), `npm run test:browser:compose` и browser followups относятся к историческим прогонам application. Они читают credentials из окружения процесса, но не загружают `PILOT_ENV_FILE` и не передают Compose `--env-file`. Один export пути для них недостаточен; автоматическая загрузка им не приписывается. На произвольный приватный env/override-проект их без отдельной подготовки не направлять. Для текущей воспроизводимой проверки используйте explicit-env integration harness из раздела приемки runbook; результаты — [RELEASE_REPORT](RELEASE_REPORT.md).
 
 Фактические результаты и оставшиеся проверки описаны в [HANDOFF](../../project-context/pilot/planning/application/HANDOFF.md).
