@@ -1,0 +1,86 @@
+{
+  "schema_version": "ux-workbench/1",
+  "scenarios": [
+    {
+      "id": "manual",
+      "marker": "[UX 01]",
+      "title": "[UX 01] Новая проверка вручную",
+      "description": "Пустая проверка для съемки, загрузки и полного ручного маршрута.",
+      "photos": []
+    },
+    {
+      "id": "mixed",
+      "marker": "[UX 02]",
+      "title": "[UX 02] Ошибка, верно и незавершенное",
+      "description": "Три задачи, совместный комплект из двух фото с продолжением.",
+      "photos": [
+        "assets/photo_01.png",
+        "assets/photo_02.png"
+      ]
+    },
+    {
+      "id": "unassessed",
+      "marker": "[UX 03]",
+      "title": "[UX 03] Не хватает условия",
+      "description": "Три оценимых задачи и одна неоценимая: отдельный отзыв и пропуск.",
+      "photos": [
+        "assets/unassessed.png"
+      ]
+    },
+    {
+      "id": "retry",
+      "marker": "[UX 04]",
+      "title": "[UX 04] Техническая ошибка и повтор",
+      "description": "Первый Job безопасно отклоняется, ручной повтор создает успешный Job.",
+      "photos": [
+        "assets/retry.png"
+      ]
+    },
+    {
+      "id": "summary",
+      "marker": "[UX 05]",
+      "title": "[UX 05] Готовая сводка и обновление",
+      "description": "Сохраненная сводка; изменение отзыва делает ее устаревшей.",
+      "photos": [
+        "assets/photo_01.png"
+      ]
+    }
+  ],
+  "photo_sets": [
+    {
+      "id": "normal",
+      "title": "Три задания на одной странице",
+      "photos": [
+        "assets/photo_01.png"
+      ]
+    },
+    {
+      "id": "continuation",
+      "title": "Две страницы с продолжением",
+      "photos": [
+        "assets/photo_01.png",
+        "assets/photo_02.png"
+      ]
+    },
+    {
+      "id": "unassessed",
+      "title": "Страница без условия четвертой задачи",
+      "photos": [
+        "assets/unassessed.png"
+      ]
+    },
+    {
+      "id": "retry",
+      "title": "Безопасная техническая ошибка",
+      "photos": [
+        "assets/retry.png"
+      ]
+    }
+  ],
+  "asset_sha256": {
+    "assets/photo_01.png": "31bbac3af8fd5444c52ea2f4598ce807568870a5be89fcc21d5163782438959c",
+    "assets/photo_02.png": "b9fa0e24256f8ac8a0b7e261418d0d4573b78fbd0335f8139808a5e48cea960d",
+    "assets/retry.png": "5f4a52efb251fdec4c46a120c10e1615fbae377d6de185d3e4a5eca7941ab012",
+    "assets/unassessed.png": "39c2dcc0397d7bbcc62ccb62a8d9f880637a74b074dc9c26f8fd7d8a06bcd51f"
+  }
+}

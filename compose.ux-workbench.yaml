@@ -1,0 +1,52 @@
+# Local development only: never include this overlay in a live deployment.
+services:
+  postgres:
+    restart: unless-stopped
+    networks: [default]
+  migrate:
+    image: smartnote-ux-workbench-python:dev
+    environment:
+      PILOT_TRANSPORT: fixture
+      POLZA_API_KEY: ""
+    networks: [default]
+  backend:
+    image: smartnote-ux-workbench-python:dev
+    restart: unless-stopped
+    environment:
+      PILOT_TRANSPORT: fixture
+      POLZA_API_KEY: ""
+    command: [python, -m, pilot.operations.ux_workbench, api]
+    volumes:
+      - ./dev/ux-workbench:/opt/smartnote-ux:ro
+    networks: [default]
+  worker:
+    image: smartnote-ux-workbench-python:dev
+    restart: unless-stopped
+    environment:
+      PILOT_TRANSPORT: fixture
+      POLZA_API_KEY: ""
+    command: [python, -m, pilot.operations.ux_workbench, worker, --delay-seconds, "4"]
+    volumes:
+      - ./dev/ux-workbench:/opt/smartnote-ux:ro
+    networks: [default]
+  frontend:
+    image: smartnote-ux-workbench-frontend:dev
+    restart: unless-stopped
+    environment:
+      VITE_PILOT_TRANSPORT: fixture
+      VITE_UX_WORKBENCH: "true"
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - ./src:/app/src:ro
+      - ./vite.config.ts:/app/vite.config.ts:ro
+      - ./project-context/pilot/planning/shared/ux-copy.json:/app/project-context/pilot/planning/shared/ux-copy.json:ro
+      - ./dev/ux-workbench:/app/public/ux-workbench:ro
+    networks: [default, ux_edge]
+networks:
+  default:
+    internal: true
+  # Docker Desktop does not publish a port for an internal-only endpoint.
+  # Only the keyless frontend receives this ingress-capable bridge.
+  ux_edge:
+    driver: bridge
+    internal: false

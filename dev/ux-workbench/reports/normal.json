@@ -1,0 +1,92 @@
+{
+  "schema_version": "page-check/1.2",
+  "status": "ok",
+  "message": "UX-макет: заранее заданные результаты, без распознавания и без LLM.",
+  "tasks": [
+    {
+      "task_id": "ux_1",
+      "locator": "Задание 1 на учебной странице",
+      "photo_indices": [
+        1
+      ],
+      "condition": "2(x+3)=10",
+      "result": "all_steps_correct",
+      "completeness": "complete",
+      "detail_level": "sufficient",
+      "omitted_steps_note": "",
+      "completeness_note": "",
+      "evidence": [
+        {
+          "photo_index": 1,
+          "latex": "2x+6=10"
+        },
+        {
+          "photo_index": 1,
+          "latex": "2x=4"
+        },
+        {
+          "photo_index": 1,
+          "latex": "x=2"
+        }
+      ],
+      "first_error": null,
+      "uncheckable_reason": ""
+    },
+    {
+      "task_id": "ux_2",
+      "locator": "Задание 2 на учебной странице",
+      "photo_indices": [
+        1
+      ],
+      "condition": "3(x-2)=12",
+      "result": "first_error_found",
+      "completeness": "complete",
+      "detail_level": "sufficient",
+      "omitted_steps_note": "",
+      "completeness_note": "",
+      "evidence": [
+        {
+          "photo_index": 1,
+          "latex": "3x-2=12"
+        },
+        {
+          "photo_index": 1,
+          "latex": "3x=14"
+        },
+        {
+          "photo_index": 1,
+          "latex": "x=\\frac{14}{3}"
+        }
+      ],
+      "first_error": {
+        "photo_index": 1,
+        "wrong_latex": "3x-2=12",
+        "rule": "При раскрытии скобок множитель умножается на каждое слагаемое.",
+        "explanation": "Число 3 нужно умножить не только на x, но и на −2: получится −6.",
+        "corrected_latex": "3x-6=12"
+      },
+      "uncheckable_reason": ""
+    },
+    {
+      "task_id": "ux_3",
+      "locator": "Задание 3 на учебной странице",
+      "photo_indices": [
+        1
+      ],
+      "condition": "x^2-5x+6=0",
+      "result": "all_steps_correct",
+      "completeness": "incomplete",
+      "detail_level": "sufficient",
+      "omitted_steps_note": "",
+      "completeness_note": "Корни не записаны, решение не завершено.",
+      "evidence": [
+        {
+          "photo_index": 1,
+          "latex": "(x-2)(x-3)=0"
+        }
+      ],
+      "first_error": null,
+      "uncheckable_reason": ""
+    }
+  ]
+}
