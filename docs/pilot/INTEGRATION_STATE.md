@@ -66,3 +66,16 @@
 | ACL и Origin | `pytest tests/integration/pilot/test_acl_staff.py -k "rel_c05 or rel_c06"` | PASS: чужие Check/photo/task дают 404, teacher на staff-путях 403, staff mutation 403, запись без/exact-Origin 403, logout без Origin 403 и сессия сохраняется |
 
 Не проверено: HTTP admin/operator role отсутствуют по построению (проверяется REL-C26), реальная выдача аккаунтов школе.
+
+## Проверено в приёмке release (REL-04)
+
+| Проверка | Команда | Факт |
+| --- | --- | --- |
+| Staff list и фильтр | `pytest tests/integration/pilot/test_staff_readonly.py -k rel_c07` | PASS: точный `owner_login` не возвращает другого учителя, курсор не дублирует элементы |
+| Детали и приватность | та же | PASS: `owner.login`, `ETag`, `Cache-Control: private, no-store`; фото доступно staff и не доступно второму учителю |
+| История staff-only | та же | PASS: `getBundleHistory` и `getSummaryHistory` отдают сохранённые поколения/снимки staff, учителю — 403 |
+| Read-only | та же + `pytest tests/pilot/staff -q` | PASS: staff mutation 403, в router только два GET-маршрута, teacher получает 403 до домена |
+| Аудит | та же (`pilot_audit`) | PASS: `staff_read_check/bundle_history/summary_history/photo` содержат реальные `actor_id`, `role=staff`, `request_id` |
+| Неизменность учителя | та же | PASS: `revision`, `data_revision` и отзывы не меняются после staff-read |
+| Staff UI | `npx playwright test tests/e2e/pilot --grep REL-C07` | PASS: Chrome 390 CSS px, третье лицо в подписях, нет кнопок согласия/skip/retry/delete/finalize/refresh, teacher не видит раздел команды |
+| Unit/сборка | `npm test`, `npm run build`, `tsc -b` | PASS: 28 тестов, сборка; предупреждение Vite о чанке 550 КБ |

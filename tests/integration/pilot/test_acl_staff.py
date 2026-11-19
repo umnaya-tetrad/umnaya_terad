@@ -173,8 +173,12 @@ def test_rel_c06_acl_and_origin_on_real_http():
     assert other.expect("GET", f"/assets/{photo['entity_id']}", 404).status == 404
     assert staff.expect("GET", f"/assets/{photo['entity_id']}", 200).status == 200
 
-    assert staff.request("GET", "/staff/checks").status in {403, 404}
-    assert owner.request("GET", "/staff/checks").status in {403, 404}
+    # REL-04 mounts the real staff surface: staff reads its own list, a teacher is refused.
+    staff_list = staff.expect("GET", "/staff/checks", 200).body
+    assert staff_list["items"], "The staff list must show material created for acceptance"
+    assert all("login" in item["owner"] for item in staff_list["items"])
+    assert owner.request("GET", "/staff/checks").status == 403
+    assert other.request("GET", "/staff/checks").status == 403
 
     current_revision = owner.expect("GET", check, 200).body["revision"]
     staff_write = staff.request(

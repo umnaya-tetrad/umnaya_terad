@@ -1,6 +1,6 @@
 import type {
-  AnalysisTarget, Check, Checks, Events, EventsAccepted, InputTarget, Job, Login, Mutation,
-  PhotoOrder, ReviewWrite, Session, Submit, Summary, Title, VersionCreate,
+  AnalysisTarget, BundleHistory, Check, Checks, Events, EventsAccepted, InputTarget, Job, Login, Mutation,
+  PhotoOrder, ReviewWrite, Session, StaffCheck, StaffChecks, Submit, Summary, SummaryHistory, Title, VersionCreate,
 } from './contract'
 import { ApiError } from './errors'
 
@@ -72,6 +72,27 @@ export class PilotApi {
     const params = new URLSearchParams({ limit: '30' })
     if (cursor) params.set('cursor', cursor)
     return this.json<Checks>(`${checks}?${params}`, { signal })
+  }
+
+  listStaffChecks({ ownerLogin, cursor, signal }: {
+    ownerLogin?: string; cursor?: string; signal?: AbortSignal
+  }) {
+    const params = new URLSearchParams({ limit: '30' })
+    if (cursor) params.set('cursor', cursor)
+    if (ownerLogin) params.set('owner_login', ownerLogin)
+    return this.json<StaffChecks>(`/staff/checks?${params}`, { signal })
+  }
+
+  getStaffCheck(id: string, signal?: AbortSignal) {
+    return this.json<StaffCheck>(`/staff/checks/${encodeURIComponent(id)}`, { signal })
+  }
+
+  getBundleHistory(id: string, signal?: AbortSignal) {
+    return this.json<BundleHistory>(`/bundles/${encodeURIComponent(id)}/history`, { signal })
+  }
+
+  getSummaryHistory(id: string, signal?: AbortSignal) {
+    return this.json<SummaryHistory>(`${check(id)}/summary/history`, { signal })
   }
 
   async getCheck(id: string, signal?: AbortSignal): Promise<Check> {

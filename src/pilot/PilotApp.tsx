@@ -6,6 +6,7 @@ import { copy, fixtureLabel } from './copy'
 import { ChecksScreen } from './screens/ChecksScreen'
 import { LoginScreen } from './screens/LoginScreen'
 import { NewCheckScreen } from './screens/NewCheckScreen'
+import { StaffCheckScreen, StaffChecksScreen } from './staff/StaffScreens'
 import { CheckWorkspace } from './state/CheckWorkspace'
 import type { Telemetry } from './telemetry/client'
 import { useLifecycle } from './telemetry/useLifecycle'
@@ -44,6 +45,26 @@ function TeacherApp({ api, intents, telemetry }: { api: PilotApi; intents: Inten
   return <ChecksScreen api={api} open={item => navigate(item.id)} create={() => setNewCheck(true)} />
 }
 
+function StaffApp({ api }: { api: PilotApi }) {
+  const [id, setId] = useState(readCheck)
+  useEffect(() => {
+    const update = () => setId(readCheck())
+    window.addEventListener('popstate', update)
+    return () => window.removeEventListener('popstate', update)
+  }, [])
+
+  function navigate(checkId: string | null) {
+    const url = new URL(location.href)
+    if (checkId) url.searchParams.set('check', checkId)
+    else url.searchParams.delete('check')
+    history.pushState(null, '', url)
+    setId(checkId)
+  }
+
+  if (id) return <StaffCheckScreen key={id} api={api} id={id} back={() => navigate(null)} />
+  return <StaffChecksScreen api={api} open={item => navigate(item.id)} />
+}
+
 export function PilotApp() {
   const auth = useAuth()
   return <>
@@ -59,6 +80,8 @@ export function PilotApp() {
         : !auth.session ? <LoginScreen login={auth.login} busy={auth.busy} error={auth.error} />
         : auth.session.role === 'teacher' && auth.intents && auth.telemetry
           ? <TeacherApp key={auth.telemetry.sessionId} api={auth.api} intents={auth.intents} telemetry={auth.telemetry} />
+        : auth.session.role === 'staff'
+          ? <StaffApp key={auth.session.user_id} api={auth.api} />
           : <p className="sheet" role="status">{copy('common.unavailable')}</p>}
       {auth.session && auth.error && <p className="notice danger" role="alert">{auth.error}</p>}
     </main>

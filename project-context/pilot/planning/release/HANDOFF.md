@@ -50,6 +50,20 @@ REL-02 выполнен и проверен на локальном Compose-ст
 
 `app/pilot/operations/manage_accounts.py` — trustless-обёртка над доменными функциями processing (`ensure_account`, `reset_account_password`); собственного SQL, хеширования и второй таблицы аккаунтов нет.
 
+### Закрытый просмотр команды (REL-04)
+
+| Артефакт | Состав |
+|---|---|
+| `app/pilot/routes/staff.py` | Только `GET /staff/checks` и `GET /staff/checks/{id}`. Зависимость `staff_actor` отказывает teacher до любого запроса; мутационных маршрутов нет |
+| `app/pilot/services/staff.py` | Тонкая передача в `pilot.domain.queries` (`list_staff_checks`, `get_staff_check`, `get_bundle_history`, `get_summary_history`); своей SQL и второй проверки прав нет |
+| `src/pilot/staff/StaffScreens.tsx` | Список с фильтром по точному `owner_login`, детали проверки, фото, разборы, отзывы от третьего лица, staff-only история поколения и сводок. Нет кнопок согласия/возражения/skip/retry/delete/finalize/refresh |
+| `app/pilot/router.py` | Staff router подключён один раз; владение общими entrypoint-файлами перешло к release |
+| `src/pilot/api/client.ts` | `listStaffChecks`, `getStaffCheck`, `getBundleHistory`, `getSummaryHistory` поверх сгенерированных типов |
+
+История комплектов и сводок доступна только staff (`require_staff` в домене), учителю возвращается 403. Каждый staff-read пишет `pilot_audit` с реальным `actor_id`, `role` и `request_id`, не меняя `revision`/`data_revision` учителя и его отзывы. Read-only удерживается трижды: отсутствием мутационных маршрутов, зависимостью роли и доменной проверкой.
+
+### Команды управления аккаунтами
+
 | Команда | Назначение |
 |---|---|
 | `python -m pilot.operations.manage_accounts seed` | Создать три локальных fixture-аккаунта из `PILOT_FIXTURE_*`; повторный запуск ничего не сбрасывает |

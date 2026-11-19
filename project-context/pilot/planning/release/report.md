@@ -83,3 +83,33 @@
 | `ruff check tests/integration/pilot app/pilot/operations` | PASS |
 
 Не проверено: выдача аккаунтов школе и reset на внешнем сервере — вне локального выпуска.
+
+## REL-04. Закрытый просмотр команды
+
+**Статус: выполнено. Runtime и браузер проверены на локальном Compose (fixture).**
+
+Сделано:
+
+- Создан `app/pilot/routes/staff.py`: только `GET /staff/checks` (фильтр `owner_login`, курсор, limit 1–100) и `GET /staff/checks/{id}` с `ETag`. Добавлена зависимость `staff_actor`, которая отказывает teacher до обращения к домену.
+- Создан `app/pilot/services/staff.py`: тонкая передача в `pilot.domain.queries`, без своей SQL и второй модели прав.
+- Staff router подключён в `app/pilot/router.py` — release впервые владеет общей точкой входа.
+- Создан `src/pilot/staff/StaffScreens.tsx` (список с фильтром, детали, фото, разборы, третье лицо в отзывах, staff-only история поколений и сводок) и `StaffScreens.test.tsx`. Мутационных кнопок нет.
+- В `src/pilot/api/client.ts` добавлены `listStaffChecks`, `getStaffCheck`, `getBundleHistory`, `getSummaryHistory` на сгенерированных типах; в `PilotApp.tsx` подключён staff shell при `role === 'staff'`.
+- Добавлены `playwright.config.ts`, `tsconfig.e2e.json`, `@types/node` и скрипт `npm run test:e2e`, потому что команды ACCEPTANCE заданы через `npx playwright test`.
+- Созданы `app/tests/pilot/staff/test_staff_routes.py` (ASGI) и `tests/e2e/pilot/staff_readonly.spec.ts`, интеграционный `tests/integration/pilot/test_staff_readonly.py`.
+- Тест выявил реальный дефект: release-route не проверял роль сам, полагаясь только на домен. Добавлена явная зависимость, покрыта тестом.
+- Обновлены [HANDOFF](HANDOFF.md) и [INTEGRATION_STATE](../../../../docs/pilot/INTEGRATION_STATE.md).
+
+Проверки:
+
+| Команда | Результат |
+|---|---|
+| `pytest tests/pilot/staff -q` (из `app/`) | PASS, 8 тестов |
+| `pytest tests/integration/pilot/test_staff_readonly.py -q` | PASS, 2 теста |
+| `pytest tests/integration/pilot -q` | PASS, 10 тестов |
+| `npm test` / `npm run build` / `npx tsc -b` | PASS, 28 тестов, сборка |
+| `npx playwright test tests/e2e/pilot --grep REL-C07` | PASS |
+| `npm run test:browser:compose` | PASS; учительский путь не сломан |
+| `ruff check` по затронутым Python-файлам | PASS |
+
+Не проверено: внешний сервер (staff на реальном домене) и реальные устройства.
