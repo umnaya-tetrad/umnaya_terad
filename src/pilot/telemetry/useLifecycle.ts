@@ -1,11 +1,8 @@
-import { useEffect, useState } from 'react'
-import type { PilotApi } from '../api/client'
+import { useEffect } from 'react'
 import type { Event } from '../api/contract'
-import { Telemetry } from './client'
+import type { Telemetry } from './client'
 
-export function useLifecycle(api: PilotApi) {
-  const [telemetry] = useState(() => new Telemetry(api))
-
+export function useLifecycle(telemetry: Telemetry) {
   useEffect(() => {
     let visible = document.visibilityState === 'visible'
     telemetry.track(visible ? 'app_visible' : 'app_hidden')
@@ -29,8 +26,6 @@ export function useLifecycle(api: PilotApi) {
       window.removeEventListener('pagehide', exit)
     }
   }, [telemetry])
-
-  return telemetry
 }
 
 export type Emit = (name: Event['name'], checkId?: string, entityId?: string) => void

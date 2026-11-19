@@ -86,3 +86,7 @@
 - Доказательства и команды `docs/pilot/BOOTSTRAP.md`, `docs/pilot/INTEGRATION_STATE.md`, `scripts/pilot/browser_smoke.mjs`, `scripts/pilot/browser_compose_smoke.mjs` и `scripts/pilot/smoke_application.py`.
 
 Команды для независимого повторения локального прогона release находятся в [BOOTSTRAP](../../../../docs/pilot/BOOTSTRAP.md).
+
+## Доработки после независимой проверки
+
+APP-F01–APP-F04 реализованы. На реальном fixture-стеке проверены замена пропущенного комплекта с сохранением старого hold и сохранение событий у исходного автора до logout. Chrome отдельно проверил источники строк M06 и сводку на четырёх ширинах при 100% и 200% текста. [Команды, ревизия и результаты по каждому пункту](FOLLOW_UPS.md).

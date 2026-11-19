@@ -7,6 +7,7 @@ import { ChecksScreen } from './screens/ChecksScreen'
 import { LoginScreen } from './screens/LoginScreen'
 import { NewCheckScreen } from './screens/NewCheckScreen'
 import { CheckWorkspace } from './state/CheckWorkspace'
+import type { Telemetry } from './telemetry/client'
 import { useLifecycle } from './telemetry/useLifecycle'
 
 function readCheck() {
@@ -14,11 +15,11 @@ function readCheck() {
   return id && /^[\da-f-]{36}$/i.test(id) ? id : null
 }
 
-function TeacherApp({ api, intents }: { api: PilotApi; intents: Intents }) {
+function TeacherApp({ api, intents, telemetry }: { api: PilotApi; intents: Intents; telemetry: Telemetry }) {
   const [id, setId] = useState(readCheck)
   const [newCheck, setNewCheck] = useState(false)
   const [setup, setSetup] = useState(false)
-  const telemetry = useLifecycle(api)
+  useLifecycle(telemetry)
 
   useEffect(() => {
     const update = () => { setSetup(false); setNewCheck(false); setId(readCheck()) }
@@ -56,8 +57,8 @@ export function PilotApp() {
     <main className="container">
       {auth.session === undefined ? <p role="status">{copy('common.loading')}</p>
         : !auth.session ? <LoginScreen login={auth.login} busy={auth.busy} error={auth.error} />
-        : auth.session.role === 'teacher' && auth.intents
-          ? <TeacherApp key={auth.session.user_id} api={auth.api} intents={auth.intents} />
+        : auth.session.role === 'teacher' && auth.intents && auth.telemetry
+          ? <TeacherApp key={auth.telemetry.sessionId} api={auth.api} intents={auth.intents} telemetry={auth.telemetry} />
           : <p className="sheet" role="status">{copy('common.unavailable')}</p>}
       {auth.session && auth.error && <p className="notice danger" role="alert">{auth.error}</p>}
     </main>

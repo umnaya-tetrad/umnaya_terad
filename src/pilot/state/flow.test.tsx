@@ -38,7 +38,7 @@ test('APP-C15 APP-C16 independent completeness and safe rendering', () => {
     result: 'all_steps_correct', completeness: 'incomplete', detail_level: 'omitted_steps',
     omitted_steps_note: '', completeness_note: '', first_error: null, evidence: [], photo_indices: [1], uncheckable_reason: '',
   }
-  const rendered = renderToStaticMarkup(<TaskCard value={value} />)
+  const rendered = renderToStaticMarkup(<TaskCard value={value} photoCount={1} />)
   expect(rendered).toContain('В записанных шагах ошибок не найдено')
   expect(rendered).toContain('Решение не закончено')
   expect(rendered).not.toContain('<img')
