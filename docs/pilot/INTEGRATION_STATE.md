@@ -23,3 +23,28 @@
 1. Чистая PostgreSQL 16.15, SQL 001–015, повторный мигратор и seed, healthy API/worker/frontend. Использованы [команды bootstrap](BOOTSTRAP.md).
 2. В реальном API прошли доступ двух учителей и staff, приватные фото, пять форматов, повторы ключей, сохранённая сводка и refresh после изменения оценки.
 3. В Chrome прошли два комплекта, шесть отзывов, двухэтапный финал и чтение результата после reload. Отдельный запуск остановил worker, оставил два принятых Job в очереди, закрыл браузер и подтвердил сохранность после перезапуска backend и worker.
+
+## Проверено в приёмке release (REL-02)
+
+19.11.2026 на той же базе собран и поднят локальный Compose-стек в явном `PILOT_TRANSPORT=fixture`. Все runtime-значения — синтетические, реквизиты в `.env` вне Git.
+
+| Проверка | Команда | Факт |
+| --- | --- | --- |
+| Сборка образов | `docker compose -f compose.yaml build` | PASS: backend/worker/migrate из `smartnote-pilot-python:local`, отдельный frontend |
+| Конфигурация | `docker compose -f compose.yaml config -q` | PASS; `PILOT_TRANSPORT` и `VITE_PILOT_TRANSPORT` берутся из одного source |
+| Миграции | `docker compose -f compose.yaml run --rm migrate` дважды и параллельно | PASS: 15 строк в `pilot_migrations`, повтор и два одновременных runner'а не добавляют записей и не меняют checksums |
+| Стек | `docker compose -f compose.yaml up -d --wait` | PASS: postgres/backend/worker/frontend healthy, migrate exit=0 |
+| Seed | `python -m pilot.operations.create_fixture_accounts` дважды | PASS: ровно 3 аккаунта (2 teacher, 1 staff), повтор не сбрасывает пароли |
+| Health без модели | `urllib` из контейнера backend | PASS, `/health` = ok; transport не вызывается |
+| Polza без ключа | запуск lifespan с `PILOT_TRANSPORT=polza`, пустым ключом | PASS fail-closed: `POLZA_API_KEY is required in polza mode.`, fixture не включается |
+| API smoke | `python scripts/pilot/smoke_application.py` | PASS: auth/ACL, пять форматов, reorder/replace, поколения, общее фото, replay, stale revision, история, сводка |
+| API smoke с повтором | `python scripts/pilot/smoke_application.py --retry` | PASS: failed analytics retry на том же snapshot |
+| Браузерный путь | `npm run test:browser:compose` | PASS: Chrome 320 CSS px, два комплекта, шесть отзывов, финал, сводка после reload |
+| Restart | `npm run test:browser:compose -- --restart` | PASS: те же Job и приватные фото после restart backend/worker с новым browser context |
+| Приватность и Origin | `pytest tests/integration/pilot -k "rel_c02 or rel_c26"` | PASS: нет статической раздачи фото, `private, no-store`, отказ без/exact-Origin, 404 на чужие ID, нет register/analyze/control |
+| Сохранение после restart | `pytest tests/integration/pilot -k rel_c04` | PASS: ID, байты нормализованного фото, Job и изоляция второго учителя сохраняются |
+| Идемпотентность миграций | `pytest tests/integration/pilot -k rel_c03` | PASS: 001–015 применяются по разу, конкурирующие runner'ы сериализованы |
+
+Обычный запуск нигде не использует `down -v`; destructive reset не автоматизирован. Backend и worker не публикуют порты — наружу открыт только frontend `127.0.0.1:5173`. Приватный volume `pilot_photos` смонтирован только в backend и worker.
+
+Не проверено этой задачей: реальная модель Polza и её стоимость (платных вызовов не было), настоящие Android/iPhone, внешний сервер/HTTPS и школьная апробация.

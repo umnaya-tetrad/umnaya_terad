@@ -29,3 +29,31 @@
 | `git diff --check` | PASS |
 
 Не проверено: Compose/PostgreSQL runtime, браузерные smoke, платный Polza, внешний сервер — это REL-02 и последующие задачи.
+
+## REL-02. Compose и миграции
+
+**Статус: выполнено. Runtime проверен на локальном Compose (fixture), внешний сервер не входил.**
+
+Сделано:
+
+- Создан глобальный `pytest.ini` (маркер `release`, `pythonpath=.`), потому что команды приёмки из ACCEPTANCE заданы из корня.
+- Написан `tests/integration/pilot/conftest.py`: HTTP-харнесс над реальным стеком через frontend-origin `/api`, пароли только из env или локального git-ignored `.env`, отсутствие конфигурации даёт ошибку, а не тихий skip.
+- Написан `tests/integration/pilot/test_compose_persistence.py`: REL-C02 (один transport-source, отсутствие портов у backend/worker, приватный volume не в frontend, health без модели, polza без ключа fail-closed, Origin/cookie, нет статической раздачи фото), REL-C03 (15 миграций, повтор и параллельные runner'ы), REL-C04 (данные и Job после restart, изоляция второго учителя), REL-C26 (нет register/analyze/control и редактирования title).
+- Собран и поднят локальный стек: `build` → `run --rm migrate` → `up -d --wait` → seed дважды. Проверены API smoke, `--retry`, браузерный Compose-прогон и `--restart`.
+- Записаны факты проверки в [INTEGRATION_STATE](../../../../docs/pilot/INTEGRATION_STATE.md) и [HANDOFF](HANDOFF.md).
+
+Проверки:
+
+| Команда | Результат |
+|---|---|
+| `docker compose -f compose.yaml config -q` | PASS |
+| `docker compose -f compose.yaml build` | PASS |
+| `docker compose -f compose.yaml run --rm migrate` (повтор и параллельно) | PASS, 15 миграций без дублей, checksums стабильны |
+| `docker compose -f compose.yaml up -d --wait` | PASS, все сервисы healthy |
+| `python -m pilot.operations.create_fixture_accounts` (дважды) | PASS, 2 teacher + 1 staff, пароль не сброшен |
+| `python scripts/pilot/smoke_application.py` и `--retry` | PASS |
+| `npm run test:browser:compose` и `-- --restart` | PASS |
+| `pytest tests/integration/pilot -q -k "rel_c02 or rel_c03 or rel_c04 or rel_c26"` | PASS, 5 тестов |
+| `ruff check tests/integration/pilot` | PASS |
+
+Не проверено: реальная модель Polza (платных вызовов нет), настоящие Android/iPhone, внешний HTTPS/deploy.
