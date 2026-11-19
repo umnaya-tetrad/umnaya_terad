@@ -6,6 +6,7 @@ import hashlib
 import json
 from pathlib import Path
 from types import SimpleNamespace
+from uuid import uuid4
 
 import httpx
 from PIL import Image
@@ -161,3 +162,40 @@ def test_fixture_and_override_do_not_bypass_image_validation(tmp_path):
     result = asyncio.run(run_job(svc, {"kind": "page_check"}, {"images": [path]}))
     assert result.outcome == "rejected" and result.actual_cost_rub == 0
     assert calls == []
+
+
+@pytest.mark.parametrize("case", ["oracle", "mixed", "synonyms", "zero-denominator"])
+def test_default_fixture_mock_arithmetic_for_arbitrary_snapshot(case):
+    snapshot, expected = pair(case)
+    svc = SimpleNamespace(settings=SimpleNamespace(pilot_transport="fixture"), transport=None)
+    result = asyncio.run(run_job(svc, {"kind": "class_analytics"}, snapshot))
+    assert result.outcome == "success"
+    validate_pair(snapshot, result.payload)
+    for field in ("notebooks", "average_errors_per_notebook", "incomplete_tasks", "disputed_tasks", "unassessed_tasks"):
+        assert result.payload[field] == expected[field]
+
+
+def test_default_fixture_supports_thirty_notebooks_with_new_wrapper_ids():
+    snapshot, _ = pair()
+    original = snapshot["notebooks"][0]
+    snapshot["notebooks"] = []
+    for _ in range(30):
+        notebook = copy.deepcopy(original)
+        notebook["notebook_id"] = str(uuid4())
+        for task in notebook["tasks"]:
+            task["task_id"], task["analysis_id"] = str(uuid4()), str(uuid4())
+        snapshot["notebooks"].append(notebook)
+    svc = SimpleNamespace(settings=SimpleNamespace(pilot_transport="fixture"), transport=None)
+    result = asyncio.run(run_job(svc, {"kind": "class_analytics"}, snapshot))
+    assert result.outcome == "success"
+    assert result.payload["notebooks"] == dict(total=30, with_errors=30, without_errors=0, partial=0, empty=0)
+    assert result.payload["average_errors_per_notebook"] == 1
+    assert len(result.payload["top_errors"][0]["task_ids"]) == 30
+    validate_pair(snapshot, result.payload)
+
+
+def test_named_fixed_fixture_rejects_mismatched_snapshot():
+    snapshot, _ = pair("zero-denominator")
+    svc = SimpleNamespace(settings=SimpleNamespace(pilot_transport="fixture"), transport=None, fixture_scenario="oracle")
+    result = asyncio.run(run_job(svc, {"kind": "class_analytics"}, snapshot))
+    assert result.outcome == "invalid_response" and result.payload is None
