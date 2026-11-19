@@ -19,7 +19,7 @@ export function ReviewControls({ review, busy, save }: {
 
   return <section className="sheet stack">
     <p>{copy('review.help')}</p>
-    <p className="phase">{copy(review ? `review.${review.state}` : 'review.unreviewed')}</p>
+    {review?.state !== 'confirmed' && <p className="phase">{copy(review ? `review.${review.state}` : 'review.unreviewed')}</p>}
     <button className="success" disabled={busy} aria-pressed={review?.state === 'confirmed'}
       onClick={() => void submit('confirmed')}>✓ {copy('review.agree')}</button>
     <button className="danger" disabled={busy} aria-pressed={review?.state === 'system_error'}

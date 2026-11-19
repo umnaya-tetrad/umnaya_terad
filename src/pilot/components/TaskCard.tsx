@@ -18,7 +18,6 @@ export function TaskCard({ value, photoCount }: { value: CheckerTask; photoCount
     /^\\(?:text|begin|left)\b/.test(value.condition ?? '')
 
   return <div className="task-analysis stack">
-    {value.locator && <p className="context">{value.locator}</p>}
     {value.condition && <section className="task-condition task-frame">
       <h3>{copy('result.condition')}</h3>
       <div className="task-equation">{conditionIsFormula
