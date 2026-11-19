@@ -1,6 +1,6 @@
 # Приемка processing
 
-19.11.2026. **PROC-C01–PROC-C32:32/32 PASS**, полный чистый прогон99 PASS на `9d788953a298ff03b7e7903a6b3015cc83f3045d`. [Точные assertions/команда/границы](RUNTIME_REPORT.md), [безопасный machine report](runtime-results.json). Уже существующий offline gate описан внизу. Источник assertions – [shared v1](../shared/README.md), [API](../shared/API_CONTRACT.md), [формулы](../../SUMMARY_METRICS.md), [A01–A25](../../TRIAL_AND_ACCEPTANCE.md). Endpoint/DTO не копировать в другую схему: использовать operationId/OpenAPI и валидатор shared.
+19.11.2026. **PROC-C01–PROC-C32:32/32 PASS**, полный чистый прогон 99 PASS на `9d788953a298ff03b7e7903a6b3015cc83f3045d`. [Точные assertions/команда/границы](RUNTIME_REPORT.md), [безопасный machine report](runtime-results.json). Уже существующий offline gate описан внизу. Источник assertions – [shared v1](../shared/README.md), [API](../shared/API_CONTRACT.md), [формулы](../../SUMMARY_METRICS.md), [A01–A25](../../TRIAL_AND_ACCEPTANCE.md). Endpoint/DTO не копировать в другую схему: использовать operationId/OpenAPI и валидатор shared.
 
 ## Общий стенд и исполняемые команды
 
@@ -27,7 +27,7 @@ Test transport – явный `FixtureTransport`, spy считает POST и с�
 
 **Node:** `tests/pilot/domain/test_proc_contract.py::test_proc_c01`.
 
-**Вход:** две изолированные PG16: пустая и с source001–007, существующими synthetic users/sessions. **Действие:** migrate дважды, затем изменить локальную копию checksum уже примененного SQL и повторить runner.
+**Вход:** две изолированные PG16: пустая и с source 001–007, существующими synthetic users/sessions. **Действие:** migrate дважды, затем изменить локальную копию checksum уже примененного SQL и повторить runner.
 
 **Ожидается:** оба первых запуска exit0, registry каждого SQL содержит один checksum, таблицы/ограничения PROC-01 существуют; второй запуск без новых SQL ничего не пересоздает, старые users/session hashes сохранены. Измененный примененный SQL – ненулевой exit, ни одной новой migration/потери данных. SQL tests отклоняют второй `(check_id,number)`, одинаковые version positions, `(job,ordinal)`, второй Report одного Job, повтор settlement. Backend startup не удаляет таблицы.
 
@@ -43,7 +43,7 @@ Test transport – явный `FixtureTransport`, spy считает POST и с�
 
 **Node:** `tests/pilot/domain/test_proc_contract.py::test_proc_c03`.
 
-T1/T2/staff через ensure_account. login200/session200 возвращают правильный user_id/teacher|staff; неверный пароль401/unauthenticated, revoked/expired session401. T1 создает Check201, T2 читает Check/фото/Job по ID –404/not_found; анонимный –401. Teacher на staff history –403/forbidden; staff login разрешен, mutation чужой teacher проверки не выполняется. Cookie HttpOnly/SameSite, Secure согласно окружению, неверный Origin mutating403; нет register endpoint/анонимного legacy analyze. Ensure повтор не сбрасывает пароль, смена роли через ensure409. Trusted reset_account_password отзывает все старые сессии только целевого аккаунта, сохраняет ID/данные и остальных пользователей; новый пароль работает, старый нет. В DB нет plaintext password/token, deny не меняет revision/ledger.
+T1/T2/staff через ensure_account. login200/session200 возвращают правильный user_id/teacher|staff; неверный пароль 401/unauthenticated, revoked/expired session401. T1 создает Check201, T2 читает Check/фото/Job по ID –404/not_found; анонимный –401. Teacher на staff history –403/forbidden; staff login разрешен, mutation чужой teacher проверки не выполняется. Cookie HttpOnly/SameSite, Secure согласно окружению, неверный Origin mutating403; нет register endpoint/анонимного legacy analyze. Ensure повтор не сбрасывает пароль, смена роли через ensure409. Trusted reset_account_password отзывает все старые сессии только целевого аккаунта, сохраняет ID/данные и остальных пользователей; новый пароль работает, старый нет. В DB нет plaintext password/token, deny не меняет revision/ledger.
 
 ## PROC-C04 – Intent до revision, потерянный ответ; A13/A23
 
@@ -183,11 +183,11 @@ Staff query read/materials/history200 с реальным actor=staff; точн�
 
 Finalized fresh failed с доказанно безопасным исходом: can_retry=true, retrySummary202 создает новый Job того же snapshot ID, повтор K дает тот же Job. Смена state ставит stale=true/can_retry=false; retry409 invalid_state. Running/unknown stale: can_refresh=false, refresh409 invalid_state, новых POST0. Comment-only не делает stale. Поздний результат старого Job сохраняется в history, не в selected нового. Свежий succeeded повторно retry/refresh409; GET не платный. Terminal stale с актуальным guard/can_refresh=true→refresh202 с новым snapshot/Job, старый result остается историей.
 
-## PROC-C27 – Общий cap500 и hot-change; A19/A23
+## PROC-C27 – Общий cap 500 и hot-change; A19/A23
 
 **Node:** `tests/pilot/processing/test_proc_contract.py::test_proc_c27`.
 
-R87 заменяет прежний walletinitialize/topup prerequisite. Проверить cap500 по умолчанию, без initialize/topup/file gate; atomic reserves на последних доступных средствах у разных teacher и обоих kind, не более2 global slots. Trusted CLI `python -m pilot.processing.budget status` и `set-limit --rub 500` использует PostgreSQL и меняет cap без restart: сохраняются worker/Job IDs и spent/holds, нет новых intent/дублей. Lowering не отменяет running; блокируются новые dispatch, повышение продолжает исходные Job. Повтор settlement не удваивает cumulative spent. PASS по фактическим assertions – [RUNTIME_REPORT](RUNTIME_REPORT.md).
+R87 заменяет прежний walletinitialize/topup prerequisite. Проверить cap 500 по умолчанию, без initialize/topup/file gate; atomic reserves на последних доступных средствах у разных teacher и обоих kind, не более 2 global slots. Trusted CLI `python -m pilot.processing.budget status` и `set-limit --rub 500` использует PostgreSQL и меняет cap без restart: сохраняются worker/Job IDs и spent/holds, нет новых intent/дублей. Lowering не отменяет running; блокируются новые dispatch, повышение продолжает исходные Job. Повтор settlement не удваивает cumulative spent. PASS по фактическим assertions – [RUNTIME_REPORT](RUNTIME_REPORT.md).
 
 ## PROC-C28 – Pause/resume без HTTP admin; A23/A24
 
@@ -223,4 +223,4 @@ Finalized stale queued/blocked без отправленной Attempt: can_refr
 
 Из корня `python project-context/pilot/planning/shared/check_shared.py` проверяет frozen hashes, OpenAPI/DTO/fixtures, analytics validator и UX strings, без приложения/БД/сети. Он не заменяет PROC-C01–C32. `python scripts/check_context.py` и обе команды git diff --check проверяют структуру/пробелы, не продуктовый runtime.
 
-Исходные backend tests воспроизведены в составе99 PASS; перечень ожиданий переноса сохранен в `app/tests/pilot/source/`. Для следующей интеграции дополнительно воспроизвести исходные backend tests из pinned source с учетом явных замен старых quota/register сценариев; сохранить список измененных ожиданий, не скрывать регрессию удалением тестов. Live smoke, Android/iPhone, внешний сервер/HTTPS и самостоятельная апробация отдельно от этой mock/PG-приемки; без их выполнения ставить not_run. В HANDOFF записать точные команды, commit, транспорт, результаты и ограничения, а не копировать прежний отчет как новый прогон.
+Исходные backend tests воспроизведены в составе 99 PASS; перечень ожиданий переноса сохранен в `app/tests/pilot/source/`. Для следующей интеграции дополнительно воспроизвести исходные backend tests из pinned source с учетом явных замен старых quota/register сценариев; сохранить список измененных ожиданий, не скрывать регрессию удалением тестов. Live smoke, Android/iPhone, внешний сервер/HTTPS и самостоятельная апробация отдельно от этой mock/PG-приемки; без их выполнения ставить not_run. В HANDOFF записать точные команды, commit, транспорт, результаты и ограничения, а не копировать прежний отчет как новый прогон.

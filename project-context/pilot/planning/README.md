@@ -1,6 +1,6 @@
 # Реализация локальной версии: вход для команды
 
-19.11.2026. Общий пакет v1 подготовлен и прошел [независимое ревью](shared/SHARED_REVIEW.md). Код пилотного приложения еще предстоит реализовать; frozen checker и переносимый reference adapter уже существуют отдельно.
+19.11.2026. Общий пакет v1 подготовлен и прошел [независимое ревью](shared/SHARED_REVIEW.md). Processing реализован и локально проверен: [ready handoff](processing/HANDOFF.md),99 PASS/32 случая; application/release остаются planned. Frozen checker сохранен, отдельный text-only live smoke аналитики описан в runtime-отчете. Это не готовность UI/Compose/сервера.
 
 1. Прочитать [shared/README.md](shared/README.md) и выполнить общий офлайн gate. Здесь точные API/DTO, типы, примеры, мобильный UX, модули, проверки и передача.
 2. Выбрать свое направление: [application](application/README.md), [processing](processing/README.md), [release](release/README.md). В каждой папке TASKS.md, ACCEPTANCE.md и HANDOFF.md; текущее состояние работы не выводится из наличия ТЗ.

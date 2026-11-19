@@ -19,19 +19,19 @@ $env:PILOT_TEST_DATABASE_URL='<isolated PostgreSQL16 URL with pilot_test_* datab
 & <venv>/Scripts/python.exe -m pytest app/tests/pilot -q --tb=short -p no:cacheprovider --basetemp <private-cache>/processing-final --junitxml=<private-cache>/processing-final.xml
 ```
 
-Зависимости – `app/requirements.txt`. Harness требует отдельную `pilot_test_*` БД и не очищает рабочую БД. Не размещать DSN/пароли в Git. Локальные JUnit/run/case artifacts хранятся приватно; JSON выше содержит только разрешенные агрегаты и выполненные assertions.
+Runtime-зависимости – `app/requirements.txt`, воспроизводимые test pins – `app/requirements-test.txt`; для shared gate отдельно нужны `project-context/pilot/planning/shared/requirements.txt`. Harness требует отдельную `pilot_test_*` БД и не очищает рабочую БД. Не размещать DSN/пароли в Git. Локальные JUnit/run/case artifacts хранятся приватно; JSON выше содержит только разрешенные агрегаты и выполненные assertions.
 
 ## Матрица задач
 
 | Задача | Статус | Проверенный объем | Случаи PROC- |
 |---|---|---|---|
-| PROC-01 | Реализовано и проверено локально | Миграции001–015, source001–007, constraints | C01/C02 |
+| PROC-01 | Реализовано и проверено локально | Миграции 001–015, source 001–007, constraints | C01/C02 |
 | PROC-02 | Реализовано и проверено локально | Auth/ACL/session/reset, revision/intent | C03/C04/C06/C24 |
 | PROC-03 | Реализовано и проверено локально | Приватные durable фото, форматы и порядок | C05/C07/C08 |
 | PROC-04 | Реализовано и проверено локально | Поколения, Task/review, skip/delete/history | C09–C14 |
 | PROC-05 | Реализовано и проверено локально | PG очередь, lease/fencing, два global slots, один retry | C15–C18/C30 |
 | PROC-06 | Реализовано и проверено локально | Frozen checker, общий transport, безопасная диагностика | C09/C19 |
-| PROC-07 | Реализовано и проверено локально | Накопительный cap500, pause, execution/billing unknown | C17/C18/C27–C29 |
+| PROC-07 | Реализовано и проверено локально | Накопительный cap 500, pause, execution/billing unknown | C17/C18/C27–C29 |
 | PROC-08 | Реализовано и проверено локально | Двухэтапный finalize и неизменяемый snapshot | C20–C22 |
 | PROC-09 | Реализовано и проверено локально | Отдельная аналитика, oracle, stale/retry/refresh | C25/C26/C31 |
 | PROC-10 | Реализовано и проверено локально | Events, dedupe, audit/outbox | C23/C24 |
@@ -72,7 +72,7 @@ PASS означает выполненные assertions этой строки, �
 | PROC-C24 | PASS | `app/tests/pilot/domain/test_proc_contract.py::test_proc_c24` | Staff history/material audit с реальной ролью, private photo ACL, безопасные общие логи. |
 | PROC-C25 | PASS | `app/tests/pilot/analytics/test_proc_contract.py::test_proc_c25` | Четыре oracle snapshot/result через PG worker; invalid counts/refs/JSON/top/null average не публикуются. |
 | PROC-C26 | PASS | `app/tests/pilot/analytics/test_proc_contract.py::test_proc_c26` | Fresh summary retry, stale/refresh, comment-only, новый snapshot. |
-| PROC-C27 | PASS | `app/tests/pilot/processing/test_proc_contract.py::test_proc_c27` | Последнее решение: default cap500, оба kind/teachers, atomic reserves, live CLI cap change, same Job/worker IDs, без wallet initialization. |
+| PROC-C27 | PASS | `app/tests/pilot/processing/test_proc_contract.py::test_proc_c27` | Последнее решение: default cap 500, оба kind/teachers, atomic reserves, live CLI cap change, same Job/worker IDs, без wallet initialization. |
 | PROC-C28 | PASS | `app/tests/pilot/processing/test_proc_contract.py::test_proc_c28` | Manual pause при running, запрет новых dispatch, settlement/read доступны, resume без HTTP admin. |
 | PROC-C29 | PASS | `app/tests/pilot/processing/test_proc_contract.py::test_proc_c29` | Последнее решение: валидные page/summary с cost=null публикуются; execution/billing раздельны; holds и неизвестная стоимость не равны нулю; trusted reconciliation/dedupe. |
 | PROC-C30 | PASS | `app/tests/pilot/processing/test_proc_contract.py::test_proc_c30` | 60 тетрадей/180 Task/два worker; >100 stale кандидатов не голодают свежие page/analytics и не расходуют средства. |
@@ -81,23 +81,27 @@ PASS означает выполненные assertions этой строки, �
 
 ## Независимое ревью и дополнительные gates
 
-Независимый агент выполнил собственный полный прогон: 99 PASS за156,96 с на `746504c`, затем C01/C32 – 2 PASS на `9d78895`; открытых P1/P2 не осталось. Проверены shared gate73, frozen assets, CLI и context. Это агентное инженерное ревью, не независимая педагогическая экспертиза. Финальный полный прогон выше выполнен после этих исправлений на одной чистой ревизии.
+Независимый агент выполнил собственный полный прогон: 99 PASS за 156,96 с на `746504c`, затем C01/C32 – 2 PASS на `9d78895`; открытых P1/P2 не осталось. Проверены shared gate73, frozen assets, CLI и context. Это агентное инженерное ревью, не независимая педагогическая экспертиза. Финальный полный прогон выше выполнен после этих исправлений на одной чистой ревизии.
 
-SQL001–007 побайтово совпадают с закрепленным source. Миграции008–015 принадлежат пилоту; примененный SQL не переписывается. Code commit включает `6c3ae3c` runtime и `6d55027` source tests. HTTP/DTO shared v1, checker `page-check/1.2`, analytics `summary-input/1`/`class-summary/1` не изменены.
+SQL 001–007 побайтово совпадают с закрепленным source. Миграции 008–015 принадлежат пилоту; примененный SQL не переписывается. Code commit включает `6c3ae3c` runtime и `6d55027` source tests. HTTP/DTO shared v1, checker `page-check/1.2`, analytics `summary-input/1`/`class-summary/1` не изменены.
 
 ## Отдельная живая проверка аналитики
 
-Использованы сохраненные **onepass v2/direct_v2** ответы public/synthetic benchmark; staged не использовался. Новый запрос содержал только текстовый JSON, без фотографий, комментариев или эталона. Runtime analytics prompt v1 не менялся; checker не вызывался платно заново. Профиль: `google/gemini-3.8-flash`, only `google-ai-studio/flex`, fallback=false, medium, completion cap25000, phase timeout300 с/connect15 с.
+Кодовая ссылка живого analytics/provider инкремента – `13b72bdcb70d2a07830a651f74cb05384c480832`. После окончательных cap/backend исправлений на `9d78895` нового платного network-прогона не было; сохраненные prompt/builders не изменены.
+
+Безопасные per-call cost/time/group aggregates – [live-analytics-results.json](live-analytics-results.json), извлечены из приватных ledger/metadata/quality и finalized provider history. Raw request/response, фото и секреты не публикуются.
+
+Использованы сохраненные **onepass v2/direct_v2** ответы public/synthetic benchmark; staged не использовался. Новый запрос содержал только текстовый JSON, без фотографий, комментариев или эталона. Runtime analytics prompt v1 не менялся; checker не вызывался платно заново. Профиль: `google/gemini-3.8-flash`, only `google-ai-studio/flex`, fallback=false, medium, completion cap 25000, phase timeout300 с/connect15 с.
 
 | Попытка | Время | RUB | Результат |
 |---|---:|---:|---|
 | Первый small | 20,55 с | 0,78419458 | Содержимое потеряно из-за double-decode в приватном Windows bridge; качество неизвестно, стоимость сверена по finalized provider history |
-| Small:6 тетрадей/7 задач | 21,946 с | 0,69401558 | Числа/ссылки и обе смысловые группы PASS; среднее0,5 |
-| Class30:30 тетрадей/120 задач, по3–5 | 81,832 с | 5,06564076 | Числа/ссылки и точные смысловые группы17/11/6 PASS |
+| Small:6 тетрадей/7 задач | 21,946 с | 0,69401558 | Числа/ссылки и обе смысловые группы PASS; среднее 0,5 |
+| Class30:30 тетрадей/120 задач, по 3–5 | 81,832 с | 5,06564076 | Числа/ссылки и точные смысловые группы 17/11/6 PASS |
 
-Всего **6,54385092 RUB**, неизвестных списаний и активных резервов0; все три стоимости finalized, по одной provider attempt. Это отдельный разрешенный экспериментальный бюджет150 RUB; его журнал не является состоянием runtime cap500 в PostgreSQL и не обнуляет прежние benchmark расходы.
+Всего **6,54385092 RUB**, неизвестных списаний и активных резервов 0; все три стоимости finalized, по одной provider attempt. Это отдельный разрешенный экспериментальный бюджет 150 RUB; его журнал не является состоянием runtime cap 500 в PostgreSQL и не обнуляет прежние benchmark расходы.
 
-Class30:14 тетрадей с ошибками,6 без,10 частичных; среднее1,4; незавершенных10, спорных10, неоценимых6. Топ: вычитание большего числа из меньшего17, квадрат разности11, недопустимое сложение/вычитание под корнем6. Четвертая группа дискриминанта2 верно исключена. Проверены исходные первые ошибочные шаги и наборы wrapper Task ID; ошибка partial входит в топ, но не в среднее. Малый oracle включает пустую/неразрешенную работу и неоценимую задачу. Отказы явно смоделированы, задачи класса повторяют подготовленные benchmark примеры; это не120 уникальных школьных решений.
+Class30:14 тетрадей с ошибками,6 без,10 частичных; среднее 1,4; незавершенных 10, спорных 10, неоценимых 6. Топ: вычитание большего числа из меньшего 17, квадрат разности 11, недопустимое сложение/вычитание под корнем 6. Четвертая группа дискриминанта 2 верно исключена. Проверены исходные первые ошибочные шаги и наборы wrapper Task ID; ошибка partial входит в топ, но не в среднее. Малый oracle включает пустую/неразрешенную работу и неоценимую задачу. Отказы явно смоделированы, задачи класса повторяют подготовленные benchmark примеры; это не 120 уникальных школьных решений.
 
 Опциональный bridge задавал Ethernet if4 до connect и проверял TLS socket. Его double-decode исправлен отдельной gzip-регрессией; production HTTPX не зависит от Windows bridge. `trust_env=False` отключает proxy окружения, но само по себе не доказывает обход системного TUN. Linux/server route этим экспериментом не проверен. Live-оценка смысла выполнена агентом, не учителем; повторов для статистической оценки качества не было.
 
@@ -111,4 +115,10 @@ Class30:14 тетрадей с ошибками,6 без,10 частичных; 
 | Внешний сервер/HTTPS/deploy/выдача школьного доступа | not_run |
 | Самостоятельная учительская апробация и экономия полного времени | not_run |
 
-Синтетический fixture/mock дает проверяемую арифметику и технический цикл; его literal-rule grouping не доказывает смысловое качество LLM. Отдельные text-only live результаты не подтверждают приложение на сегодняшнем сервере, качество всех тем алгебры или достижение целевых5–15 с.
+Синтетический fixture/mock дает проверяемую арифметику и технический цикл; его literal-rule grouping не доказывает смысловое качество LLM. Отдельные text-only live результаты не подтверждают приложение на сегодняшнем сервере, качество всех тем алгебры или достижение целевых 5–15 с.
+
+## Проверка doc-sync
+
+После синхронизации выполнены `python scripts/check_context.py`, `python project-context/pilot/planning/check_tasks.py`, `python project-context/pilot/planning/shared/check_shared.py` (73 PASS), `git diff --check` и `git diff --cached --check`. Planning gate показывает application=planned/processing=ready/release=planned и отклоняет неизвестный status; ready требует конкретного code commit и чистого успешного runtime evidence.
+
+`git diff 9d78895 -- app src` пуст: после канонических99 тестов runtime-код, SQL, requirements и assets не менялись. Поэтому Markdown/doc-tooling не выдаются за новый прогон приложения. Финальное независимое ревью doc diff выполняется перед публикацией; отсутствие UI/Compose/server/mobile checks сохраняется явно.
