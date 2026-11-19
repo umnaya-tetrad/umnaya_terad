@@ -48,3 +48,21 @@
 Обычный запуск нигде не использует `down -v`; destructive reset не автоматизирован. Backend и worker не публикуют порты — наружу открыт только frontend `127.0.0.1:5173`. Приватный volume `pilot_photos` смонтирован только в backend и worker.
 
 Не проверено этой задачей: реальная модель Polza и её стоимость (платных вызовов не было), настоящие Android/iPhone, внешний сервер/HTTPS и школьная апробация.
+
+## Проверено в приёмке release (REL-03)
+
+Аккаунты и ACL проверены на том же локальном Compose-стеке. Реквизиты не попадали в Git и в вывод команд.
+
+| Проверка | Команда | Факт |
+| --- | --- | --- |
+| Состав аккаунтов | `psql: select role, count(*) from users` | `staff=1`, `teacher=2` |
+| Идемпотентный seed | `python -m pilot.operations.manage_accounts seed` дважды | PASS: 3 аккаунта, повтор без сброса пароля |
+| Создание/конфликт роли | `manage_accounts create --login <teacher> --role staff` | отказ `invalid_state`, роль не меняется |
+| Reset | `manage_accounts reset --login <teacher>` с `PILOT_ACCOUNT_PASSWORD` | PASS: старый пароль и старые cookie дают 401, новый пароль работает, материалы сохранены |
+| Reset отсутствующего | `manage_accounts reset --login release-missing-account` | отказ `not_found` |
+| Пароль через argv | `manage_accounts reset --password ...` | отказ argparse; такого флага нет |
+| Секреты в выводе | stdout/stderr всех команд | пароль и hash не печатаются |
+| Аудит | `select name, payload->>'operator_ref' from pilot_audit` | `account_created`/`password_reset` содержат `operator_ref`, без секретов |
+| ACL и Origin | `pytest tests/integration/pilot/test_acl_staff.py -k "rel_c05 or rel_c06"` | PASS: чужие Check/photo/task дают 404, teacher на staff-путях 403, staff mutation 403, запись без/exact-Origin 403, logout без Origin 403 и сессия сохраняется |
+
+Не проверено: HTTP admin/operator role отсутствуют по построению (проверяется REL-C26), реальная выдача аккаунтов школе.

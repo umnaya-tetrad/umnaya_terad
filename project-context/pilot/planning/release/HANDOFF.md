@@ -44,7 +44,19 @@ REL-02 выполнен и проверен на локальном Compose-ст
 
 ## Запуск и данные
 
-Точные команды — в [BOOTSTRAP](../../../../docs/pilot/BOOTSTRAP.md); `docs/pilot/RELEASE_RUNBOOK.md` создаётся в REL-11. Имена локального окружения без значений: `POSTGRES_PASSWORD`, `VISITOR_COOKIE_SECRET`, `ALLOWED_BROWSER_ORIGINS`, `PILOT_TRANSPORT`, `PILOT_FIXTURE_TEACHER_1_LOGIN/PASSWORD`, `PILOT_FIXTURE_TEACHER_2_LOGIN/PASSWORD`, `PILOT_FIXTURE_STAFF_LOGIN/PASSWORD`. Значения хранятся вне Git.
+Имена локального окружения без значений: `POSTGRES_PASSWORD`, `VISITOR_COOKIE_SECRET`, `ALLOWED_BROWSER_ORIGINS`, `PILOT_TRANSPORT`, `PILOT_FIXTURE_TEACHER_1_LOGIN/PASSWORD`, `PILOT_FIXTURE_TEACHER_2_LOGIN/PASSWORD`, `PILOT_FIXTURE_STAFF_LOGIN/PASSWORD`. Значения хранятся вне Git: локальный файл лежит за пределами репозитория (например `~/.config/smartnote/pilot.env`) и передаётся Compose через `--env-file`, потому что `scripts/check_context.py` отклоняет `.env` внутри рабочего дерева. Точные команды — в [BOOTSTRAP](../../../../docs/pilot/BOOTSTRAP.md); `docs/pilot/RELEASE_RUNBOOK.md` создаётся в REL-11.
+
+## Управление аккаунтами (REL-03)
+
+`app/pilot/operations/manage_accounts.py` — trustless-обёртка над доменными функциями processing (`ensure_account`, `reset_account_password`); собственного SQL, хеширования и второй таблицы аккаунтов нет.
+
+| Команда | Назначение |
+|---|---|
+| `python -m pilot.operations.manage_accounts seed` | Создать три локальных fixture-аккаунта из `PILOT_FIXTURE_*`; повторный запуск ничего не сбрасывает |
+| `python -m pilot.operations.manage_accounts create --login <login> --role teacher\|staff` | Создать один аккаунт; существующий логин с той же ролью — no-op, другая роль — конфликт |
+| `python -m pilot.operations.manage_accounts reset --login <login>` | Заменить пароль и отозвать все сессии только этого аккаунта, сохранив ID и материалы |
+
+Пароль приходит скрытым вводом в терминале или из `PILOT_ACCOUNT_PASSWORD`; аргумента `--password` нет, значения не печатаются. Для аудита задаётся `--operator-ref` или `PILOT_OPERATOR_REF`, по умолчанию `local-cli`; `request_id` генерируется на каждый вызов. HTTP admin API и роль operator не создаются.
 
 ## Блокеры
 

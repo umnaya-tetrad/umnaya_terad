@@ -57,3 +57,29 @@
 | `ruff check tests/integration/pilot` | PASS |
 
 Не проверено: реальная модель Polza (платных вызовов нет), настоящие Android/iPhone, внешний HTTPS/deploy.
+
+## REL-03. Accounts и безопасный reset
+
+**Статус: выполнено. Runtime проверен на локальном Compose (fixture).**
+
+Сделано:
+
+- Создан `app/pilot/operations/manage_accounts.py` с командами `seed`, `create`, `reset`. Это тонкая обёртка над `ensure_account` и `reset_account_password` processing: собственного SQL, хеширования и второй модели аккаунтов нет.
+- Пароль берётся скрытым вводом или из `PILOT_ACCOUNT_PASSWORD`; флага `--password` не существует, значения не печатаются. `operator_ref`/`request_id` уходят в доменный аудит.
+- Написан `tests/integration/pilot/test_acl_staff.py`: REL-C05 (состав, seed дважды, логин/логаут, reset с отзывом только своих сессий, сохранность материалов, отказы CLI) и REL-C06 (ACL на чужие ID, staff read-only, exact Origin, приватные заголовки фото).
+- Обновлены [HANDOFF](HANDOFF.md) (раздел управления аккаунтами и расположение локального env-файла) и [INTEGRATION_STATE](../../../../docs/pilot/INTEGRATION_STATE.md) (таблица проверок). Локальный env вынесен из рабочего дерева в `~/.config/smartnote/pilot.env`, потому что `check_context.py` отклоняет `.env` в репозитории; Compose получает его через `--env-file`.
+
+Проверки:
+
+| Команда | Результат |
+|---|---|
+| `manage_accounts seed` (дважды) | PASS, staff=1 / teacher=2, повтор без сброса |
+| `manage_accounts create --role staff` для teacher-логина | отказ `invalid_state` |
+| `manage_accounts reset` с новым паролем | PASS, старые cookie 401, новый пароль работает, данные T1 целы |
+| `manage_accounts reset` неизвестного логина | отказ `not_found` |
+| `reset --password ...` | argparse отклоняет флаг; такого аргумента нет |
+| `pytest tests/integration/pilot/test_acl_staff.py -q` | PASS, 3 теста |
+| `pytest tests/integration/pilot -q` | PASS, 8 тестов |
+| `ruff check tests/integration/pilot app/pilot/operations` | PASS |
+
+Не проверено: выдача аккаунтов школе и reset на внешнем сервере — вне локального выпуска.
