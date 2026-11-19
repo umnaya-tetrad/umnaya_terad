@@ -3,6 +3,7 @@ import sys
 import json
 import tempfile
 import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlsplit
 from uuid import uuid4
@@ -14,6 +15,74 @@ import pytest_asyncio
 
 APP = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(APP))
+
+
+def _git(*arguments):
+    return subprocess.run(
+        ["git", *arguments], cwd=APP.parent, capture_output=True, text=True, check=True
+    ).stdout.strip()
+
+
+def pytest_configure(config):
+    """Bind evidence to the code that started this session, before collection."""
+    run_id = uuid4().hex
+    folder = APP.parent.parent / ".cache/processing-runs" / run_id
+    (folder / "cases").mkdir(parents=True)
+    info = {
+        "run_id": run_id,
+        "commit": _git("rev-parse", "HEAD"),
+        "started_at_utc": datetime.now(timezone.utc).isoformat(),
+        "working_tree_clean_at_start": not bool(_git("status", "--porcelain")),
+        "folder": str(folder),
+    }
+    config._processing_run_info = info
+    (folder / "run.json").write_text(
+        json.dumps(info, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+
+
+def pytest_runtest_call(item):
+    info = item.config._processing_run_info
+    (Path(info["folder"]) / "current-test.json").write_text(
+        json.dumps(
+            {
+                "node": item.nodeid,
+                "started_at_utc": datetime.now(timezone.utc).isoformat(),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
+def pytest_sessionfinish(session, exitstatus):
+    info = session.config._processing_run_info
+    info.update(
+        finished_at_utc=datetime.now(timezone.utc).isoformat(),
+        exit_status=int(exitstatus),
+        commit_at_end=_git("rev-parse", "HEAD"),
+        working_tree_clean_at_end=not bool(_git("status", "--porcelain")),
+    )
+    (Path(info["folder"]) / "run.json").write_text(
+        json.dumps(info, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+
+
+def pytest_terminal_summary(terminalreporter):
+    terminalreporter.write_line(
+        "Processing evidence: " + terminalreporter.config._processing_run_info["folder"]
+    )
+
+
+@pytest.fixture(scope="session")
+def run_info(pytestconfig):
+    return pytestconfig._processing_run_info
+
+
+@pytest.fixture(scope="session", autouse=True)
+def record_run_provenance(run_info, record_testsuite_property):
+    record_testsuite_property("processing_run_id", run_info["run_id"])
+    record_testsuite_property("processing_commit", run_info["commit"])
+    record_testsuite_property("processing_evidence_folder", run_info["folder"])
 
 
 @pytest.hookimpl(hookwrapper=True)
@@ -77,23 +146,16 @@ async def pg_factory():
 
 
 @pytest_asyncio.fixture
-async def db(pg_factory, request):
+async def db(pg_factory, request, run_info):
     pool = await pg_factory()
     yield pool
     if request.node.name == "test_proc_c01":
-        folder = APP.parent.parent / ".cache/processing-case-reports"
-        folder.mkdir(parents=True, exist_ok=True)
+        folder = Path(run_info["folder"]) / "cases"
         outcome = getattr(request.node, "rep_call", None)
-        commit = subprocess.run(
-            ["git", "rev-parse", "HEAD"],
-            cwd=APP.parent,
-            capture_output=True,
-            text=True,
-            check=True,
-        ).stdout.strip()
         report = {
             "node": request.node.nodeid,
-            "commit": commit,
+            "commit": run_info["commit"],
+            "run_id": run_info["run_id"],
             "transport": "fixture",
             "outcome": outcome.outcome if outcome else "setup_failed",
             "postgres": await pool.fetchval("SELECT version()"),
@@ -131,7 +193,7 @@ async def svc(db, tmp_path):
 
 
 @pytest_asyncio.fixture
-async def h(svc, request, monkeypatch):
+async def h(svc, request, monkeypatch, run_info):
     from .harness import Harness
 
     harness = Harness(svc)
@@ -146,8 +208,7 @@ async def h(svc, request, monkeypatch):
     try:
         yield harness
     finally:
-        folder = APP.parent.parent / ".cache/processing-case-reports"
-        folder.mkdir(parents=True, exist_ok=True)
+        folder = Path(run_info["folder"]) / "cases"
         counts = {}
         for table in [
             "pilot_jobs",
@@ -179,17 +240,11 @@ async def h(svc, request, monkeypatch):
             if has_child_calls
             else 0
         )
-        commit = subprocess.run(
-            ["git", "rev-parse", "HEAD"],
-            cwd=APP.parent,
-            capture_output=True,
-            text=True,
-            check=True,
-        ).stdout.strip()
         outcome = getattr(request.node, "rep_call", None)
         report = {
             "node": request.node.nodeid,
-            "commit": commit,
+            "commit": run_info["commit"],
+            "run_id": run_info["run_id"],
             "transport": svc.mode,
             "outcome": outcome.outcome if outcome else "setup_failed",
             "postgres": await svc.pool.fetchval("SELECT version()"),
