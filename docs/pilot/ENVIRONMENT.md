@@ -18,11 +18,13 @@
 
 ## Срез этой Windows-машины
 
-Пути ниже относятся к конкретной машине и не появятся у коллеги после clone. Это независимые synthetic fixture-проекты со своими БД/volumes, не production и не серверный env. Сведения об active-проектах — Docker metadata и контекст локальных release-прогонов; значения файлов не раскрываются.
+Пути ниже относятся к конкретной машине и не появятся у коллеги после clone. У проектов отдельные БД/volumes. Live использует настоящую Polza, остальные демонстрационные проекты — synthetic fixture; это локальные стенды, не внешний сервер. Значения файлов не раскрываются.
 
 | Назначение / порт | Compose project | Приватный путь / состояние на 20.11.2026 |
 | --- | --- | --- |
 | Default launcher, порт по умолчанию 5173 | default `smartnote-pilot` | `C:/Users/User/.config/smartnote/pilot.env` **не существует**; это ожидаемый default-путь, а не текущая конфигурация демонстрации |
+| Активный live с Polza, 5173 | `smartnote-pilot-live` | `C:/Users/User/.config/smartnote/pilot-live.env`; UI собирается из текущей ветки с отдельным `pilot-live-ui.compose.yaml`, backend/data сохранены |
+| Приостановленный UX-стенд | `smartnote-ux-workbench` | `C:/Users/User/.config/smartnote/ux-workbench.env`; контейнеры остановлены, данные сохранены. На 5173 сейчас live |
 | Старая активная демонстрация, 5183 | `smartnote-main-audit-729b717` | `C:/Users/User/Desktop/3_year/SmartNote/.cache/main-audit-729b717/runtime/compose.env`; путь подтвержден Compose env-file label контейнера |
 | Активный исправленный preview, 5484 | `smartnote-release-ui-fixes` | `C:/Users/User/Desktop/3_year/SmartNote/.cache/release-fixes/ui/compose.env`; путь подтвержден приватным UI run context |
 | Завершенный runtime-прогон, 5483 | `smartnote-release-fix-focus` | `C:/Users/User/Desktop/3_year/SmartNote/.cache/release-fixes/runtime/compose.env` остался на диске, сервисы остановлены |
