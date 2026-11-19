@@ -1,50 +1,120 @@
 # Состояние и передача release
 
-19.11.2026, Asia/Yekaterinburg. **status: planned.** Подготовлено индивидуальное ТЗ; приложение этим действием не реализовано. Работа release начинается в 18:00. Документ не подтверждает наличие кодовых коммитов или результаты runtime-приемки.
+19.11.2026, Asia/Yekaterinburg. **status: in_progress.** B4 принят, задачи REL-01–REL-12 выполняются; отдельные результаты записываются по факту выполнения, а не авансом.
 
-| Поле | Текущее фактическое значение |
+## Ревизии
+
+| Поле | Фактическое значение |
 |---|---|
-| Плановая рабочая ветка | `work/release`, создание/фактическая ветка пока не подтверждены |
-| Интеграционная ветка | `integration/pilot-local`, фактический remote/baseline SHA еще не передан |
-| B0 contract commit | Не передан; общий пакет API 1.0.0 указан в shared, SHA зафиксировать при B4 |
-| B1 runtime baseline commit | Не передан; запуск приложения release не проверял |
-| B4 application/processing commits | Не переданы; не подменять HEAD документационного репозитория |
-| Source provenance | SmartNoteLanding `d62f5ecb8c1c53b1c97faf06530b8d84e691f88d`; pinned источник будущего bootstrap, не сборка пилота |
-| Candidate 20:15 / final 21:00 | Не созданы/не проверены |
-| Transport / live расходы | Runtime не запускался; будущая приемка явно fixture. Платных запросов этой задачей нет |
+| Рабочая ветка | `release_tasks`, создана от `main` `002d814de6bab3b946208e0155e54e65c035cb27` |
+| Интеграционная база (факт) | `002d814de6bab3b946208e0155e54e65c035cb27` (`origin/main`). Отдельная ветка `integration/pilot-local` не создавалась; её роль выполняет линейная история `release_tasks` поверх этой базы |
+| B0 contract commit | `1144c498b4aba1e4e4fe118abe7c3f6f1b940198` — shared v1, OpenAPI 1.0.0 |
+| B1 runtime baseline | `fe3d741dc92fd7d2d6c24500fd4e824775563e80` — интеграция processing с приложением |
+| B4 application commit | `92fd1e83ea17b2002b195ea0e555f8b75c8da899` (`work/application`), поверх — исправления `b4ad6ad8d5c43a2640a9b61fce01fbc74a3b8c42` и merge `002d814` |
+| B4 processing commit | `9d788953a298ff03b7e7903a6b3015cc83f3045d` (`processing`), влит как `0f8460df6465612a815810b77eb2f60a72376350` |
+| Source provenance | SmartNoteLanding `d62f5ecb8c1c53b1c97faf06530b8d84e691f88d`; повторный импорт не выполнялся |
+| Миграции | `app/migrations/001–015`; 001–007 побайтово совпадают с pinned source |
+| Candidate 20:15 / final 21:00 | Кандидат локальный: коммит REL-12 в `release_tasks`; внешний выпуск не создавался |
+| Transport | Приемка только `PILOT_TRANSPORT=fixture`; платных вызовов в release нет |
 
-## Готово
+## Приём B4 (REL-01)
 
-Специфицированы [REL-01–REL-12](TASKS.md), [REL-C01–REL-C28 и A01–A25](ACCEPTANCE.md). Это документы, а не выполненные задачи приложения. Основа — [shared v1](../shared/README.md); фактические офлайн-проверки общего пакета отдельно в [SHARED_REVIEW](../shared/SHARED_REVIEW.md), не записываются как runtime-прогон release.
+Сверено по фактическому репозиторию, а не по именам веток:
+
+| Проверка | Как выполнено | Результат |
+|---|---|---|
+| Наличие переданных commit | `git cat-file -t` для B0/B1/B4/source SHA | все объекты существуют в локальном репозитории |
+| Один contract v1 | `build_contract.py check_generated()` + сравнение `render_types()` с файлами | `app/pilot/contracts.py` и `src/pilot/api/generated.ts` побайтово совпадают с генератором; OpenAPI/схемы без drift |
+| Pinned source, SQL 001–007 | `git hash-object` по каждому файлу против manifest `docs/pilot/BOOTSTRAP.md` | 7/7 совпадают |
+| Pinned source, прочий импорт | сравнение 39 строк manifest | 23 blob без изменений, 12 изменены осознанно при адаптации, 4 исключены (`app/tests/conftest.py`, `app/tests/test_security.py`, `src/lib/useModal.ts`, `src/styles.css`) — причины уже записаны в BOOTSTRAP |
+| Владельцы путей | чтение diff и `MODULE_BOUNDARIES` | общие entrypoint/config, `infra/`, `scripts/pilot/`, `docs/pilot/`, `compose.yaml`, `Dockerfile`, `app/Dockerfile`, seed приняты release; `app/config.py`, `domain/`, `processing/`, `analytics/`, `events/`, SQL остаются processing |
+| Секреты в diff | `git grep` по шаблонам ключей, проверка `.env*` | отслеживаемых ключей/паролей нет; `.env.example` содержит пустые значения |
+| Shared offline gate | `python project-context/pilot/planning/shared/check_shared.py` | PASS, 73 теста: frozen checker, 158 UX-строк, OpenAPI 34 операции, 44 HTTP fixtures, 25 lifecycle-снимков, 4 пары analytics |
+| Структура документации | `python scripts/check_context.py` | PASS, 471 файл, 975 локальных ссылок |
+| Frontend unit | `npm ci && npm test` | PASS, 6 файлов / 26 тестов |
+| Frontend build | `npm run build` | PASS; предупреждение Vite о чанке 542 КБ не является ошибкой |
+| Application API-тесты | `pytest --confcutdir tests/pilot/application tests/pilot/application -q` | PASS, 24 теста |
+| Diff hygiene | `git diff --check` | PASS |
+
+Не проверено этим приёмом: Compose/PostgreSQL runtime, браузерные smoke-прогоны, платный Polza, внешний сервер. Они относятся к REL-02 и далее.
 
 ## Еще не готово
 
-Все REL-01–REL-12 planned; все REL-C01–REL-C28 not_run. Не получены исполняемый B4, миграционный upgrade, аккаунты/сессия, полный analytics smoke с commit, локальная сборка и реальные мобильные результаты. Это ожидаемые входы реализации, не доказательство блокировки после начала работы.
+REL-02 выполнен и проверен на локальном Compose-стеке (см. таблицу приёмки в [INTEGRATION_STATE](../../../../docs/pilot/INTEGRATION_STATE.md)). Дальше по порядку идут REL-03–REL-12. Все REL-C01–REL-C28 получают статус по факту; кейсы вне уже выполненных остаются not_run. Реальная модель, настоящие Android/iPhone, внешнее развёртывание и школьная апробация — отдельные факты и в локальный результат не входят.
 
-## Что принять в 18:00
+## Runbook, backup и recovery (REL-11)
 
-Application: реальный branch/commit, BOOTSTRAP manifest, B1 smoke, main/router/Compose/packageconfigs/infra/scripts/docs/account seed, UI/CRUD и известные дефекты. Processing: модели/guards/миграции/runner, worker/queue/funds/events/pause/reconcile facade, fund_wallet initialize/topup и проверка профиля, полные checker+analytics, сигнатуры Services и результаты API smoke begin→finalize→summary, duplicate/failed/retry/state-change/refresh. Проверить включенные коммиты, затем однократно принять владение B4; повторный импорт source не выполнять.
+| Артефакт | Назначение |
+|---|---|
+| `docs/pilot/RELEASE_RUNBOOK.md` | Полная операторская инструкция: env, build/migrate/up/seed/health, pause/resume, cap, reconcile, backup, restore, rollback, приёмка |
+| `docs/pilot/RUNBOOK.md` | Короткий вход-ссылка на полный runbook |
+| `scripts/pilot/backup_local.py` | Приватный согласованный backup БД и фото в каталог вне репозитория; отказывается работать при запущенных writers |
+| `scripts/pilot/restore_local.py` | Restore только в отдельный проект `smartnote-restore-*` с новыми volumes, с отказом поверх рабочей базы |
 
-Результат передачи заполнить: `application_commit`, `processing_commit`, `contract_commit`, `baseline_commit`, `integration_commit`, принятые пути, последовательность миграций, транспорт, команды/результаты. До получения оставить «не передан», SHA не угадывать.
+Обычный запуск не использует `down -v`; destructive reset не автоматизирован. Rollback: пауза dispatch, сохранение unknown/evidence/reserve, возврат к совместимому commit/image без SQL-downgrade.
 
 ## Запуск и данные
 
-Будущие команды в [ACCEPTANCE](ACCEPTANCE.md) должны быть созданы/проверены при реализации; release еще их не выполнял. Понадобятся Docker Compose, frontend/backend dev dependencies, private local env, общая БД и приватный photo volume. `PILOT_TRANSPORT=fixture` задается явно, frontend `VITE_PILOT_TRANSPORT` из того же source; при polza нужен реальный ключ и отдельная авторизация платного smoke. Значения ключей/паролей в HANDOFF не записывать.
+Имена локального окружения без значений: `POSTGRES_PASSWORD`, `VISITOR_COOKIE_SECRET`, `ALLOWED_BROWSER_ORIGINS`, `PILOT_TRANSPORT`, `PILOT_FIXTURE_TEACHER_1_LOGIN/PASSWORD`, `PILOT_FIXTURE_TEACHER_2_LOGIN/PASSWORD`, `PILOT_FIXTURE_STAFF_LOGIN/PASSWORD`. Значения хранятся вне Git: локальный файл лежит за пределами репозитория (например `~/.config/smartnote/pilot.env`) и передаётся Compose через `--env-file`, потому что `scripts/check_context.py` отклоняет `.env` внутри рабочего дерева. Точные команды — в [BOOTSTRAP](../../../../docs/pilot/BOOTSTRAP.md); `docs/pilot/RELEASE_RUNBOOK.md` создаётся в REL-11.
 
-Имена local seed env без значений: `PILOT_FIXTURE_TEACHER_1_LOGIN`, `PILOT_FIXTURE_TEACHER_1_PASSWORD`, `PILOT_FIXTURE_TEACHER_2_LOGIN`, `PILOT_FIXTURE_TEACHER_2_PASSWORD`, `PILOT_FIXTURE_STAFF_LOGIN`, `PILOT_FIXTURE_STAFF_PASSWORD`. Defaults отсутствуют, повтор seed не сбрасывает пароль молча; поздний reset — отдельная привилегированная CLI. Основные Settings в `app/config.py` принадлежат processing и не становятся sharedconfig release на B4.
+## Управление аккаунтами (REL-03)
 
-Accounts первоначально дает application до B1; release после B4 принимает seed и reset CLI. Итоговые команды startup/migrate/accounts/pause/reconcile/funds/backup/restore и зависимости записать в `docs/pilot/RELEASE_RUNBOOK.md`, `RUNBOOK.md` оставить вход-ссылкой. Restart без удаления volumes; unknown хранит резерв до безопасной сверки. Политика env/профиля — [LOCAL_ENV](../shared/LOCAL_ENV.md): реальные средства не seed400, баланс/резерв и evidence подтверждаются отдельно, fixture wallet изолирован.
+`app/pilot/operations/manage_accounts.py` — trustless-обёртка над доменными функциями processing (`ensure_account`, `reset_account_password`); собственного SQL, хеширования и второй таблицы аккаунтов нет.
 
-## Выполненные проверки release
+### Закрытый просмотр команды (REL-04)
 
-Runtime, Compose, PostgreSQL, браузер, настоящие Android/iPhone, модель, server deploy — **не выполнялись** при подготовке ТЗ. После реализации здесь записать каждую команду, cwd, commit, fixture/режим, actual результат и ограничения. Документационные проверки подготовки ТЗ записывать отдельно после их фактического выполнения; их результат не переводит runtime-кейсы в pass.
+| Артефакт | Состав |
+|---|---|
+| `app/pilot/routes/staff.py` | Только `GET /staff/checks` и `GET /staff/checks/{id}`. Зависимость `staff_actor` отказывает teacher до любого запроса; мутационных маршрутов нет |
+| `app/pilot/services/staff.py` | Тонкая передача в `pilot.domain.queries` (`list_staff_checks`, `get_staff_check`, `get_bundle_history`, `get_summary_history`); своей SQL и второй проверки прав нет |
+| `src/pilot/staff/StaffScreens.tsx` | Список с фильтром по точному `owner_login`, детали проверки, фото, разборы, отзывы от третьего лица, staff-only история поколения и сводок. Нет кнопок согласия/возражения/skip/retry/delete/finalize/refresh |
+| `app/pilot/router.py` | Staff router подключён один раз; владение общими entrypoint-файлами перешло к release |
+| `src/pilot/api/client.ts` | `listStaffChecks`, `getStaffCheck`, `getBundleHistory`, `getSummaryHistory` поверх сгенерированных типов |
 
-Проверка подготовки ТЗ 19.11.2026: `python project-context/pilot/planning/shared/check_shared.py` через подготовленное dev-окружение Python 3.12 — PASS, 73 офлайн-теста; 34 HTTP-операции, 44 HTTP fixtures, 25 lifecycle snapshots, четыре пары analytics. `git diff --check` и `git diff --cached --check` — PASS. Это сверка спецификации, без live LLM/сервера/приложения. Полный `check_context.py` повторяется координатором после появления параллельных файлов и итогового TASK_REVIEW; промежуточно фиксировал еще отсутствующие создаваемые документы, а не runtime-дефект.
+История комплектов и сводок доступна только staff (`require_staff` в домене), учителю возвращается 403. Каждый staff-read пишет `pilot_audit` с реальным `actor_id`, `role` и `request_id`, не меняя `revision`/`data_revision` учителя и его отзывы. Read-only удерживается трижды: отсутствием мутационных маршрутов, зависимостью роли и доменной проверкой.
 
-## Блокеры и исправления
+### Эксплуатационные CLI (REL-05)
 
-Активные runtime-блокеры пока не установлены, поскольку реализация не начата. При обнаружении: `BLK-release-NN / severity / contract+A-ID / commit / fixture+команда / actual / expected / next action`. Известный контракт интегратор исправляет в любом модуле с fix commit и регрессией без ожидания автора. Новый продукт/несовместимое API передается координатору, молчание не согласие.
+| Артефакт | Назначение |
+|---|---|
+| `scripts/pilot/processing_control.py` | Хостовый wrapper: `status`, `pause --reason`, `resume --reason`. Запускает фасад внутри backend-контейнера и передаёт `COMPOSE_PROJECT_NAME`/`PILOT_FRONTEND_PORT` |
+| `app/pilot/operations/processing_cli.py` | Контейнерная часть: вызывает `get_processing_control`/`set_processing_paused` и `get_budget`; своей SQL и второго ledger нет |
+| `scripts/pilot/reconcile_attempt.py` | Хостовый wrapper сверки: читает и хеширует evidence-файл локально, передаёт только digest |
+| `app/pilot/operations/reconcile_cli.py` | Контейнерная часть: вызывает `reconcile_attempt` с `ReconciliationEvidence` |
+| `python -m pilot.processing.budget status` / `set-limit --rub` | Готовый processing CLI общего cap; release только вызывает его, второй лимит не заводится |
 
-## Финальная передача
+Правила, проверенные тестами: пауза останавливает только новые dispatch, queued Jobs и чтение сохраняются; resume продолжает прежнюю работу; красный отзыв ничего не выключает. Сверка принимает `rejected|settled`, требует доказательство, повтор с тем же `request_id` и evidence — no-op, иное evidence — конфликт с ненулевым кодом. Unknown не освобождается по таймауту, skip или restart; settlement с известной стоимостью снимает резерв один раз. HTTP admin-маршрутов и роли operator нет.
 
-Заполнить к 21:00: candidate/final commit, included/fix commits, проверенные миграции/volumes/accounts, результаты REL-C01–REL-C28 и одной A01–A25 матрицы, report/runbook paths, оставшиеся failed/not_run и шаг восстановления. Реальная модель/расходы, настоящие устройства, внешнее развертывание и школьная апробация — отдельные факты. Фраза «локальная сборка готова» допустима только в пределах явно выполненной приемки.
+Приёмка идёт в отдельном Compose-проекте `smartnote-release-accept` на `127.0.0.1:5273`; `compose.yaml` принимает `COMPOSE_PROJECT_NAME` и `PILOT_FRONTEND_PORT`. Рабочий проект `smartnote-pilot` приёмкой не затрагивается, `down -v` применяется только к выделенному acceptance-проекту.
+
+### Команды управления аккаунтами
+
+| Команда | Назначение |
+|---|---|
+| `python -m pilot.operations.manage_accounts seed` | Создать три локальных fixture-аккаунта из `PILOT_FIXTURE_*`; повторный запуск ничего не сбрасывает |
+| `python -m pilot.operations.manage_accounts create --login <login> --role teacher\|staff` | Создать один аккаунт; существующий логин с той же ролью — no-op, другая роль — конфликт |
+| `python -m pilot.operations.manage_accounts reset --login <login>` | Заменить пароль и отозвать все сессии только этого аккаунта, сохранив ID и материалы |
+
+Пароль приходит скрытым вводом в терминале или из `PILOT_ACCOUNT_PASSWORD`; аргумента `--password` нет, значения не печатаются. Для аудита задаётся `--operator-ref` или `PILOT_OPERATOR_REF`, по умолчанию `local-cli`; `request_id` генерируется на каждый вызов. HTTP admin API и роль operator не создаются.
+
+## Итог REL-01–REL-12
+
+Все двенадцать задач выполнены и зафиксированы отдельными коммитами в `release_tasks` без push. Итоговые результаты:
+
+| Проверка | Результат |
+|---|---|
+| `python project-context/pilot/planning/shared/check_shared.py` | PASS, 73 офлайн-теста |
+| `python scripts/check_context.py` | PASS |
+| `npm test` / `npm run build` / `npx tsc -b` | PASS, 28 тестов |
+| `pytest tests/pilot/application` / `tests/pilot/staff` из `app/` | PASS, 24 / 8 |
+| `pytest tests/integration/pilot -q` | PASS, 49 тестов |
+| `npx playwright test tests/e2e/pilot` | PASS, 14 тестов; 8 полных прогонов подряд |
+| `ruff check`, `git diff --check` | PASS |
+
+Матрица A01–A25 и таблица REL-C01–C28 с доказательствами — в [RELEASE_REPORT](../../../../docs/pilot/RELEASE_REPORT.md). Runbook — [RELEASE_RUNBOOK](../../../../docs/pilot/RELEASE_RUNBOOK.md).
+
+Остаются отдельными фактами, а не частью локального выпуска: реальная модель Polza и платные вызовы, внешний сервер/HTTPS/deploy, настоящие Android/iPhone, самостоятельная апробация учителя и письменный итог школы.
+
+## Блокеры
+
+Активных блокеров нет. Формат записи при появлении: `BLK-release-NN / severity / contract+A-ID / commit / fixture+команда / actual / expected / next action`.
