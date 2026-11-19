@@ -79,3 +79,21 @@
 | Неизменность учителя | та же | PASS: `revision`, `data_revision` и отзывы не меняются после staff-read |
 | Staff UI | `npx playwright test tests/e2e/pilot --grep REL-C07` | PASS: Chrome 390 CSS px, третье лицо в подписях, нет кнопок согласия/skip/retry/delete/finalize/refresh, teacher не видит раздел команды |
 | Unit/сборка | `npm test`, `npm run build`, `tsc -b` | PASS: 28 тестов, сборка; предупреждение Vite о чанке 550 КБ |
+
+## Проверено в приёмке release (REL-05)
+
+Приёмка выполняется в отдельном Compose-проекте `smartnote-release-accept` (порт 5273). Сессия тестов сама поднимает чистые volumes этого проекта, поэтому прогон воспроизводим и не трогает рабочий `smartnote-pilot`.
+
+| Проверка | Команда | Факт |
+| --- | --- | --- |
+| Pause останавливает dispatch | `pytest tests/integration/pilot/test_funds_control.py -k rel_c18` | PASS: при остановленном worker Job остаётся `queued`, pause фиксируется, чтение и вход доступны; после resume Job завершается |
+| Аудит операций | та же | PASS: `processing_paused`/`processing_resumed` содержат `operator_ref`; без `--reason` — отказ |
+| Красный отзыв ≠ пауза | та же | PASS: `paused` остаётся `false` |
+| Общий cap, hot-change | `-k rel_c17` | PASS: уменьшение и возврат cap не сбрасывают `spent`/`held` и не требуют restart; обе смены аудируются (`spend_limit_changed`) |
+| Cap блокирует только новые отправки | та же | PASS: материал блокированного Job сохраняется, cap восстанавливается |
+| Сверка unknown | `-k rel_c16` | PASS: резерв удерживается, `settled` со стоимостью снимает его один раз, повтор — no-op, другое evidence — конфликт ненулевым кодом, аудит один |
+| Unknown без evidence | та же | PASS: состояние и резерв не меняются, повторный проход worker не пересылает запрос |
+| Rejected | та же | PASS: отказ с ненулевой стоимостью и evidence без `reference` отклоняются |
+| Нет HTTP admin | та же | PASS: `/processing/pause`, `/budget`, `/admin/processing` недоступны teacher и staff |
+
+Полный набор `pytest tests/integration/pilot -q` — 18 тестов, PASS дважды подряд (75,9 с и 75,7 с).

@@ -1,13 +1,12 @@
 """Closed staff read-only acceptance (REL-C07) on the real local stack."""
 from __future__ import annotations
 
-import subprocess
 import time
 
 import pytest
 
 from conftest import (
-    COMPOSE,
+    compose,
     PHOTO_FIXTURE,
     ROOT,
     Client,
@@ -20,11 +19,10 @@ pytestmark = pytest.mark.release
 
 
 def audit_for(name: str, check_id: str) -> list[str]:
-    result = subprocess.run(
-        [*COMPOSE, "exec", "-T", "postgres", "psql", "-U", "pilot", "-d", "pilot", "-tAc",
-         f"select coalesce(actor_id::text,'-') || '|' || role || '|' || coalesce(request_id::text,'-') "
-         f"from pilot_audit where name='{name}' and check_id='{check_id}' order by created_at"],
-        cwd=ROOT, capture_output=True, text=True, check=True,
+    result = compose(
+        "exec", "-T", "postgres", "psql", "-U", "pilot", "-d", "pilot", "-tAc",
+        "select coalesce(actor_id::text,'-') || '|' || role || '|' || coalesce(request_id::text,'-') "
+        f"from pilot_audit where name='{name}' and check_id='{check_id}' order by created_at",
     )
     return [line for line in result.stdout.splitlines() if line.strip()]
 

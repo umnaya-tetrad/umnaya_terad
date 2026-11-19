@@ -10,9 +10,12 @@ collected suite must not be reported as a pass.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
+import sys
+import tempfile
 from http.cookiejar import CookieJar
 from pathlib import Path
 from urllib.error import HTTPError
@@ -22,9 +25,14 @@ from uuid import uuid4
 import pytest
 
 ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_ORIGIN = "http://127.0.0.1:5173"
+DEFAULT_ORIGIN = f"http://127.0.0.1:{os.environ.get('PILOT_ACCEPTANCE_PORT', '5273')}"
 PHOTO_FIXTURE = ROOT / "project-context/pilot/planning/shared/api/fixtures/synthetic-photo.png"
 MEDIA = ROOT / "src/pilot/__fixtures__/media"
+# Acceptance always runs in its own Compose project with its own volumes, so it
+# never mixes with the working local stack. It is not the working project and
+# never touches its database.
+ACCEPTANCE_PROJECT = os.environ.get("PILOT_ACCEPTANCE_PROJECT", "smartnote-release-accept")
+ACCEPTANCE_PORT = os.environ.get("PILOT_ACCEPTANCE_PORT", "5273")
 # Local secrets live outside the repository: the structural context check rejects
 # a stray .env, and release acceptance must never commit credentials.
 DEFAULT_ENV_FILE = Path.home() / ".config/smartnote/pilot.env"
@@ -68,6 +76,12 @@ def _compose_base() -> list[str]:
 
 
 COMPOSE = _compose_base()
+# Every acceptance call targets the isolated project, never the working stack.
+COMPOSE_ENV = {
+    "COMPOSE_PROJECT_NAME": ACCEPTANCE_PROJECT,
+    "PILOT_FRONTEND_PORT": ACCEPTANCE_PORT,
+    "ALLOWED_BROWSER_ORIGINS": f"http://127.0.0.1:{ACCEPTANCE_PORT},http://localhost:{ACCEPTANCE_PORT}",
+}
 
 
 def setting(name: str, default: str | None = None) -> str:
@@ -91,7 +105,23 @@ def credentials(account: str) -> dict[str, str]:
 
 
 def compose(*args: str, check: bool = True) -> subprocess.CompletedProcess:
-    return subprocess.run([*COMPOSE, *args], cwd=ROOT, capture_output=True, text=True, check=check)
+    return subprocess.run(
+        [*COMPOSE, *args], cwd=ROOT, capture_output=True, text=True, check=check, env=compose_environment()
+    )
+
+
+def run_host_script(*args: str, check: bool = False) -> subprocess.CompletedProcess:
+    """Run a trusted host wrapper against the isolated acceptance project."""
+    return subprocess.run(
+        [sys.executable, *args], cwd=ROOT, capture_output=True, text=True, check=check,
+        env=compose_environment(),
+    )
+
+
+def compose_environment() -> dict[str, str]:
+    environment = dict(os.environ)
+    environment.update(COMPOSE_ENV)
+    return environment
 
 
 def compose_json() -> dict:
@@ -271,6 +301,48 @@ def wait_healthy(timeout: float = 90.0) -> None:
     raise AssertionError(f"Compose services did not become healthy: {checks}")
 
 
+def reconcile_fixture_unknown(attempt_id: str) -> None:
+    """Settle a fixture-only unknown attempt so it stops holding a global slot.
+
+    Unknown execution keeps its reserve and slot until trusted reconciliation by
+    design. The fixture transport reports a zero cost, so acceptance may settle
+    its own synthetic attempts with that evidence and leave the stack reusable.
+    """
+    evidence = Path(tempfile.mkdtemp(prefix="pilot-accept-")) / "fixture-evidence.json"
+    evidence.write_text(
+        json.dumps({"reference": f"release-acceptance-{attempt_id}", "actual_cost_rub": "0"}), encoding="utf-8"
+    )
+    compose(
+        "exec", "-T", "backend", "python", "-m", "pilot.operations.reconcile_cli",
+        "--attempt-id", attempt_id, "--outcome", "settled",
+        "--reference", f"release-acceptance-{attempt_id}",
+        "--sha256", hashlib.sha256(evidence.read_bytes()).hexdigest(),
+        "--actual-cost-rub", "0", "--operator-ref", "release-acceptance",
+        check=False,
+    )
+
+
 @pytest.fixture(scope="session", autouse=True)
 def _stack() -> None:
+    """Prepare a clean, isolated acceptance project.
+
+    REL-C02 requires a clean PostgreSQL for acceptance and REL-C04 requires
+    persistence after restart. Both are only reproducible if the suite starts
+    from its own empty volumes, so the session rebuilds *only* the dedicated
+    acceptance project. The working project is refused explicitly.
+    """
+    if ACCEPTANCE_PROJECT == "smartnote-pilot":
+        raise AssertionError("Acceptance must never run against the working Compose project.")
     fixture_backend()
+    compose("down", "-v", "--remove-orphans", check=False)
+    compose("run", "--rm", "migrate")
+    compose("up", "-d", "--wait")
+    compose("exec", "-T", "backend", "python", "-m", "pilot.operations.manage_accounts", "seed")
+    try:
+        response = Client().request("GET", "/auth/session")
+    except Exception as exc:  # noqa: BLE001 - report a clear setup message
+        raise AssertionError(
+            f"Acceptance stack {ACCEPTANCE_PROJECT} is not reachable on {origin()}: {exc}. "
+            "Prepare it with the REL-02 commands from the release runbook."
+        ) from None
+    assert response.status in {200, 401}, response.status

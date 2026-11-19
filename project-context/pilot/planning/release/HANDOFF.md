@@ -62,6 +62,20 @@ REL-02 выполнен и проверен на локальном Compose-ст
 
 История комплектов и сводок доступна только staff (`require_staff` в домене), учителю возвращается 403. Каждый staff-read пишет `pilot_audit` с реальным `actor_id`, `role` и `request_id`, не меняя `revision`/`data_revision` учителя и его отзывы. Read-only удерживается трижды: отсутствием мутационных маршрутов, зависимостью роли и доменной проверкой.
 
+### Эксплуатационные CLI (REL-05)
+
+| Артефакт | Назначение |
+|---|---|
+| `scripts/pilot/processing_control.py` | Хостовый wrapper: `status`, `pause --reason`, `resume --reason`. Запускает фасад внутри backend-контейнера и передаёт `COMPOSE_PROJECT_NAME`/`PILOT_FRONTEND_PORT` |
+| `app/pilot/operations/processing_cli.py` | Контейнерная часть: вызывает `get_processing_control`/`set_processing_paused` и `get_budget`; своей SQL и второго ledger нет |
+| `scripts/pilot/reconcile_attempt.py` | Хостовый wrapper сверки: читает и хеширует evidence-файл локально, передаёт только digest |
+| `app/pilot/operations/reconcile_cli.py` | Контейнерная часть: вызывает `reconcile_attempt` с `ReconciliationEvidence` |
+| `python -m pilot.processing.budget status` / `set-limit --rub` | Готовый processing CLI общего cap; release только вызывает его, второй лимит не заводится |
+
+Правила, проверенные тестами: пауза останавливает только новые dispatch, queued Jobs и чтение сохраняются; resume продолжает прежнюю работу; красный отзыв ничего не выключает. Сверка принимает `rejected|settled`, требует доказательство, повтор с тем же `request_id` и evidence — no-op, иное evidence — конфликт с ненулевым кодом. Unknown не освобождается по таймауту, skip или restart; settlement с известной стоимостью снимает резерв один раз. HTTP admin-маршрутов и роли operator нет.
+
+Приёмка идёт в отдельном Compose-проекте `smartnote-release-accept` на `127.0.0.1:5273`; `compose.yaml` принимает `COMPOSE_PROJECT_NAME` и `PILOT_FRONTEND_PORT`. Рабочий проект `smartnote-pilot` приёмкой не затрагивается, `down -v` применяется только к выделенному acceptance-проекту.
+
 ### Команды управления аккаунтами
 
 | Команда | Назначение |

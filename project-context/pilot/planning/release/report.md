@@ -113,3 +113,29 @@
 | `ruff check` по затронутым Python-файлам | PASS |
 
 Не проверено: внешний сервер (staff на реальном домене) и реальные устройства.
+
+## REL-05. Pause и unknown reconciliation
+
+**Статус: выполнено. Runtime проверен в изолированном Compose-проекте (fixture).**
+
+Сделано:
+
+- `scripts/pilot/processing_control.py` — хостовый wrapper `status|pause|resume`; внутри контейнера вызывает `app/pilot/operations/processing_cli.py`, который обращается к фасаду `pilot.processing.control` и `pilot.processing.budget`. Своего ledger, SQL и второго лимита нет.
+- `scripts/pilot/reconcile_attempt.py` — хостовый wrapper: читает evidence-файл локально, считает SHA-256 и передаёт digest в `app/pilot/operations/reconcile_cli.py`, который вызывает `reconcile_attempt`. Сырой документ не попадает ни в контейнер, ни в лог, ни в аудит.
+- Приёмка вынесена в отдельный Compose-проект: `compose.yaml` принимает `COMPOSE_PROJECT_NAME` и `PILOT_FRONTEND_PORT`; тесты поднимают `smartnote-release-accept` на 5273 и никогда не работают с рабочим `smartnote-pilot`.
+- Написан `tests/integration/pilot/test_funds_control.py`: REL-C17 (общий cap, hot-change без restart, блокировка только новых dispatch), REL-C18 (pause/resume, красный отзыв, отсутствие HTTP admin), REL-C16 (unknown удерживает резерв и слот, settlement один раз, конфликт evidence, rejected только при доказанном отсутствии списания, отсутствие автоматического resend).
+- Тестовая сессия стартует с чистых volumes своего проекта, чтобы unknown-попытки предыдущего прогона не занимали оба глобальных слота; очистка ограничена acceptance-проектом.
+- Обновлены [HANDOFF](HANDOFF.md) и [INTEGRATION_STATE](../../../../docs/pilot/INTEGRATION_STATE.md).
+
+Проверки:
+
+| Команда | Результат |
+|---|---|
+| `python scripts/pilot/processing_control.py status` | PASS: `paused`, `available_rub`, `held_rub`, `unknown_attempt_ids`, `mode` |
+| `pause`/`resume` с `--reason` и `--operator-ref` | PASS; без `--reason` — отказ |
+| `python -m pilot.processing.budget set-limit --rub ...` | PASS: `spent`/`held` сохраняются, restart не требуется |
+| `pytest tests/integration/pilot/test_funds_control.py -q` | PASS, 8 тестов |
+| `pytest tests/integration/pilot -q` (дважды) | PASS, 18 тестов, 75,9 с и 75,7 с |
+| `ruff check tests/integration/pilot scripts/pilot app/pilot/operations` | PASS |
+
+Не проверено: pause/reconcile на внешнем сервере и с реальным провайдером (платных вызовов нет).

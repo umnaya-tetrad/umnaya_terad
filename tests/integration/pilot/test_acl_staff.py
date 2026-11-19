@@ -1,15 +1,15 @@
 """Accounts, ACL and Origin acceptance (REL-C05/C06)."""
 from __future__ import annotations
 
-import subprocess
 from uuid import uuid4
+
+import subprocess
 
 import pytest
 
 from conftest import (
-    COMPOSE,
+    compose,
     PHOTO_FIXTURE,
-    ROOT,
     Client,
     credentials,
     mutation_key,
@@ -23,11 +23,11 @@ NEW_PASSWORD = "ReleaseReset2026pass"
 
 
 def cli(*args: str, password: str | None = None, expect: int = 0) -> subprocess.CompletedProcess:
-    command = [*COMPOSE, "exec", "-T"]
+    command = ["exec", "-T"]
     if password is not None:
         command.extend(["-e", f"PILOT_ACCOUNT_PASSWORD={password}"])
     command.extend(["backend", "python", "-m", "pilot.operations.manage_accounts", *args])
-    result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, check=False)
+    result = compose(*command, check=False)
     assert result.returncode == expect, f"CLI exited {result.returncode}, expected {expect}: {result.stdout}{result.stderr}"
     return result
 
@@ -41,10 +41,9 @@ def restore_teacher_password() -> None:
 
 def test_rel_c05_seed_roles_login_and_reset():
     """REL-C05: exactly three fixture accounts, working login, safe reset."""
-    counts = subprocess.run(
-        [*COMPOSE, "exec", "-T", "postgres", "psql", "-U", "pilot", "-d", "pilot", "-tAc",
-         "select role || '=' || count(*) from users group by role order by role"],
-        cwd=ROOT, capture_output=True, text=True, check=True,
+    counts = compose(
+        "exec", "-T", "postgres", "psql", "-U", "pilot", "-d", "pilot", "-tAc",
+        "select role || '=' || count(*) from users group by role order by role",
     ).stdout.split()
     assert counts == ["staff=1", "teacher=2"], counts
 
@@ -114,10 +113,9 @@ def test_rel_c05_cli_rejects_unsafe_input():
     missing = cli("reset", "--login", "release-missing-account", password=NEW_PASSWORD, expect=1)
     assert "not_found" in missing.stderr
 
-    no_password = subprocess.run(
-        [*COMPOSE, "exec", "-T", "backend", "python", "-m", "pilot.operations.manage_accounts",
-         "reset", "--login", username, "--password", NEW_PASSWORD],
-        cwd=ROOT, capture_output=True, text=True, check=False,
+    no_password = compose(
+        "exec", "-T", "backend", "python", "-m", "pilot.operations.manage_accounts",
+        "reset", "--login", username, "--password", NEW_PASSWORD, check=False,
     )
     assert no_password.returncode != 0, "The CLI must not accept a password as a flag"
     assert "unrecognized arguments" in no_password.stderr, no_password.stderr
