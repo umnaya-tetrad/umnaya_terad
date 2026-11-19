@@ -39,6 +39,55 @@ describe('application API', () => {
   })
 
   test.each([
+    ['page.HEIC', '', 'image/heic'],
+    ['page.heif', 'application/octet-stream', 'image/heif'],
+    ['page.heic', 'application/octet-stream', 'image/heic'],
+    ['page.jpg', '', 'image/jpeg'],
+    ['page.png', '', 'image/png'],
+    ['page.webp', 'application/octet-stream', 'image/webp'],
+    ['page.heic', 'image/heic', 'image/heic'],
+    ['page.pdf', 'application/pdf', 'application/pdf'],
+    ['page.heic', 'application/pdf', 'application/pdf'],
+    ['page.heic.exe', '', ''],
+    ['heic', '', ''],
+  ])('APP-C08 gallery MIME hint %s (%s) preserves original bytes and metadata', async (name, type, expected) => {
+    const file = new File([new Uint8Array([0, 255, 3, 128])], name, { type, lastModified: 123456 })
+    const transport = vi.fn<typeof globalThis.fetch>().mockResolvedValue(Response.json({}))
+    await new PilotApi(transport).mutate(actions.uploadPhoto('version', file), { key: 'upload', revision: 1 })
+    const sent = (transport.mock.calls[0][1]?.body as FormData).get('file') as File
+    expect(sent.type).toBe(expected)
+    expect(sent.name).toBe(file.name)
+    expect(sent.lastModified).toBe(file.lastModified)
+    expect(new Uint8Array(await sent.arrayBuffer())).toEqual(new Uint8Array(await file.arrayBuffer()))
+  })
+
+  test('APP-C11 inferred and explicit gallery MIME replay the same original upload intent', async () => {
+    const storage = localStorageDouble()
+    const transport = vi.fn<typeof globalThis.fetch>()
+      .mockRejectedValueOnce(new TypeError('lost upload reply'))
+      .mockResolvedValueOnce(Response.json({ check_revision: 2 }))
+    const api = new PilotApi(transport)
+    const native = new File(['unchanged original'], 'page.heic', { type: '' })
+    const explicit = new File([native], native.name, { type: 'image/heic' })
+    await expect(new Intents(api, 'teacher', storage).send(actions.uploadPhoto('version', native), 'check', 1))
+      .rejects.toThrow('lost upload reply')
+    await new Intents(api, 'teacher', storage).send(actions.uploadPhoto('version', explicit), 'check', 2)
+    const [initial, replay] = transport.mock.calls.map(([, init]) => init!)
+    expect(new Headers(replay.headers).get('Idempotency-Key')).toBe(new Headers(initial.headers).get('Idempotency-Key'))
+    expect(new Headers(replay.headers).get('If-Match')).toBe('"1"')
+    expect((replay.body as FormData).get('file')).toMatchObject({ name: native.name, type: 'image/heic', size: native.size })
+    expect(storage.length).toBe(0)
+  })
+
+  test('APP-C08 the image size guard still rejects an oversized inferred-MIME upload before dispatch', async () => {
+    const transport = vi.fn<typeof globalThis.fetch>()
+    const file = new File([new Uint8Array(8_000_001)], 'large.heic')
+    await expect(new Intents(new PilotApi(transport), 'teacher', localStorageDouble())
+      .send(actions.uploadPhoto('version', file), 'check', 1)).rejects.toMatchObject({ status: 413 })
+    expect(transport).not.toHaveBeenCalled()
+  })
+
+  test.each([
     actions.submitBundle('bundle', { input_version_id: 'sealed' }),
     actions.finalizeCheck('check'),
   ])('APP-C11 APP-C24 reload and concurrent clicks replay the original key', async (action) => {

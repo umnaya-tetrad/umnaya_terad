@@ -18,6 +18,20 @@ const task = (id: string) => path('tasks', id)
 const post = (path: string, body?: Payload | File): Action => ({ method: 'POST', path, body })
 const remove = (path: string): Action => ({ method: 'DELETE', path })
 
+const photoTypes: Record<string, string> = {
+  jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp',
+  heic: 'image/heic', heif: 'image/heif',
+}
+
+function photoUploadFile(file: File) {
+  // Some galleries (including Chrome on Windows for HEIC) omit the MIME hint.
+  // The server still validates the actual bytes, format and image dimensions.
+  if (file.type && file.type !== 'application/octet-stream') return file
+  const extension = /\.(jpe?g|png|webp|heic|heif)$/i.exec(file.name)?.[1].toLowerCase()
+  const type = extension && photoTypes[extension]
+  return type ? new File([file], file.name, { type, lastModified: file.lastModified }) : file
+}
+
 export const actions = {
   createCheck: (body: Title) => post(checks, body),
   deleteCheck: (id: string) => remove(check(id)),
@@ -28,7 +42,9 @@ export const actions = {
   createInputVersion: (id: string, body: VersionCreate) => post(`${bundle(id)}/versions`, body),
   reorderPhotos: (id: string, body: PhotoOrder): Action => ({ method: 'PATCH', path: draft(id), body }),
   discardDraft: (id: string) => remove(draft(id)),
-  uploadPhoto: (id: string, file: File) => post(`${draft(id)}/photos`, file),
+  // Normalize before Intents fingerprints the payload, so an explicit MIME and
+  // the same inferred hint replay the same upload after a lost response.
+  uploadPhoto: (id: string, file: File) => post(`${draft(id)}/photos`, photoUploadFile(file)),
   deleteDraftPhoto: (id: string, photoId: string) => remove(`${draft(id)}/photos/${encodeURIComponent(photoId)}`),
   submitBundle: (id: string, body: Submit) => post(`${bundle(id)}/submit`, body),
   retryBundle: (id: string, body: InputTarget) => post(`${bundle(id)}/retry`, body),
@@ -125,7 +141,7 @@ export class PilotApi {
     let body: BodyInit | undefined
     if (action.body instanceof File) {
       const form = new FormData()
-      form.set('file', action.body)
+      form.set('file', photoUploadFile(action.body))
       body = form
     } else if (action.body !== undefined) {
       headers.set('Content-Type', 'application/json')
