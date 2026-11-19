@@ -138,6 +138,60 @@ textarea { resize: vertical; }
 .display-formula { display: block; }
 .display-formula .katex-display { margin: .4em 0; text-align: left; }
 .display-formula .katex-display > .katex { text-align: left; }
+
+/* Landing-style analysis. Each color is one semantic block, not one card per line. */
+.task-analysis { --analysis-green: #1b8b52; --analysis-red: #ec3e48; gap: 16px; }
+.task-frame {
+  min-width: 0;
+  padding: clamp(14px, 3vw, 22px);
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  background: var(--cream);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.task-condition { text-align: center; }
+.task-condition h3, .task-lines h3, .task-wrong-content h3, .task-block-label, .task-correction h4 {
+  margin: 0 0 10px;
+  font-size: .75rem;
+  font-weight: 850;
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: .025em;
+}
+.task-outcome { text-align: center; }
+.task-outcome h2 { margin: 0; font-size: clamp(1.15rem, 4vw, 1.6rem); line-height: 1.15; font-weight: 900; text-transform: uppercase; }
+.task-outcome--incorrect, .task-wrong-step, .task-error-explanation { border-color: var(--analysis-red); background: #fff0f0; }
+.task-outcome--incorrect h2 { color: #ce2835; }
+.task-outcome--correct, .task-lines--correct { border-color: var(--analysis-green); background: #edf9ef; }
+.task-outcome--correct h2, .task-lines--correct h3 { color: #17633b; }
+.task-outcome--unassessed { background: var(--cream); }
+.task-lines h3 span { margin-right: 6px; }
+.task-lines-content { display: grid; gap: 18px; padding-block: 8px; }
+.task-key-line { display: grid; min-width: 0; gap: 5px; }
+.task-equation { min-width: 0; color: var(--ink); font-size: clamp(1.12rem, 3.1vw, 1.55rem); }
+.task-photo-ref { display: block; margin: 4px 0 0; text-align: right; font-size: .72rem; color: #62584c; }
+.task-wrong-step { display: grid; grid-template-columns: 36px minmax(0, 1fr); padding: 0; }
+.task-error-marker { display: grid; place-items: center; background: var(--analysis-red); color: #fff; font-size: 1.3rem; font-weight: 900; }
+.task-wrong-content { padding: clamp(14px, 3vw, 22px); min-width: 0; }
+.task-error-explanation { display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: start; gap: 13px; }
+.task-explanation-marker { display: grid; place-items: center; width: 32px; height: 32px; background: var(--analysis-red); border: 1px solid var(--ink); color: #fff; font-weight: 900; }
+.task-error-copy { gap: 16px; }
+.task-error-copy h3 { margin: 0; color: #ce2835; font-size: 1.08rem; line-height: 1.35; font-weight: 850; }
+.task-error-copy p { margin: 0; }
+.task-error-copy .task-block-label { margin-bottom: 5px; }
+.task-correction { display: grid; grid-template-columns: minmax(90px, 135px) minmax(0, 1fr); gap: 12px; align-items: center; padding: 13px; border: 1px solid var(--ink); background: var(--cream); }
+.task-correction h4 { margin: 0; }
+.task-analysis .math-formula--wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .15em .24em; min-width: 0; max-width: 100%; }
+.task-analysis .math-formula__fragment { max-width: 100%; }
+.task-analysis .math-formula__fragment .katex-display { margin: 0; }
+.task-analysis .math-formula--fit .katex { font-size: calc(1.21em * var(--math-fit-scale, 1)); }
+.task-analysis .math-formula--scrollable { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; overflow-y: hidden; padding-bottom: 6px; }
+.task-analysis .math-formula--scrollable .math-formula__fragment { flex: 0 0 auto; }
+.task-analysis .math-formula__fallback, .task-analysis .math-formula__plain-fallback { max-width: 100%; overflow-wrap: anywhere; font-family: Consolas, monospace; font-size: .7em; }
+@media (max-width: 480px) {
+  .task-error-explanation { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .task-correction { grid-template-columns: minmax(0, 1fr); }
+}
 dialog {
   width: min(calc(100% - 24px), 520px);
   max-height: calc(100dvh - 24px);
