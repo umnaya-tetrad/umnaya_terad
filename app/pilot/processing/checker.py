@@ -26,7 +26,9 @@ def load_prompt() -> str:
     return prompt
 
 
-def image_part(path: Path) -> dict:
+def _image(path: Path) -> tuple[bytes, str]:
+    if not isinstance(path, Path):
+        raise ValueError("Image path must be a private Path")
     with path.open("rb") as stream:
         content = stream.read(8_000_001)
     if not content or len(content) > 8_000_000:
@@ -41,6 +43,18 @@ def image_part(path: Path) -> dict:
             image.load()
     except (UnidentifiedImageError, OSError, Image.DecompressionBombError) as error:
         raise ValueError("Image failed decoding") from error
+    return content, mime
+
+
+def validate_images(images: list[Path]) -> None:
+    if not isinstance(images, list) or not images:
+        raise ValueError("Ordered nonempty image list required")
+    for path in images:
+        _image(path)
+
+
+def image_part(path: Path) -> dict:
+    content, mime = _image(path)
     return {"type": "image_url", "image_url": {
         "url": f"data:{mime};base64,{base64.b64encode(content).decode('ascii')}", "detail": "high",
     }}

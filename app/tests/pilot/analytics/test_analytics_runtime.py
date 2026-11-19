@@ -67,6 +67,7 @@ def test_builders_are_separate_and_checker_frozen(tmp_path):
     (httpx.ConnectTimeout, "temporary_failure", Decimal(0)),
     (httpx.ReadTimeout, "unknown", None),
     (httpx.WriteError, "unknown", None),
+    (httpx.DecodingError, "unknown", None),
 ])
 def test_one_post_and_ambiguous_failures(reason, outcome, cost):
     seen = []
@@ -147,3 +148,16 @@ def test_length_is_invalid_and_known_cost_preserved():
     result = asyncio.run(send_once({}, config=config(), transport=httpx.MockTransport(lambda _: httpx.Response(200, json=envelope({}, finish="length")))))
     assert result.outcome == "invalid_response" and result.error_code == "output_limit"
     assert result.actual_cost_rub == Decimal("0.125")
+
+
+def test_fixture_and_override_do_not_bypass_image_validation(tmp_path):
+    calls = []
+    async def override(job, payload):
+        calls.append(1)
+        return TransportResult("success", payload={})
+    svc = SimpleNamespace(transport=override)
+    path = tmp_path / "too-small.png"
+    Image.new("RGB", (31, 64)).save(path)
+    result = asyncio.run(run_job(svc, {"kind": "page_check"}, {"images": [path]}))
+    assert result.outcome == "rejected" and result.actual_cost_rub == 0
+    assert calls == []

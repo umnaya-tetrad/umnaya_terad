@@ -74,6 +74,17 @@ def bound_for_request(svc, job: dict, input_payload: dict) -> Decimal | None:
 
 
 async def run_job(svc, job: dict, input_payload: dict) -> TransportResult:
+    try:
+        if job["kind"] == "page_check":
+            from .checker import validate_images
+            validate_images(input_payload["images"])
+        elif job["kind"] == "class_analytics":
+            from ..analytics.validation import validate_input
+            validate_input(input_payload)
+        else:
+            raise ValueError("Unknown job kind")
+    except (OSError, ValueError, KeyError, TypeError, ValidationError):
+        return TransportResult("rejected", actual_cost_rub=Decimal(0), error_code="invalid_input")
     override = getattr(svc, "transport", None)
     if override is not None:
         result = override(job, input_payload)
