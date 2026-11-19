@@ -1,0 +1,4 @@
+ALTER TABLE pilot_funds ADD CONSTRAINT pilot_wallet_finite CHECK(balance_rub NOT IN ('NaN'::numeric,'Infinity'::numeric,'-Infinity'::numeric) AND held_rub NOT IN ('NaN'::numeric,'Infinity'::numeric,'-Infinity'::numeric) AND outstanding_debt_rub NOT IN ('NaN'::numeric,'Infinity'::numeric,'-Infinity'::numeric));
+ALTER TABLE pilot_fund_reservations ADD CONSTRAINT pilot_reserve_finite CHECK(amount_rub NOT IN ('NaN'::numeric,'Infinity'::numeric,'-Infinity'::numeric));
+ALTER TABLE pilot_fund_ledger ADD CONSTRAINT pilot_ledger_finite CHECK(amount_rub>=0 AND amount_rub NOT IN ('NaN'::numeric,'Infinity'::numeric,'-Infinity'::numeric));
+ALTER TABLE pilot_attempts ADD CONSTRAINT pilot_attempt_cost_finite CHECK(actual_cost_rub IS NULL OR actual_cost_rub NOT IN ('NaN'::numeric,'Infinity'::numeric,'-Infinity'::numeric));

@@ -28,6 +28,8 @@ async def _cancel_jobs(con,c,bundle_ids=None,*,reason='deleted'):
     args=[c['id'],reason]
     if bundle_ids is not None:sql+=' AND bundle_id=ANY($3::uuid[])';args.append([r.uuid(x) for x in bundle_ids])
     await con.execute(sql,*args)
+    # Cancellation is never proof that a dispatched provider call was free.
+    await con.execute("UPDATE pilot_attempts SET state='unknown' WHERE state='started' AND dispatched AND job_id IN (SELECT id FROM pilot_jobs WHERE check_id=$1 AND state='cancelled')",c['id'])
 async def _snapshot_job(con,c):
     sid=uuid4();payload=build_snapshot(c,sid)
     await con.execute('INSERT INTO pilot_snapshots(id,check_id,data_revision,payload) VALUES($1,$2,$3,$4::jsonb)',sid,c['id'],c['data_revision'],json.dumps(payload))
@@ -108,7 +110,8 @@ async def upload_photo(svc,ctx,input_version_id,prepared):
         return pid,None,True,None
     try:return await _mutate(svc,ctx,'upload_photo','input',input_version_id,{'sha256':prepared.sha256,'version':str(input_version_id)},go,status=201)
     except BaseException:
-        for folder in created:shutil.rmtree(folder)
+        for folder in created:
+            if folder.resolve().is_relative_to(svc.storage_root.resolve()):shutil.rmtree(folder)
         raise
     finally:discard_prepared(prepared)
 async def reorder_photos(svc,ctx,input_version_id,payload):
