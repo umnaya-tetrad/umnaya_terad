@@ -1,6 +1,6 @@
 """All writes share one parent lock and transaction with intent and outbox."""
 
-import hashlib, json, shutil
+import hashlib, json
 from uuid import UUID, uuid4
 from . import repository as r
 from .access import check_access
@@ -135,6 +135,8 @@ async def _mutate(
 ):
     method, template = METHODS[op]
     path = "/" + template.format(entity_id)
+    if op == "delete_draft_photo":
+        path += "/" + str(payload["photo_id"])
     digest = hash_payload(payload)
     async with svc.pool.acquire() as con, con.transaction():
         # One idempotency intent is serialized even for create and deleted resources.
@@ -326,7 +328,6 @@ async def create_input_version(svc, ctx, bundle_id, payload):
 
 
 async def upload_photo(svc, ctx, input_version_id, prepared):
-    created = []
 
     async def go(con, c):
         _, b, v = r.find(c, "input", input_version_id)
@@ -334,7 +335,6 @@ async def upload_photo(svc, ctx, input_version_id, prepared):
             invalid("Отправленные фото нельзя изменять.")
         pid = r.uid()
         original, normalized = persist_photo(svc, prepared, pid)
-        created.append(original.parent)
         await con.execute(
             "INSERT INTO pilot_photo_assets(id,check_id,bundle_id,original_path,normalized_path,media_type,sha256,byte_count,width,height) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
             r.uuid(pid),
@@ -369,11 +369,10 @@ async def upload_photo(svc, ctx, input_version_id, prepared):
             go,
             status=201,
         )
-    except BaseException:
-        for folder in created:
-            if folder.resolve().is_relative_to(svc.storage_root.resolve()):
-                shutil.rmtree(folder)
-        raise
+    # An exception may mean the COMMIT response was lost after acceptance.
+    # Durable files therefore survive ambiguous DB outcomes. Only transient
+    # prepared files are discarded here; orphan GC requires independent proof
+    # that no accepted asset/link/intent exists before deleting durable material.
     finally:
         discard_prepared(prepared)
 
@@ -675,6 +674,8 @@ async def begin_completion(svc, ctx, check_id):
 
 async def finalize_check(svc, ctx, check_id):
     async def go(con, c):
+        if c["phase"] != "review":
+            invalid("Сначала перейдите к просмотру результатов.")
         if not completion(c)["can_finalize"]:
             invalid(
                 "Сначала завершите просмотр всех результатов.", "completion_blocked"
