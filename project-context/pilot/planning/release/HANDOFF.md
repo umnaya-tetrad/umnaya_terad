@@ -1,50 +1,51 @@
 # Состояние и передача release
 
-19.11.2026, Asia/Yekaterinburg. **status: planned.** Подготовлено индивидуальное ТЗ; приложение этим действием не реализовано. Работа release начинается в 18:00. Документ не подтверждает наличие кодовых коммитов или результаты runtime-приемки.
+19.11.2026, Asia/Yekaterinburg. **status: in_progress.** B4 принят, задачи REL-01–REL-12 выполняются; отдельные результаты записываются по факту выполнения, а не авансом.
 
-| Поле | Текущее фактическое значение |
+## Ревизии
+
+| Поле | Фактическое значение |
 |---|---|
-| Плановая рабочая ветка | `work/release`, создание/фактическая ветка пока не подтверждены |
-| Интеграционная ветка | `integration/pilot-local`, фактический remote/baseline SHA еще не передан |
-| B0 contract commit | Не передан; общий пакет API 1.0.0 указан в shared, SHA зафиксировать при B4 |
-| B1 runtime baseline commit | Не передан; запуск приложения release не проверял |
-| B4 application/processing commits | Не переданы; не подменять HEAD документационного репозитория |
-| Source provenance | SmartNoteLanding `d62f5ecb8c1c53b1c97faf06530b8d84e691f88d`; pinned источник будущего bootstrap, не сборка пилота |
-| Candidate 20:15 / final 21:00 | Не созданы/не проверены |
-| Transport / live расходы | Runtime не запускался; будущая приемка явно fixture. Платных запросов этой задачей нет |
+| Рабочая ветка | `release_tasks`, создана от `main` `002d814de6bab3b946208e0155e54e65c035cb27` |
+| Интеграционная база (факт) | `002d814de6bab3b946208e0155e54e65c035cb27` (`origin/main`). Отдельная ветка `integration/pilot-local` не создавалась; её роль выполняет линейная история `release_tasks` поверх этой базы |
+| B0 contract commit | `1144c498b4aba1e4e4fe118abe7c3f6f1b940198` — shared v1, OpenAPI 1.0.0 |
+| B1 runtime baseline | `fe3d741dc92fd7d2d6c24500fd4e824775563e80` — интеграция processing с приложением |
+| B4 application commit | `92fd1e83ea17b2002b195ea0e555f8b75c8da899` (`work/application`), поверх — исправления `b4ad6ad8d5c43a2640a9b61fce01fbc74a3b8c42` и merge `002d814` |
+| B4 processing commit | `9d788953a298ff03b7e7903a6b3015cc83f3045d` (`processing`), влит как `0f8460df6465612a815810b77eb2f60a72376350` |
+| Source provenance | SmartNoteLanding `d62f5ecb8c1c53b1c97faf06530b8d84e691f88d`; повторный импорт не выполнялся |
+| Миграции | `app/migrations/001–015`; 001–007 побайтово совпадают с pinned source |
+| Candidate 20:15 / final 21:00 | Не созданы; заполняются в REL-12 по факту |
+| Transport | Приемка только `PILOT_TRANSPORT=fixture`; платных вызовов в release нет |
 
-## Готово
+## Приём B4 (REL-01)
 
-Специфицированы [REL-01–REL-12](TASKS.md), [REL-C01–REL-C28 и A01–A25](ACCEPTANCE.md). Это документы, а не выполненные задачи приложения. Основа — [shared v1](../shared/README.md); фактические офлайн-проверки общего пакета отдельно в [SHARED_REVIEW](../shared/SHARED_REVIEW.md), не записываются как runtime-прогон release.
+Сверено по фактическому репозиторию, а не по именам веток:
+
+| Проверка | Как выполнено | Результат |
+|---|---|---|
+| Наличие переданных commit | `git cat-file -t` для B0/B1/B4/source SHA | все объекты существуют в локальном репозитории |
+| Один contract v1 | `build_contract.py check_generated()` + сравнение `render_types()` с файлами | `app/pilot/contracts.py` и `src/pilot/api/generated.ts` побайтово совпадают с генератором; OpenAPI/схемы без drift |
+| Pinned source, SQL 001–007 | `git hash-object` по каждому файлу против manifest `docs/pilot/BOOTSTRAP.md` | 7/7 совпадают |
+| Pinned source, прочий импорт | сравнение 39 строк manifest | 23 blob без изменений, 12 изменены осознанно при адаптации, 4 исключены (`app/tests/conftest.py`, `app/tests/test_security.py`, `src/lib/useModal.ts`, `src/styles.css`) — причины уже записаны в BOOTSTRAP |
+| Владельцы путей | чтение diff и `MODULE_BOUNDARIES` | общие entrypoint/config, `infra/`, `scripts/pilot/`, `docs/pilot/`, `compose.yaml`, `Dockerfile`, `app/Dockerfile`, seed приняты release; `app/config.py`, `domain/`, `processing/`, `analytics/`, `events/`, SQL остаются processing |
+| Секреты в diff | `git grep` по шаблонам ключей, проверка `.env*` | отслеживаемых ключей/паролей нет; `.env.example` содержит пустые значения |
+| Shared offline gate | `python project-context/pilot/planning/shared/check_shared.py` | PASS, 73 теста: frozen checker, 158 UX-строк, OpenAPI 34 операции, 44 HTTP fixtures, 25 lifecycle-снимков, 4 пары analytics |
+| Структура документации | `python scripts/check_context.py` | PASS, 471 файл, 975 локальных ссылок |
+| Frontend unit | `npm ci && npm test` | PASS, 6 файлов / 26 тестов |
+| Frontend build | `npm run build` | PASS; предупреждение Vite о чанке 542 КБ не является ошибкой |
+| Application API-тесты | `pytest --confcutdir tests/pilot/application tests/pilot/application -q` | PASS, 24 теста |
+| Diff hygiene | `git diff --check` | PASS |
+
+Не проверено этим приёмом: Compose/PostgreSQL runtime, браузерные smoke-прогоны, платный Polza, внешний сервер. Они относятся к REL-02 и далее.
 
 ## Еще не готово
 
-Все REL-01–REL-12 planned; все REL-C01–REL-C28 not_run. Не получены исполняемый B4, миграционный upgrade, аккаунты/сессия, полный analytics smoke с commit, локальная сборка и реальные мобильные результаты. Это ожидаемые входы реализации, не доказательство блокировки после начала работы.
-
-## Что принять в 18:00
-
-Application: реальный branch/commit, BOOTSTRAP manifest, B1 smoke, main/router/Compose/packageconfigs/infra/scripts/docs/account seed, UI/CRUD и известные дефекты. Processing: модели/guards/миграции/runner, worker/queue/funds/events/pause/reconcile facade, fund_wallet initialize/topup и проверка профиля, полные checker+analytics, сигнатуры Services и результаты API smoke begin→finalize→summary, duplicate/failed/retry/state-change/refresh. Проверить включенные коммиты, затем однократно принять владение B4; повторный импорт source не выполнять.
-
-Результат передачи заполнить: `application_commit`, `processing_commit`, `contract_commit`, `baseline_commit`, `integration_commit`, принятые пути, последовательность миграций, транспорт, команды/результаты. До получения оставить «не передан», SHA не угадывать.
+REL-02–REL-12 выполняются по порядку. Все REL-C01–REL-C28 получают статус по факту; до выполнения они остаются not_run. Реальная модель, настоящие Android/iPhone, внешнее развёртывание и школьная апробация — отдельные факты и в локальный результат не входят.
 
 ## Запуск и данные
 
-Будущие команды в [ACCEPTANCE](ACCEPTANCE.md) должны быть созданы/проверены при реализации; release еще их не выполнял. Понадобятся Docker Compose, frontend/backend dev dependencies, private local env, общая БД и приватный photo volume. `PILOT_TRANSPORT=fixture` задается явно, frontend `VITE_PILOT_TRANSPORT` из того же source; при polza нужен реальный ключ и отдельная авторизация платного smoke. Значения ключей/паролей в HANDOFF не записывать.
+Точные команды — в [BOOTSTRAP](../../../../docs/pilot/BOOTSTRAP.md); `docs/pilot/RELEASE_RUNBOOK.md` создаётся в REL-11. Имена локального окружения без значений: `POSTGRES_PASSWORD`, `VISITOR_COOKIE_SECRET`, `ALLOWED_BROWSER_ORIGINS`, `PILOT_TRANSPORT`, `PILOT_FIXTURE_TEACHER_1_LOGIN/PASSWORD`, `PILOT_FIXTURE_TEACHER_2_LOGIN/PASSWORD`, `PILOT_FIXTURE_STAFF_LOGIN/PASSWORD`. Значения хранятся вне Git.
 
-Имена local seed env без значений: `PILOT_FIXTURE_TEACHER_1_LOGIN`, `PILOT_FIXTURE_TEACHER_1_PASSWORD`, `PILOT_FIXTURE_TEACHER_2_LOGIN`, `PILOT_FIXTURE_TEACHER_2_PASSWORD`, `PILOT_FIXTURE_STAFF_LOGIN`, `PILOT_FIXTURE_STAFF_PASSWORD`. Defaults отсутствуют, повтор seed не сбрасывает пароль молча; поздний reset — отдельная привилегированная CLI. Основные Settings в `app/config.py` принадлежат processing и не становятся sharedconfig release на B4.
+## Блокеры
 
-Accounts первоначально дает application до B1; release после B4 принимает seed и reset CLI. Итоговые команды startup/migrate/accounts/pause/reconcile/funds/backup/restore и зависимости записать в `docs/pilot/RELEASE_RUNBOOK.md`, `RUNBOOK.md` оставить вход-ссылкой. Restart без удаления volumes; unknown хранит резерв до безопасной сверки. Политика env/профиля — [LOCAL_ENV](../shared/LOCAL_ENV.md): реальные средства не seed400, баланс/резерв и evidence подтверждаются отдельно, fixture wallet изолирован.
-
-## Выполненные проверки release
-
-Runtime, Compose, PostgreSQL, браузер, настоящие Android/iPhone, модель, server deploy — **не выполнялись** при подготовке ТЗ. После реализации здесь записать каждую команду, cwd, commit, fixture/режим, actual результат и ограничения. Документационные проверки подготовки ТЗ записывать отдельно после их фактического выполнения; их результат не переводит runtime-кейсы в pass.
-
-Проверка подготовки ТЗ 19.11.2026: `python project-context/pilot/planning/shared/check_shared.py` через подготовленное dev-окружение Python 3.12 — PASS, 73 офлайн-теста; 34 HTTP-операции, 44 HTTP fixtures, 25 lifecycle snapshots, четыре пары analytics. `git diff --check` и `git diff --cached --check` — PASS. Это сверка спецификации, без live LLM/сервера/приложения. Полный `check_context.py` повторяется координатором после появления параллельных файлов и итогового TASK_REVIEW; промежуточно фиксировал еще отсутствующие создаваемые документы, а не runtime-дефект.
-
-## Блокеры и исправления
-
-Активные runtime-блокеры пока не установлены, поскольку реализация не начата. При обнаружении: `BLK-release-NN / severity / contract+A-ID / commit / fixture+команда / actual / expected / next action`. Известный контракт интегратор исправляет в любом модуле с fix commit и регрессией без ожидания автора. Новый продукт/несовместимое API передается координатору, молчание не согласие.
-
-## Финальная передача
-
-Заполнить к 21:00: candidate/final commit, included/fix commits, проверенные миграции/volumes/accounts, результаты REL-C01–REL-C28 и одной A01–A25 матрицы, report/runbook paths, оставшиеся failed/not_run и шаг восстановления. Реальная модель/расходы, настоящие устройства, внешнее развертывание и школьная апробация — отдельные факты. Фраза «локальная сборка готова» допустима только в пределах явно выполненной приемки.
+Активных блокеров нет. Формат записи при появлении: `BLK-release-NN / severity / contract+A-ID / commit / fixture+команда / actual / expected / next action`.
