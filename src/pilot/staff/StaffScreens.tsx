@@ -5,13 +5,14 @@ import type {
 } from '../api/contract'
 import { errorText } from '../api/errors'
 import { copy } from '../copy'
-import { JobStatus } from '../components/JobStatus'
+import { JobStatus, summaryStatus } from '../components/JobStatus'
 import { PhotoThumbnail } from '../components/PhotoStrip'
 import { PhotoViewer } from '../components/PhotoViewer'
 import { MathText } from '../components/MathText'
 import { TaskCard } from '../components/TaskCard'
 
 const date = new Intl.DateTimeFormat('ru-RU', { dateStyle: 'medium', timeStyle: 'short' })
+const number = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 4 })
 
 /** Third-person review wording: the staff member never reviews on the teacher's behalf. */
 export function reviewLabel(state: string | null | undefined) {
@@ -105,7 +106,7 @@ export function StaffChecksScreen({ api, open }: {
   </section>
 }
 
-function HistoryRuns({ runs }: { runs: HistoryRun[] }) {
+function HistoryRuns({ runs, photoCount }: { runs: HistoryRun[]; photoCount: number }) {
   const [openTask, setOpenTask] = useState<string>()
   if (!runs.length) return <p className="help">{copy('common.unavailable')}</p>
   return <div className="stack">
@@ -123,15 +124,56 @@ function HistoryRuns({ runs }: { runs: HistoryRun[] }) {
           <button onClick={() => setOpenTask(value => value === key ? undefined : key)}>
             {openTask === key ? copy('common.close') : copy('result.title')}
           </button>
-          {openTask === key && <TaskCard value={shown} photoCount={shown.evidence.length ? shown.evidence.length : 1} />}
+          {openTask === key && <TaskCard value={shown} photoCount={photoCount} />}
           {stored?.review?.comment && <p className="help"><MathText text={stored.review.comment} /></p>}
         </div>
       })}
       {!!run.deleted_task_ids.length && <p className="help">
-        {copy('delete.task')}: {run.deleted_task_ids.length}
+        {copy('staff.deleted_tasks', { count: run.deleted_task_ids.length })}
       </p>}
     </div>)}
   </div>
+}
+
+export function StaffSummaryHistory({ value }: { value: SummaryHistory }) {
+  return <section className="sheet stack" aria-label={copy('summary.title')}>
+    <h2>{copy('summary.title')}</h2>
+    {value.items.map(item => {
+      const { summary } = item
+      const result = summary.result
+      const status = summaryStatus(summary)
+      const basis = result ? result.notebooks.with_errors + result.notebooks.without_errors : 0
+      return <article className="stack" key={`${summary.job_id}:${item.created_at}`}>
+        <p className="phase">{copy('summary.created', { date: date.format(new Date(item.created_at)) })}</p>
+        {status && <p className="notice">{copy(status)}</p>}
+        {summary.stale && <p className="notice">{copy('summary.stale')}</p>}
+        {result && <>
+          <ul className="plain metrics">
+            <li>{copy('summary.total', { count: result.notebooks.total })}</li>
+            <li>{copy('summary.with_errors', { count: result.notebooks.with_errors })}</li>
+            <li>{copy('summary.without_errors', { count: result.notebooks.without_errors })}</li>
+            <li>{copy('summary.basis', { count: basis })}</li>
+            <li>{basis > 0 && result.average_errors_per_notebook !== null
+              ? copy('summary.average', { value: number.format(result.average_errors_per_notebook) })
+              : copy('summary.no_average')}</li>
+            <li>{copy('summary.partial', { count: result.notebooks.partial })}</li>
+            <li>{copy('summary.empty', { count: result.notebooks.empty })}</li>
+            <li>{copy('summary.incomplete', { count: result.incomplete_tasks })}</li>
+            <li>{copy('summary.disputed', { count: result.disputed_tasks })}</li>
+            <li>{copy('result.no_result')} · {result.unassessed_tasks}</li>
+          </ul>
+          {!!result.top_errors.length && <div className="stack">
+            <h3>{copy('summary.top')}</h3>
+            <p className="help">{copy('summary.top_basis')}</p>
+            <ol className="stack">{result.top_errors.slice(0, 3).map((group, index) => <li key={index}>
+              <strong>{group.rule}</strong><p>{copy('summary.frequency', { count: group.task_ids.length })}</p>
+            </li>)}</ol>
+          </div>}
+        </>}
+      </article>
+    })}
+    {!value.items.length && <p className="help">{copy('summary.not_started')}</p>}
+  </section>
 }
 
 export function StaffCheckScreen({ api, id, back }: { api: PilotApi; id: string; back: () => void }) {
@@ -219,20 +261,10 @@ export function StaffCheckScreen({ api, id, back }: { api: PilotApi; id: string;
       {history.versions.map((version, index) => <div className="stack" key={version.input.id}>
         <p className="phase">{copy('check.notebook', { number: index + 1 })}</p>
         <Photos api={api} photos={version.input.photos} open={value => setViewer(value)} />
-        <HistoryRuns runs={version.runs} />
+        <HistoryRuns runs={version.runs} photoCount={version.input.photos.length} />
       </div>)}
     </div>}
-    {summaryHistory && <div className="sheet stack">
-      <h2>{copy('summary.title')}</h2>
-      {summaryHistory.items.map(item => <div className="stack" key={`${item.summary.job_id}:${item.created_at}`}>
-        <p className="phase">{date.format(new Date(item.created_at))}</p>
-        <p className="help">{copy('summary.basis')}</p>
-        {item.summary.result && <p className="phase">
-          {copy('summary.with_errors')}: {item.summary.result.notebooks.with_errors} · {copy('summary.without_errors')}: {item.summary.result.notebooks.without_errors}
-        </p>}
-      </div>)}
-      {!summaryHistory.items.length && <p className="help">{copy('summary.not_started')}</p>}
-    </div>}
+    {summaryHistory && <StaffSummaryHistory value={summaryHistory} />}
     {viewer && <PhotoViewer api={api} {...viewer} close={() => setViewer(undefined)} />}
   </section>
 }

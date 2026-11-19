@@ -155,12 +155,16 @@
     "staff.teacher_login": "Логин учителя",
     "staff.find": "Найти проверки",
     "staff.readonly": "Только просмотр. Отзывы учителя менять нельзя.",
+    "staff.deleted_tasks": "Удаленных задач: {count}",
     "staff.review_missing": "Учитель еще не оценил проверку ИИ",
     "staff.review_confirmed": "Учитель согласился с проверкой ИИ",
     "staff.review_system_error": "Учитель отметил ошибку в проверке ИИ",
     "common.fixture_mode": "Учебный режим. Проверка имитируется."
   },
   "placeholders": {
+    "staff.deleted_tasks": {
+      "count": "Число удаленных задач исторической попытки"
+    },
     "check.notebook": {
       "number": "Условный номер тетради, положительное целое"
     },
