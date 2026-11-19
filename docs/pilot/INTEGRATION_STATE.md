@@ -130,3 +130,18 @@
 | Истёкший lease и fencing | `-k rel_c16` | PASS: помеченная dispatched попытка переходит в `unknown`, резерв удерживается, поздний ответ старого epoch не публикуется, автоматического resend нет, позднее evidence остаётся для сверки |
 
 Полный набор `pytest tests/integration/pilot -q` — 27 тестов, PASS (109,4 с).
+
+## Проверено в приёмке release (REL-08)
+
+| Проверка | Команда | Факт |
+| --- | --- | --- |
+| Два этапа финала | `pytest tests/integration/pilot/test_analytics_finalization.py -k rel_c19_two` | PASS: `begin-completion` даёт `review` без AnalyticsJob, прямой finalize — 409, редактирование состава разрешено, повтор finalize возвращает исходный Job, ровно один snapshot, пустая проверка не финализируется |
+| Ожидание обработки | `-k rel_c19_pending` | PASS: при Job в `queued` `pending_jobs ≥ 1`, finalize 409 без AnalyticsJob |
+| Закрытый состав | `-k rel_c20` | PASS: после финала новые тетради/комплекты и удаление тетради — 409, удаление всей проверки доступно, изменение отзыва после финала разрешено и делает сводку `stale` |
+| GET не запускает | `-k rel_c21_get_summary` | PASS: три чтения подряд не меняют число Job |
+| Retry того же snapshot | `-k rel_c21_failed` | PASS: `failed` + `stale=false` + `can_retry=true`; retry создаёт новый Job на том же snapshot |
+| Stale/refresh | `-k rel_c22_review` | PASS: смена состояния делает сводку `stale`, смена только комментария — нет; refresh создаёт новый snapshot; teacher не видит историю запусков (403) |
+| Спорное отдельно | `-k rel_c22_disputed` | PASS: `disputed_tasks ≥ 1`, в топ входят только подтверждённые первые ошибки, знаменатель и `null` при нуле проверены |
+| Числовой/смысловой oracle | `-k rel_c23` | PASS: все четыре пары (`oracle` 4/1/1/1/1 и avg 0,5, `zero-denominator` avg `null`, `mixed`, `synonyms` avg 2) проходят настоящий `validate_pair`; неверный счётчик и чужой `task_id` отклоняются, не чинятся молча |
+
+Полный набор `pytest tests/integration/pilot -q` — 39 тестов, PASS (154,1 с).

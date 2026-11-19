@@ -184,3 +184,24 @@
 | `ruff check tests/integration/pilot` | PASS |
 
 Не проверено: реальный внешний провайдер, поздний ответ настоящей модели и восстановление на внешнем сервере.
+
+## REL-08. Финал и полный lifecycle аналитики
+
+**Статус: выполнено. Runtime проверен в изолированном Compose-проекте.**
+
+Сделано:
+
+- `tests/integration/pilot/test_analytics_finalization.py` покрывает REL-C19 (два этапа, blocker-матрица, пустая проверка, ожидание обработки), REL-C20 (закрытый состав после финала, редактируемость отзыва, удаление проверки), REL-C21 (GET не запускает Job, retry того же snapshot), REL-C22 (stale при смене состояния, comment-only без stale, refresh нового snapshot, отсутствие staff-истории у учителя, спорное вне подтверждённой математики) и REL-C23 (четыре контрактные пары через настоящий worker-валидатор, отказ на неверных числах и чужом `task_id`).
+- Валидатор `app/pilot/analytics/validation.py` вызывается внутри backend-контейнера на закреплённых fixtures, поэтому проверяются фактические схемы, а не копия в тесте.
+- Найдены и исправлены дефекты самих тестов: обращение к `.body` у мутаций, `check_revision` вместо `revision`, отсутствующий `check_id` в `pilot_task_analyses` (он есть только в `pilot_jobs`).
+- Обновлены [INTEGRATION_STATE](../../../../docs/pilot/INTEGRATION_STATE.md) и этот отчёт.
+
+Проверки:
+
+| Команда | Результат |
+|---|---|
+| `pytest tests/integration/pilot/test_analytics_finalization.py -q` | PASS, 12 тестов |
+| `pytest tests/integration/pilot -q` | PASS, 39 тестов, 154,1 с |
+| `ruff check tests/integration/pilot` | PASS |
+
+Не проверено: живой платный запрос аналитики и семантика группировки правил реальной моделью — это отдельный разрешённый smoke, уже выполненный processing-направлением, но не release-runtime.
