@@ -1,6 +1,6 @@
 # Runbook локального выпуска пилота
 
-19.11.2026. Операторская инструкция для локальной сборки и восстановления. Внешний сервер, HTTPS и школьная выдача доступа здесь **не** описаны: это отдельный выпуск. Правила конфигурации — [LOCAL_ENV](../../project-context/pilot/planning/shared/LOCAL_ENV.md), проверенные команды — [BOOTSTRAP](BOOTSTRAP.md).
+20.11.2026. Операторская инструкция для локальной сборки и восстановления. Внешний сервер, HTTPS и школьная выдача доступа здесь **не** описаны: это отдельный выпуск. Правила конфигурации — [LOCAL_ENV](../../project-context/pilot/planning/shared/LOCAL_ENV.md), проверенные команды — [BOOTSTRAP](BOOTSTRAP.md).
 
 Все команды выполняются из корня репозитория `umnaya_terad`. Файл с реквизитами лежит **вне Git**, например `~/.config/smartnote/pilot.env` (права `600`), и передаётся Compose через `--env-file`. Значения не печатать и не коммитить.
 
@@ -18,8 +18,15 @@
 | `PILOT_OPERATOR_REF` | Кто выполняет привилегированную операцию (аудит) |
 | `PILOT_ENV_FILE` | Путь к локальному env-файлу для скриптов `scripts/pilot/*` |
 | `PILOT_BACKUP_PROJECT` | Проект, который бэкапит `backup_local.py` (по умолчанию `smartnote-pilot`) |
+| `PILOT_COMPOSE_OVERRIDES` | Необязательные абсолютные пути к Compose override-файлам для backup/restore, разделенные `os.pathsep` (`:` на Linux, `;` на Windows). Те же файлы должны использоваться при запуске исходного проекта |
 
 Обычный режим — `polza`; без ключа startup отказывает и не подменяется fixture. Учебная приёмка задаёт `fixture` явно и видит метку «Учебный режим».
+
+Для `run.sh` несекретные параметры задаются через окружение: `MODE`, `PROJECT`, `PORT`, `LOGIN` (поддержаны также `PILOT_TRANSPORT`, `COMPOSE_PROJECT_NAME`, `PILOT_FRONTEND_PORT` и имена `PILOT_FIXTURE_*`). Например, `MODE=fixture PROJECT=smartnote-local-test PORT=5273 ./run.sh`. Без явного режима остается `polza`.
+
+Пароли и `POLZA_API_KEY` задаются только в приватном `$PILOT_ENV_FILE` или окружении процесса. Не вписывать их в отслеживаемый `run.sh` или в аргументы команд. Прежние имена `PASSWORD`, `TEACHER2_PASSWORD`, `STAFF_PASSWORD`, `POLZA_KEY` поддерживаются как переменные окружения. При отсутствии паролей первый запуск генерирует их и сохраняет один раз; существующие логины и секреты читаются из приватного файла. Launcher передает пароли в `docker compose exec` через `-e ИМЯ`, без значений в argv хостового процесса.
+
+Обычный `./run.sh` проверяет вход, но при несовпадении пароля отказывает без сброса. Для намеренной смены оператор сначала обновляет приватную конфигурацию, затем запускает `./run.sh reset`: команда использует trusted `manage_accounts`, сохраняет ID, роли и материалы, закрывает сессии только реально сброшенных аккаунтов. Остановка, status, restart, budget и pause доступны прежними командами; справка — `./run.sh help`.
 
 ## Запуск и проверка
 
@@ -73,24 +80,27 @@ python3 scripts/pilot/reconcile_attempt.py --attempt-id <uuid> --outcome settled
 Бэкап возможен только при остановленных писателях, иначе скрипт откажется: несогласованный дамп хуже отказа. Каталог должен быть вне репозитория и приватным.
 
 ```sh
-docker compose --env-file "$PILOT_ENV_FILE" stop backend worker
+docker compose -p smartnote-pilot --env-file "$PILOT_ENV_FILE" stop backend worker
 python3 scripts/pilot/backup_local.py --destination ~/pilot-backups --project smartnote-pilot
-docker compose --env-file "$PILOT_ENV_FILE" start backend worker
+docker compose -p smartnote-pilot --env-file "$PILOT_ENV_FILE" start backend worker
 ```
 
 Результат: каталог `pilot-backup-<UTC>/` с `database.dump` (`pg_dump -Fc`), `photos.tar.gz` и `manifest.json`. Права каталога `700`. Бэкапы не коммитить и не хранить рядом с `.env` в Git.
 
+`--project` выбирает один проект для всех операций (проверка писателей, дамп, фото, метаданные), с явным `docker compose -p`; чужой `COMPOSE_PROJECT_NAME` его не переопределяет. Без флага используется `PILOT_BACKUP_PROJECT`, затем `smartnote-pilot`. Остановить писателей нужно именно выбранного проекта. Ошибки команд выводятся без сырого stderr, который может содержать секреты конфигурации.
+
 ## Restore
 
-Восстановление идёт **только в отдельный проект** `smartnote-restore-*` с новыми volumes; поверх рабочей базы скрипт откажет.
+Восстановление идет **только в новый отдельный проект** `smartnote-restore-*` с новыми volumes. До первого `up/cp/pg_restore` скрипт проверяет Compose-конфигурацию и Docker inventory: любые контейнеры проекта, включая остановленные, его volumes или сеть означают отказ. Volumes, оставшиеся после `down`, и совпадение имени volume без Compose-метки также защищены. Ошибка проверки Docker означает отказ, а не пустую цель. Исходный проект и его писатели не затрагиваются.
 
 ```sh
-docker compose -p smartnote-restore-test -f compose.yaml --env-file "$PILOT_ENV_FILE" down -v
 python3 scripts/pilot/restore_local.py --bundle ~/pilot-backups/pilot-backup-<UTC> \
-  --project smartnote-restore-test
+  --project smartnote-restore-rehearsal-20261120
 ```
 
-Скрипт: поднимает `postgres`, копирует дамп, делает `pg_restore --clean --if-exists`, прогоняет migrate (только сверка checksums), распаковывает фото в приватный volume, поднимает `postgres/backend/worker` и печатает число проверок, unknown-попыток и активных резервов. Frontend намеренно не стартует: второй экземпляр потребовал бы ещё один порт, а факт восстановления проверяется по базе, файлам и worker.
+Выбирать ранее не использованное имя; при отказе не удалять существующую цель ради повторения. Обхода защиты и destructive override нет. Пользовательские/shared/external volumes, включая устаревший `--target-photos-volume`, отклоняются. Тестовый override может менять image/окружение, но volumes должны оставаться в пространстве нового проекта.
+
+Скрипт поднимает `postgres`, копирует дамп, делает `pg_restore --exit-on-error --clean --if-exists`, прогоняет migrate (сверка checksums), распаковывает фото в приватный volume и поднимает `postgres/backend/worker` с `--wait`. Код каждой операции и итоговые счетчики проверяются; при ошибке выполнение прекращается с ненулевым exit, JSON успеха не печатается. Частично созданная цель остается для диагностики; новый прогон требует нового имени. Frontend не стартует: второй экземпляр потребовал бы еще один порт, а факт восстановления проверяется по базе, файлам и worker.
 
 Обязательные проверки после restore: `pilot_migrations` = 15, пользователи = 3, число `pilot_checks` не меньше источника, каждый `pilot_photo_assets.normalized_path` существует в volume, `pilot_attempts.state='unknown'` остаётся `unknown`, активные резервы совпадают с источником. Исходный проект не должен измениться.
 

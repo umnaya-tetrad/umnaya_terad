@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 # Локальный запуск пилота «Умная тетрадь».
 #
-# Всё, что обычно нужно менять, — в блоке НАСТРОЙКИ ниже. Остальное трогать не нужно.
-# Скрипт не хранит секретов в репозитории: пароли и ключ попадают в локальный файл
-# окружения вне Git (~/.config/smartnote/pilot.env, права 600).
+# Секреты задавайте в приватном env-файле вне Git или окружении процесса.
+# Не вписывайте пароли и ключи в этот файл.
 #
 # Быстрый старт:
 #   ./run.sh            # поднять стек и проверить вход
@@ -13,37 +12,23 @@
 
 set -euo pipefail
 
-# ============================== НАСТРОЙКИ ==============================
-# Режим: fixture — учебный (без обращений к модели, бесплатно)
-#        polza   — реальная модель Gemini через Polza (тратит деньги)
-MODE=polza
-
-# Логин и пароль учителя, под которым вы входите.
-# Пустой пароль = «взять сохранённый, а если его нет — сгенерировать и запомнить».
-LOGIN=teacher1
-PASSWORD=
-
-# Необязательные дополнительные аккаунты (нужны, чтобы проверить изоляцию
-# двух учителей и закрытый раздел команды). Тоже можно оставить пустыми.
-TEACHER2_LOGIN=teacher2
-TEACHER2_PASSWORD=
-STAFF_LOGIN=staff
-STAFF_PASSWORD=
-
-# Ключ Polza. Нужен только при MODE=polza. Не коммитить и не передавать в VITE_*.
-POLZA_KEY=
-
-# Модель и маршрут Polza (менять обычно не требуется).
-POLZA_MODEL=google/gemini-3.8-flash
-POLZA_PROVIDER=google-ai-studio/flex
-
-# Порт интерфейса на 127.0.0.1 и имя Compose-проекта.
-PORT=5173
-PROJECT=smartnote-pilot
-
-# Файл окружения. Лежит вне репозитория: внутри .env отклоняется проверкой контекста.
+# Несекретные настройки можно переопределить через окружение.
+# fixture — бесплатный имитатор; polza — платные запросы Gemini через Polza.
+MODE="${MODE:-${PILOT_TRANSPORT:-polza}}"
+LOGIN="${LOGIN:-${PILOT_FIXTURE_TEACHER_1_LOGIN:-}}"
+TEACHER2_LOGIN="${TEACHER2_LOGIN:-${PILOT_FIXTURE_TEACHER_2_LOGIN:-}}"
+STAFF_LOGIN="${STAFF_LOGIN:-${PILOT_FIXTURE_STAFF_LOGIN:-}}"
+POLZA_MODEL="${POLZA_MODEL:-google/gemini-3.8-flash}"
+POLZA_PROVIDER="${POLZA_PROVIDER:-google-ai-studio/flex}"
+PORT="${PORT:-${PILOT_FRONTEND_PORT:-5173}}"
+PROJECT="${PROJECT:-${COMPOSE_PROJECT_NAME:-smartnote-pilot}}"
 ENV_FILE="${PILOT_ENV_FILE:-$HOME/.config/smartnote/pilot.env}"
-# ======================================================================
+
+# Совместимые имена секретов читаются только из окружения или приватного файла.
+PASSWORD="${PASSWORD:-${PILOT_FIXTURE_TEACHER_1_PASSWORD:-}}"
+TEACHER2_PASSWORD="${TEACHER2_PASSWORD:-${PILOT_FIXTURE_TEACHER_2_PASSWORD:-}}"
+STAFF_PASSWORD="${STAFF_PASSWORD:-${PILOT_FIXTURE_STAFF_PASSWORD:-}}"
+POLZA_KEY="${POLZA_KEY:-${POLZA_API_KEY:-}}"
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COMPOSE_FILE="$ROOT/compose.yaml"
@@ -71,13 +56,13 @@ random_string() {
   elif command -v python3 >/dev/null 2>&1; then
     raw="$(python3 -c 'import secrets,sys;print(secrets.token_urlsafe(int(sys.argv[1])))' "$length" 2>/dev/null || true)"
   fi
-  [ -n "$raw" ] || die "нет openssl/python3 для генерации пароля — задайте пароль в блоке НАСТРОЙКИ"
+  [ -n "$raw" ] || die "нет openssl/python3 для генерации пароля — задайте пароль в приватном env-файле"
   raw="$(printf '%s' "$raw" | LC_ALL=C tr -dc 'A-Za-z0-9' || true)"
   [ ${#raw} -ge "$length" ] || die "не удалось сгенерировать пароль нужной длины"
   printf '%s' "${raw:0:$length}"
 }
 
-# Секрет: приоритет — значение из блока НАСТРОЙКИ, затем сохранённое, затем новый.
+# Секрет: приоритет — окружение процесса, затем сохранённое, затем новый.
 # Результат печатается; ничего не логируется. length=0 означает «не генерировать».
 secret() {
   local chosen="$1" key="$2" length="${3:-24}"
@@ -111,11 +96,18 @@ esac
 require_polza_key() {
   [ "$MODE" = "polza" ] || return 0
   [ -n "$POLZA_KEY" ] || [ -n "$(stored POLZA_API_KEY)" ] || die \
-    "MODE=polza требует POLZA_KEY. Впишите ключ в блок НАСТРОЙКИ или в $ENV_FILE"
+    "MODE=polza требует POLZA_KEY. задайте POLZA_API_KEY в приватном $ENV_FILE или окружении процесса"
 }
 
-POSTGRES_PASSWORD="$(secret '' POSTGRES_PASSWORD 32)"
-VISITOR_COOKIE_SECRET="$(secret '' VISITOR_COOKIE_SECRET 48)"
+LOGIN="${LOGIN:-$(stored PILOT_FIXTURE_TEACHER_1_LOGIN)}"
+LOGIN="${LOGIN:-teacher1}"
+TEACHER2_LOGIN="${TEACHER2_LOGIN:-$(stored PILOT_FIXTURE_TEACHER_2_LOGIN)}"
+TEACHER2_LOGIN="${TEACHER2_LOGIN:-teacher2}"
+STAFF_LOGIN="${STAFF_LOGIN:-$(stored PILOT_FIXTURE_STAFF_LOGIN)}"
+STAFF_LOGIN="${STAFF_LOGIN:-staff}"
+
+POSTGRES_PASSWORD="$(secret "${POSTGRES_PASSWORD:-}" POSTGRES_PASSWORD 32)"
+VISITOR_COOKIE_SECRET="$(secret "${VISITOR_COOKIE_SECRET:-}" VISITOR_COOKIE_SECRET 48)"
 POLZA_KEY="$(secret "$POLZA_KEY" POLZA_API_KEY 0)"
 PASSWORD="$(secret "$PASSWORD" PILOT_FIXTURE_TEACHER_1_PASSWORD 20)"
 TEACHER2_PASSWORD="$(secret "$TEACHER2_PASSWORD" PILOT_FIXTURE_TEACHER_2_PASSWORD 20)"
@@ -191,7 +183,8 @@ backend_python() {
 # Вход через настоящий HTTP. Возвращает 0 при 200, 1 при 401, 2 при прочих сбоях.
 login_status() {
   local login="$1" password="$2"
-  compose exec -T -e LOGIN="$login" -e PASSWORD="$password" -e ORIGIN="http://127.0.0.1:$PORT" \
+  LOGIN="$login" PASSWORD="$password" ORIGIN="http://127.0.0.1:$PORT" \
+    compose exec -T -e LOGIN -e PASSWORD -e ORIGIN \
     backend python -c '
 import json, os, sys
 from urllib.error import HTTPError
@@ -216,18 +209,19 @@ except Exception:
 
 reset_password() {
   local login="$1" password="$2"
-  compose exec -T -e PILOT_ACCOUNT_PASSWORD="$password" backend \
+  PILOT_ACCOUNT_PASSWORD="$password" compose exec -T -e PILOT_ACCOUNT_PASSWORD backend \
     python -m pilot.operations.manage_accounts --operator-ref run.sh reset --login "$login" \
     >/dev/null
 }
 
 # Аккаунт мог быть создан раньше с другим паролем: seed в этом случае ничего не меняет.
 ensure_login() {
-  local login="$1" password="$2" label="$3" status=0
+  local login="$1" password="$2" label="$3" allow_reset="${4:-false}" status=0
   login_status "$login" "$password" || status=$?
   case "$status" in
     0) return 0 ;;
-    1) note "  $label: пароль отличается от сохранённого — обновляю"
+    1) [ "$allow_reset" = true ] || die "$label: сохраненный пароль не подходит. Обычный запуск его не меняет; для явного сброса: ./run.sh reset"
+       note "  $label: выполняю явный сброс пароля"
        reset_password "$login" "$password" || die "не удалось обновить пароль $login"
        login_status "$login" "$password" || die "после сброса вход $login не работает" ;;
     *) die "backend не отвечает на вход $login. Смотрите: ./run.sh logs backend" ;;
@@ -325,17 +319,16 @@ cmd_restart() {
   write_env
   compose up -d --force-recreate
   wait_health
-  note "Перезапущено с текущими настройками из блока НАСТРОЙКИ."
+  note "Перезапущено с настройками окружения и приватного env-файла."
 }
 
 cmd_reset() {
   [ -f "$ENV_FILE" ] || die "ещё нет $ENV_FILE — выполните ./run.sh"
-  require_polza_key
   write_env
-  ensure_login "$LOGIN" "$PASSWORD" "учитель"
-  ensure_login "$TEACHER2_LOGIN" "$TEACHER2_PASSWORD" "второй учитель"
-  ensure_login "$STAFF_LOGIN" "$STAFF_PASSWORD" "сотрудник"
-  note "Пароли в базе совпадают с блоком НАСТРОЙКИ. Старые сессии сброшенных аккаунтов закрыты."
+  ensure_login "$LOGIN" "$PASSWORD" "учитель" true
+  ensure_login "$TEACHER2_LOGIN" "$TEACHER2_PASSWORD" "второй учитель" true
+  ensure_login "$STAFF_LOGIN" "$STAFF_PASSWORD" "сотрудник" true
+  note "Пароли в базе совпадают с приватной конфигурацией. Старые сессии сброшенных аккаунтов закрыты."
 }
 
 cmd_budget() {
@@ -375,11 +368,11 @@ cmd_help() {
 
   ./run.sh                собрать, применить миграции, поднять и проверить вход
   ./run.sh up             то же самое (явно)
-  ./run.sh restart        пересоздать контейнеры с новыми настройками из блока НАСТРОЙКИ
+  ./run.sh restart        пересоздать контейнеры с настройками окружения и приватного env-файла
   ./run.sh stop           остановить, данные сохранить
   ./run.sh down           удалить контейнеры, данные сохранить
   ./run.sh down --wipe    удалить контейнеры и volumes (база, фото) — с подтверждением
-  ./run.sh reset          привести пароли аккаунтов к значениям из блока НАСТРОЙКИ
+  ./run.sh reset          явно сбросить несовпадающие пароли по приватной конфигурации
   ./run.sh status         состояние сервисов и расход
   ./run.sh logs [сервис]  логи (backend, worker, frontend, postgres)
   ./run.sh budget         общий лимит и расход модели
@@ -388,9 +381,12 @@ cmd_help() {
   ./run.sh doctor         окружение, режим, наличие ключа
   ./run.sh help           эта справка
 
-Что менять: блок НАСТРОЙКИ в самом начале файла (MODE, LOGIN, PASSWORD, POLZA_KEY, PORT).
-Пароли и ключ сохраняются в локальный файл вне Git; в репозиторий они не попадают.
-Пустой PASSWORD означает «использовать сохранённый или сгенерировать один раз».
+Несекретные настройки: MODE, LOGIN, PORT, PROJECT через окружение процесса.
+Пароли PILOT_FIXTURE_*_PASSWORD и ключ POLZA_API_KEY: приватный env-файл вне Git
+(PILOT_ENV_FILE, по умолчанию ~/.config/smartnote/pilot.env, права 600) или окружение.
+Совместимые PASSWORD/TEACHER2_PASSWORD/STAFF_PASSWORD/POLZA_KEY также читаются из окружения.
+Не передавайте секреты в аргументах команд и не редактируйте run.sh ради секретов.
+Если пароля нет, он генерируется один раз. Обычный startup не сбрасывает пароль в базе.
 EOF
 }
 
