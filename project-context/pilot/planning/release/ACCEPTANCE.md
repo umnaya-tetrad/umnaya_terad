@@ -1,6 +1,6 @@
 # Независимая приемка release
 
-19.11.2026. **Спецификация будущих проверок; все runtime-кейсы сейчас not_run.** Команды/файлы приложения ниже требуется создать и проверить при реализации REL-01–REL-12; их наличие или PASS не предполагается. Источники: [API](../shared/API_CONTRACT.md), [OpenAPI](../shared/api/openapi.json), [UX](../shared/MOBILE_UX.md), [формулы](../../SUMMARY_METRICS.md). Реализационные проверки других направлений: [application ACCEPTANCE](../application/ACCEPTANCE.md) и [processing ACCEPTANCE](../processing/ACCEPTANCE.md); ссылки ниже используют общие A-ID, без выдумывания их локальных case ID.
+19.11.2026. **REL-C01–REL-C28 выполнены на локальной сборке.** Фактические команды, результаты по каждому кейсу и границы — [report](report.md) и [RELEASE_REPORT](../../../../docs/pilot/RELEASE_REPORT.md). Настоящие Android/iPhone, внешний сервер и платная модель остаются not_run. Источники: [API](../shared/API_CONTRACT.md), [OpenAPI](../shared/api/openapi.json), [UX](../shared/MOBILE_UX.md), [формулы](../../SUMMARY_METRICS.md). Реализационные проверки других направлений: [application ACCEPTANCE](../application/ACCEPTANCE.md) и [processing ACCEPTANCE](../processing/ACCEPTANCE.md); ссылки ниже используют общие A-ID, без выдумывания их локальных case ID.
 
 ## Среда, fixtures и исполняемые команды
 
