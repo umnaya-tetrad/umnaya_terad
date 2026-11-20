@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     server: {
+      allowedHosts: ["localhost", "127.0.0.1", "umnaya-tetrad.ru"],
       // Compose uses backend:8000; local dev and built preview use the host API.
       proxy: apiProxy
     },
