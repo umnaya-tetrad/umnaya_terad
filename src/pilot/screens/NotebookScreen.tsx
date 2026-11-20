@@ -184,7 +184,7 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
                 : result === 'incorrect' ? 'result.error_found'
                 : result === 'correct' ? 'result.correct' : 'result.no_result')}
             </span>
-            <span>{entry.task.skipped ? copy('task.skipped') : entry.task.analysis.locator}</span>
+            {entry.task.skipped && <span>{copy('task.skipped')}</span>}
           </button>
         </li>
       })}</ul>

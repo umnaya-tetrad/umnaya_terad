@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { PilotApi } from './api/client'
 import type { Intents } from './api/intents'
 import { useAuth } from './auth'
@@ -100,8 +100,21 @@ function StaffApp({ api }: { api: PilotApi }) {
 
 export function PilotApp() {
   const auth = useAuth()
+  const masthead = useRef<HTMLElement>(null)
+  useLayoutEffect(() => {
+    const header = masthead.current
+    if (!header) return
+    const updateHeight = () => document.documentElement.style.setProperty('--masthead-height', `${header.getBoundingClientRect().height}px`)
+    updateHeight()
+    const observer = new ResizeObserver(updateHeight)
+    observer.observe(header)
+    return () => {
+      observer.disconnect()
+      document.documentElement.style.removeProperty('--masthead-height')
+    }
+  }, [])
   return <>
-    <header className="masthead">
+    <header className="masthead" ref={masthead}>
       <div className="masthead-inner">
         <span className="wordmark"><span aria-hidden="true" className="notebook-mark">▦</span> Умная тетрадь</span>
         {auth.session && <button className="subtle" disabled={auth.busy} onClick={() => void auth.logout()}>{copy('login.logout')}</button>}

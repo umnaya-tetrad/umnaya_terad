@@ -45,7 +45,9 @@ button.danger { color: var(--red); border-color: var(--red); background: #fff4ef
 button.success[aria-pressed="true"] { background: var(--green); color: white; }
 button.danger[aria-pressed="true"] { background: var(--red); color: white; }
 button.back, button.subtle { width: fit-content; }
+button.back { position: sticky; top: calc(var(--masthead-height, 72px) + 8px); z-index: 20; align-self: start; box-shadow: 0 3px 0 var(--ink); }
 button.back::before { content: '←'; margin-right: .5em; }
+html { scroll-padding-top: calc(var(--masthead-height, 72px) + 80px); }
 h1, h2, h3, p { margin: 0; overflow-wrap: anywhere; }
 h1, h2 { line-height: 1.25; }
 h1 { font-size: clamp(1.45rem, 1rem + 1vw, 1.56rem); }
@@ -65,7 +67,7 @@ input:not([type=file]), textarea {
   font-weight: 400;
 }
 textarea { resize: vertical; }
-.masthead { background: var(--cream); border-bottom: 2px solid var(--ink); }
+.masthead { position: sticky; top: 0; z-index: 30; background: var(--cream); border-bottom: 2px solid var(--ink); }
 .masthead-inner {
   max-width: 760px;
   margin: auto;
