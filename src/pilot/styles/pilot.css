@@ -139,6 +139,11 @@ textarea { resize: vertical; }
 .task-result-label--incorrect { color: #a3242a; background: #fff0f0; }
 .task-result-label--incomplete { color: #765407; background: #fff1b3; }
 .task-result-label--unassessed { color: #51493a; background: var(--cream); }
+.review-screen--actions { padding-bottom: calc(var(--review-actions-height, 160px) + 12px); }
+.review-actions { position: fixed; inset: auto 0 0; z-index: 25; background: var(--cream); border-top: 2px solid var(--ink); box-shadow: 0 -3px 12px rgb(17 23 19 / 12%); padding-bottom: env(safe-area-inset-bottom); }
+.review-actions-inner { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; width: min(100%, 760px); margin: auto; padding: 10px clamp(12px, 4vw, 24px); }
+.review-actions-inner > button { min-width: 0; }
+@media (min-width: 560px) { .review-actions-inner { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .photo-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(145px, 100%), 1fr)); gap: 10px; }
 .photo-tile { border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
 .thumbnail { display: grid; width: 100%; gap: 4px; padding: 6px; }

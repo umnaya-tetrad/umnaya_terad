@@ -21,7 +21,7 @@ export function ReviewScreen({ api, check, entry, busy, run, mutate, back, next,
   const photos = input?.photos ?? []
   const eligible = !task.skipped && task.analysis.result !== 'not_assessed'
 
-  return <section className="stack">
+  return <section className={`stack${eligible ? ' review-screen--actions' : ''}`}>
     <button className="back" onClick={back}>{copy('common.back')}</button>
     <div className="sheet">
       <p className="context">{check.title} · {copy('check.notebook', { number: notebook.number })}</p>
