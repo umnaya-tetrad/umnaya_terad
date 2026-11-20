@@ -79,8 +79,9 @@ textarea { resize: vertical; }
   flex-wrap: wrap;
   gap: 8px;
 }
-.wordmark { display: flex; align-items: center; gap: 8px; font-weight: 750; }
-.notebook-mark { color: var(--blue); font-size: 1.35rem; line-height: 1; }
+.wordmark { display: flex; align-items: center; gap: 12px; min-height: 48px; color: var(--ink); text-decoration: none; font-size: clamp(.95rem, 3.6vw, 1.3rem); font-weight: 900; line-height: 1.1; letter-spacing: -.025em; }
+.wordmark:hover { opacity: .85; }
+.notebook-mark { display: block; width: 42px; height: 42px; flex: 0 0 42px; }
 .fixture { text-align: center; background: var(--yellow); border-top: 1px solid var(--ink); font-size: .9rem; }
 .container {
   width: min(100%, 760px);

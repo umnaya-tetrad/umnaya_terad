@@ -116,7 +116,18 @@ export function PilotApp() {
   return <>
     <header className="masthead" ref={masthead}>
       <div className="masthead-inner">
-        <span className="wordmark"><span aria-hidden="true" className="notebook-mark">▦</span> Умная тетрадь</span>
+        <a className="wordmark" href={location.pathname} aria-label="Умная тетрадь — Мои проверки">
+          <svg className="notebook-mark" viewBox="0 0 52 52" aria-hidden="true" focusable="false">
+            <path fill="#ff1f46" d="M0 0h24v52H0z" />
+            <path fill="#0b579c" d="M24 0h28v52H24z" />
+            <path fill="#fff" fillOpacity=".18" d="M0 0h52v2H0z" />
+            <rect x="16.5" y="16" width="19" height="20" rx=".5" fill="none" stroke="#fff" strokeWidth="1.6" />
+            <path fill="#fff" d="M23 16h12v20H23z" />
+            <path d="M20 19v14" stroke="#fff" strokeWidth="1.3" />
+            <path d="M26 23h6m-6 4h6" stroke="#0b579c" strokeWidth="1.5" />
+          </svg>
+          <span>УМНАЯ ТЕТРАДЬ</span>
+        </a>
         {auth.session && <button className="subtle" disabled={auth.busy} onClick={() => void auth.logout()}>{copy('login.logout')}</button>}
       </div>
       {import.meta.env.VITE_PILOT_TRANSPORT === 'fixture' && <div className="fixture" title={copy('common.fixture_mode')}>{fixtureLabel}</div>}
