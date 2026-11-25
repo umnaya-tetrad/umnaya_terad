@@ -22,13 +22,13 @@ export function UploadStatus({ queue, checkId, notebookId, compact = false, open
   if (!items.length && !queue.error) return null
   if (compact) return <aside className="notice" aria-label="Очередь загрузки">
     <p>Фото загружаются в фоне: {items.filter(x => x.kind === 'photo').length}. Можно продолжать съемку.</p>
-    {queue.error && <p role="alert">{queue.error}</p>}
+    {queue.error && <><p role="alert">{queue.error}</p><button onClick={() => void queue.resume()}>Повторить загрузку</button></>}
     {open && [...new Set(items.map(x => x.checkId))].map(id => <button key={id} onClick={() => open(id)}>Открыть загрузки</button>)}
   </aside>
   return <section className="sheet stack" aria-label="Фото на телефоне">
     <h2>Загрузка фото</h2>
     <p className="help">Можно снимать дальше и переходить к другим тетрадям. До отправки всех фото не закрывайте приложение.</p>
-    {queue.error && <p role="alert">{queue.error}</p>}
+    {queue.error && <><p role="alert">{queue.error}</p><button onClick={() => void queue.resume()}>Повторить загрузку</button></>}
     {items.map(item => <article className="notice stack" key={item.id}>
       {item.kind === 'photo' ? <>
         <LocalPhoto item={item} />

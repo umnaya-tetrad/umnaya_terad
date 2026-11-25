@@ -21,7 +21,7 @@ export class PhotoUploadQueue {
     this.ready = this.load().catch(() => { this.error = 'Не удалось открыть хранилище фото на телефоне.'; this.changed() })
     if (typeof BroadcastChannel !== 'undefined') {
       this.channel = new BroadcastChannel('smartnote:photo-uploads:' + owner)
-      this.channel.onmessage = () => { if (!this.draining) void this.load().then(() => this.kick()) }
+      this.channel.onmessage = () => { if (!this.draining) void this.load().then(() => this.kick()).catch(() => { this.error = 'Не удалось прочитать очередь фото. Повторите загрузку.'; this.changed() }) }
     }
     window.addEventListener('online', this.online)
     window.addEventListener('beforeunload', this.beforeUnload)
@@ -77,6 +77,7 @@ export class PhotoUploadQueue {
     })
     try {
       await saveRecords(batch)
+      this.error = ''
       this.items = [...this.items, ...batch]; this.changed(); this.channel?.postMessage('changed')
     } catch {
       this.items = [...this.items, ...batch.map(item => ({ ...item, state: 'error' as const, volatile: true, error: 'Фото не сохранено на телефоне. Освободите память и нажмите «Повторить».' }))]
@@ -101,7 +102,11 @@ export class PhotoUploadQueue {
   }
   async retry(id: string) {
     const item = this.items.find(x => x.id === id)
-    if (item) { await this.put({ ...item, ...(item.kind === 'photo' ? { volatile: false } : {}), state: 'queued', error: undefined, attempts: 0 }); this.kick() }
+    if (item) { await this.put({ ...item, ...(item.kind === 'photo' ? { volatile: false } : {}), state: 'queued', error: undefined, attempts: 0 }); this.error = ''; this.changed(); this.kick() }
+  }
+  async resume() {
+    try { await this.load(); this.error = ''; this.changed(); this.kick() }
+    catch { this.error = 'Не удалось прочитать очередь на телефоне. Освободите память и повторите.'; this.changed() }
   }
   async forget(inputId: string, serverId?: string) {
     for (const item of this.items.filter(x => x.inputId === inputId && (serverId === undefined || (x.kind === 'photo' && x.serverId === serverId)))) {
@@ -242,7 +247,7 @@ export class PhotoUploadQueue {
     void promise.catch(() => { this.error = 'Не удалось сохранить очередь. Не закрывайте приложение и повторите.'; this.changed() })
       .finally(() => {
         this.draining = false; this.currentInput = undefined
-        if (this.items.some(x => !this.cancelled.has(x.inputId) && x.state === 'queued' && (x.kind === 'photo' || x.fileIds.every(id => this.items.some(f => f.id === id && f.state === 'uploaded'))))) this.kick()
+        if (!this.error && this.items.some(x => !this.cancelled.has(x.inputId) && x.state === 'queued' && (x.kind === 'photo' || x.fileIds.every(id => this.items.some(f => f.id === id && f.state === 'uploaded'))))) this.kick()
       })
   }
 }
