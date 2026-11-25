@@ -5,7 +5,10 @@ import { copy } from '../copy'
 type Props = { login: (payload: Login) => Promise<void>; busy: boolean; error: string }
 
 export function LoginScreen({ login, busy, error }: Props) {
-  const [username, setUsername] = useState('')
+  const [username, setUsername] = useState(() => {
+    const hint = new URLSearchParams(window.location.search).get('login')?.trim().toLowerCase() ?? ''
+    return /^[a-z0-9][a-z0-9_.-]{2,31}$/.test(hint) ? hint : ''
+  })
   const [password, setPassword] = useState('')
 
   async function submit(event: FormEvent) {
