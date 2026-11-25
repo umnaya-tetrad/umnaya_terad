@@ -16,6 +16,8 @@ METHODS = {
     "create_bundle": ("POST", "notebooks/{}/bundles"),
     "create_input_version": ("POST", "bundles/{}/versions"),
     "upload_photo": ("POST", "input-versions/{}/photos"),
+    "queued_upload_photo": ("POST", "input-versions/{}/queued-photos"),
+    "queued_submit_bundle": ("POST", "bundles/{}/queued-submit"),
     "reorder_photos": ("PATCH", "input-versions/{}"),
     "discard_draft": ("DELETE", "input-versions/{}"),
     "delete_draft_photo": ("DELETE", "input-versions/{}/photos"),
@@ -151,7 +153,7 @@ async def _mutate(
             raise DomainError(403, "forbidden", "Поддержка может только просматривать.")
         cid = await r.locate_check(con, kind, entity_id)
         c = await r.load_check(con, cid, ctx.actor, lock=True)
-        if ctx.expected_revision != c["revision"]:
+        if not (op in ("queued_upload_photo", "queued_submit_bundle") and ctx.expected_revision is None) and ctx.expected_revision != c["revision"]:
             invalid(
                 "Проверка изменилась. Обновите данные.",
                 "revision_conflict",
@@ -327,7 +329,7 @@ async def create_input_version(svc, ctx, bundle_id, payload):
     )
 
 
-async def upload_photo(svc, ctx, input_version_id, prepared):
+async def upload_photo(svc, ctx, input_version_id, prepared, *, queued=False):
 
     async def go(con, c):
         _, b, v = r.find(c, "input", input_version_id)
@@ -362,7 +364,7 @@ async def upload_photo(svc, ctx, input_version_id, prepared):
         return await _mutate(
             svc,
             ctx,
-            "upload_photo",
+            "queued_upload_photo" if queued else "upload_photo",
             "input",
             input_version_id,
             {"sha256": prepared.sha256, "version": str(input_version_id)},
@@ -564,14 +566,16 @@ async def delete_task(svc, ctx, task_id):
     return await _delete(svc, ctx, "task", task_id)
 
 
-async def submit_bundle(svc, ctx, bundle_id, payload):
-    validate(payload, "Submit")
+async def submit_bundle(svc, ctx, bundle_id, payload, *, queued=False):
+    validate({"input_version_id": payload["input_version_id"]} if queued else payload, "Submit")
 
     async def go(con, c):
         _, b, _ = r.find(c, "bundle", bundle_id)
         v = b["draft"]
         if not v or v["id"] != payload["input_version_id"] or not v["photos"]:
             invalid("Нужен непустой актуальный черновик.")
+        if queued and [photo["id"] for photo in v["photos"]] != payload["photo_ids"]:
+            invalid("Состав фото изменился на другом устройстве. Откройте тетрадь и проверьте комплект.", "input_changed", c["revision"])
         await _cancel_jobs(con, c, [b["id"]], reason="replaced")
         v["state"] = "sealed"
         await con.execute(
@@ -589,7 +593,7 @@ async def submit_bundle(svc, ctx, bundle_id, payload):
     return await _mutate(
         svc,
         ctx,
-        "submit_bundle",
+        "queued_submit_bundle" if queued else "submit_bundle",
         "bundle",
         bundle_id,
         payload,

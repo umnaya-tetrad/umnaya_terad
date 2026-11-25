@@ -4,6 +4,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, File, Query, Request, Response, UploadFile
 from starlette.concurrency import run_in_threadpool
 from starlette.responses import FileResponse
+from pydantic import BaseModel, Field
 
 from pilot.contracts import BundleHistory, Check, Checks, Mutation
 from pilot.domain import mutations, queries, storage
@@ -101,6 +102,36 @@ async def upload_photo(
         raise DomainError(422, "invalid_input", "Добавьте один файл.")
     prepared = await run_in_threadpool(storage.prepare_photo, file.file, file.content_type or "")
     return await mutations.upload_photo(svc, ctx, input_version_id, prepared)
+
+
+@router.post("/input-versions/{input_version_id}/queued-photos", status_code=201)
+async def queued_upload_photo(
+    input_version_id: UUID, request: Request, svc: Service,
+    ctx: Annotated[MutationContext, Depends(new_check_mutation)], file: Annotated[UploadFile, File()],
+) -> Mutation:
+    # Append to an immutable draft identity, not to a stale whole-check revision.
+    # Owner, draft state, idempotency and parent locking remain in the domain.
+    if len((await request.form()).multi_items()) != 1:
+        raise DomainError(422, "invalid_input", "Добавьте один файл.")
+    prepared = await run_in_threadpool(storage.prepare_photo, file.file, file.content_type or "")
+    return await mutations.upload_photo(svc, ctx, input_version_id, prepared, queued=True)
+
+
+class QueuedSubmitBody(BaseModel):
+    input_version_id: UUID
+    photo_ids: list[UUID] = Field(min_length=1, max_length=100)
+
+
+@router.post("/bundles/{bundle_id}/queued-submit", status_code=202)
+async def queued_submit_bundle(
+    bundle_id: UUID, payload: QueuedSubmitBody, svc: Service,
+    ctx: Annotated[MutationContext, Depends(new_check_mutation)],
+) -> Mutation:
+    if len(set(payload.photo_ids)) != len(payload.photo_ids):
+        raise DomainError(422, "invalid_input", "Фото комплекта не должны повторяться.")
+    return await mutations.submit_bundle(svc, ctx, bundle_id, {
+        "input_version_id": str(payload.input_version_id), "photo_ids": [str(value) for value in payload.photo_ids],
+    }, queued=True)
 
 
 @router.delete("/input-versions/{input_version_id}/photos/{photo_id}", operation_id="deleteDraftPhoto")
