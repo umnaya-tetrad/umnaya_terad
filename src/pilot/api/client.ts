@@ -80,7 +80,7 @@ export class PilotApi {
     }, true)
   }
 
-  getSession() { return this.json<Session>('/auth/session', undefined, true) }
+  getSession(signal?: AbortSignal) { return this.json<Session>('/auth/session', { signal }, true) }
 
   async logout() { await this.request('/auth/logout', { method: 'POST' }) }
 
@@ -135,7 +135,7 @@ export class PilotApi {
     }, true)
   }
 
-  mutate(action: Action, guard: Guard) {
+  mutate(action: Action, guard: Guard, signal?: AbortSignal) {
     const headers = new Headers({ 'Idempotency-Key': guard.key })
     if (guard.revision !== null) headers.set('If-Match', `"${guard.revision}"`)
     let body: BodyInit | undefined
@@ -147,6 +147,6 @@ export class PilotApi {
       headers.set('Content-Type', 'application/json')
       body = JSON.stringify(action.body)
     }
-    return this.json<Mutation>(action.path, { method: action.method, headers, body })
+    return this.json<Mutation>(action.path, { method: action.method, headers, body, signal })
   }
 }

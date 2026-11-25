@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { actions, type PilotApi } from '../api/client'
 import type { Bundle, Check, Notebook } from '../api/contract'
 import { ConfirmDialog, type Confirmation } from '../components/ConfirmDialog'
@@ -10,12 +10,23 @@ import { copy } from '../copy'
 import { movePhoto } from '../photos'
 import { notebookPhotoCount, skippable, tasksIn, type Mutate, type Run, type TaskLocation } from '../state/flow'
 import type { Event } from '../api/contract'
+import type { PhotoUploadQueue } from '../uploads/queue'
+import { UploadStatus, useUploads } from '../uploads/UploadStatus'
 
-export function NotebookScreen({ api, check, notebook, initialBundle, busy, run, mutate, back, next, review, emit }: {
-  api: PilotApi; check: Check; notebook: Notebook; initialBundle?: string; busy: boolean; run: Run; mutate: Mutate;
+export function NotebookScreen({ api, check, notebook, initialBundle, busy, run, mutate, back, next, review, emit, uploads }: {
+  uploads: PhotoUploadQueue; api: PilotApi; check: Check; notebook: Notebook; initialBundle?: string; busy: boolean; run: Run; mutate: Mutate;
   back: () => void; next: () => Promise<void>; review: (entry: TaskLocation) => void;
   emit: (name: Event['name'], entityId?: string) => void
 }) {
+  useUploads(uploads)
+  const [localError, setLocalError] = useState('')
+  const [unacceptedFiles, setUnacceptedFiles] = useState<File[]>()
+  useEffect(() => {
+    if (!unacceptedFiles?.length) return
+    const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = '' }
+    window.addEventListener('beforeunload', warn)
+    return () => window.removeEventListener('beforeunload', warn)
+  }, [unacceptedFiles])
   const [bundleId, setBundleId] = useState(initialBundle)
   const [replace, setReplace] = useState<string>()
   const [viewer, setViewer] = useState<{ id: string; label: string }>()
@@ -23,14 +34,17 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
   const [uploading, setUploading] = useState(false)
   const [accepted, setAccepted] = useState(false)
   const [unsent, setUnsent] = useState(false)
-  const draftBundle = notebook.bundles.find(bundle => bundle.id === bundleId && bundle.draft)
-    ?? notebook.bundles.find(bundle => bundle.draft?.photos.length && !bundle.current_input)
-    ?? notebook.bundles.find(bundle => bundle.draft && !bundle.current_input)
-    ?? notebook.bundles.find(bundle => bundle.draft?.photos.length)
+  const availableBundles = notebook.bundles.filter(bundle => !bundle.draft || !uploads.sealed(bundle.draft.id))
+  const draftBundle = availableBundles.find(bundle => bundle.id === bundleId && bundle.draft)
+    ?? availableBundles.find(bundle => bundle.draft?.photos.length && !bundle.current_input)
+    ?? availableBundles.find(bundle => bundle.draft && !bundle.current_input)
+    ?? availableBundles.find(bundle => bundle.draft?.photos.length)
   const draft = draftBundle?.draft
   const canEdit = check.phase !== 'finalized'
   const photos = draft?.photos ?? []
   const photoIds = photos.map(photo => photo.id)
+  const localFiles = draft ? uploads.files(draft.id) : []
+  const hasPhotos = photos.length > 0 || localFiles.length > 0
 
   function sameDraft(current: Check) {
     const active = current.notebooks.find(item => item.id === notebook.id)
@@ -43,6 +57,34 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
 
   function select(files: File[]) {
     emit('photo_selected', draftBundle?.id)
+    setLocalError(''); setAccepted(false)
+    if (!replace) {
+      setUnacceptedFiles(files)
+      void (async () => {
+        let target = draft && draftBundle ? { checkId: check.id, notebookId: notebook.id, bundleId: draftBundle.id, inputId: draft.id } : undefined
+        if (!target) {
+          const ok = await run(async refreshRevision => {
+            await refreshRevision(value => value.phase !== 'finalized' && value.notebooks.some(n => n.id === notebook.id))
+            const made = await mutate(actions.createBundle(notebook.id), false)
+            const current = await refreshRevision(value => value.phase !== 'finalized')
+            const created = current.notebooks.find(n => n.id === notebook.id)?.bundles.find(b => b.id === made.entity_id)
+            if (!created?.draft) throw new Error('Не удалось создать комплект.')
+            target = { checkId: check.id, notebookId: notebook.id, bundleId: created.id, inputId: created.draft.id }
+          })
+          if (!ok) return
+        }
+        if (target) {
+          setBundleId(target.bundleId)
+          try { await uploads.enqueue(target, files); setUnacceptedFiles(undefined) }
+          catch (error) {
+            // IDB quota failures already retain the whole party in the owner queue.
+            if (files.every(file => uploads.files(target!.inputId).some(item => item.name === file.name && item.originalBytes === file.size))) setUnacceptedFiles(undefined)
+            throw error
+          }
+        }
+      })().catch(error => setLocalError(error instanceof Error ? error.message : 'Фото не удалось сохранить.'))
+      return
+    }
     void run(async refreshRevision => {
       setUploading(true)
       setAccepted(false)
@@ -64,6 +106,7 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
           const { entity_id: newPhoto } = await mutate(actions.uploadPhoto(draftId, files[0]), false)
           if (!newPhoto) throw new Error('Missing photo')
           await mutate(actions.deleteDraftPhoto(draftId, replace), false)
+          await uploads.forget(draftId, replace)
           await mutate(actions.reorderPhotos(draftId, { photo_ids: photoIds.map(id => id === replace ? newPhoto : id) }))
         } else {
           for (const [index, file] of files.entries()) {
@@ -88,35 +131,24 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
     if (!draft) return
     confirmDelete(copy('delete.draft'), async () => {
       await mutate(actions.discardDraft(draft.id))
+      await uploads.forget(draft.id)
       setBundleId(undefined)
       setUnsent(false)
     })
   }
 
   function submit(goNext: boolean) {
-    if (!draft || !draftBundle || !photos.length || uploading) return
-    void run(async refreshRevision => {
-      await refreshRevision(sameDraft)
-      await mutate(actions.submitBundle(draftBundle.id, { input_version_id: draft.id }), false)
-      setAccepted(true)
-      setUnsent(false)
-      setBundleId(undefined)
-      const current = await refreshRevision(value => value.phase !== 'finalized' &&
-        !!value.notebooks.find(item => item.id === notebook.id)?.bundles.some(bundle =>
-          bundle.id === draftBundle.id && bundle.current_input?.id === draft.id && !bundle.skipped,
-        ))
-      if (goNext) {
-        await next()
-      } else {
-        if (current.notebooks.find(item => item.id === notebook.id)?.bundles.some(bundle => bundle.draft && !bundle.current_input)) return
-        const made = await mutate(actions.createBundle(notebook.id))
-        if (made.entity_id) setBundleId(made.entity_id)
-      }
-    })
+    if (!draft || !draftBundle || !hasPhotos || uploading) return
+    setLocalError('')
+    void uploads.submit({ checkId: check.id, notebookId: notebook.id, bundleId: draftBundle.id, inputId: draft.id }, photoIds)
+      .then(async () => {
+        setAccepted(true); setUnsent(false); setBundleId(undefined)
+        if (goNext) await run(next)
+      }).catch(error => setLocalError(error instanceof Error ? error.message : 'Комплект не удалось сохранить.'))
   }
 
   function goBack() {
-    if (photos.length) {
+    if (photos.length && !localFiles.length) {
       setUnsent(true)
       return
     }
@@ -161,6 +193,13 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
       <p className="context">{check.title}</p>
       <h1>{copy('check.notebook', { number: notebook.number })}</h1>
     </header>
+    {localError && <p className="notice danger" role="alert">{localError}</p>}
+    {!!unacceptedFiles?.length && localError && <div className="notice danger">
+      <p>Фото пока не сохранены: {unacceptedFiles.length}. Не закрывайте приложение.</p>
+      <button disabled={busy} onClick={() => select(unacceptedFiles)}>Повторить добавление фото</button>
+      <button disabled={busy} onClick={() => { if (window.confirm('Убрать эти несохраненные фото?')) { setUnacceptedFiles(undefined); setLocalError('') } }}>Убрать несохраненные фото</button>
+    </div>}
+    <UploadStatus queue={uploads} checkId={check.id} notebookId={notebook.id} />
     {accepted && <p className="notice success" role="status">{copy('capture.accepted')}</p>}
     {taskGroups.filter(group => group.entries.length > 0).map(group => <section className="stack" key={group.title}>
       <h2>{copy(group.title)}</h2>
@@ -195,8 +234,8 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
           {copy('capture.preview')} · {bundle.draft?.photos.length}
         </button>,
       )}
-      {!photos.length && <p>{copy('notebook.empty')}</p>}
-      {!photos.length && <p className="help">{copy('capture.hint')}</p>}
+      {!hasPhotos && <p>{copy('notebook.empty')}</p>}
+      {!hasPhotos && <p className="help">{copy('capture.hint')}</p>}
       {!!photos.length && <h2>{copy('capture.preview')}</h2>}
       {!!photos.length && <ol className="photo-strip plain">{photos.map((photo, index) => {
         const label = copy('capture.photo', { number: index + 1, total: photos.length })
@@ -214,6 +253,7 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
           <button className="danger" disabled={busy} onClick={() => {
             if (draft) confirmDelete(copy('delete.photo', { number: index + 1 }), async () => {
               await mutate(actions.deleteDraftPhoto(draft.id, photo.id))
+              await uploads.forget(draft.id, photo.id)
             })
           }}>{copy('capture.remove')}</button>
         </li>
@@ -222,12 +262,12 @@ export function NotebookScreen({ api, check, notebook, initialBundle, busy, run,
       {!!photos.length && !replace && <h3>{copy('capture.add')}</h3>}
       <PhotoCapture select={select} opened={() => emit('capture_opened', draftBundle?.id)} busy={busy} single={!!replace} />
       {uploading && <p role="status">{copy('capture.uploading')}</p>}
-      {unsent && !!photos.length && <p className="notice" role="alert">{copy('capture.unsent')}</p>}
-      {photos.length ? <div className="stack">
+      {unsent && !!hasPhotos && <p className="notice" role="alert">{copy('capture.unsent')}</p>}
+      {hasPhotos ? <div className="stack">
         <button className="primary" disabled={busy} onClick={() => submit(false)}>{copy('capture.submit_stay')}</button>
         <button disabled={busy} onClick={() => submit(true)}>{copy('capture.submit_next')}</button>
-        <button className="subtle danger" disabled={busy} onClick={discard}>{copy('capture.discard')}</button>
-      </div> : notebookPhotoCount(notebook) > 0 && <button disabled={busy} onClick={() => void run(next)}>{copy('notebook.next')}</button>}
+        <button className="subtle danger" onClick={discard} disabled={busy || localFiles.some(file => file.state !== 'uploaded')}>{copy('capture.discard')}</button>
+      </div> : (notebookPhotoCount(notebook) > 0 || uploads.pending(check.id, notebook.id).length > 0) && <button disabled={busy} onClick={() => void run(next)}>{copy('notebook.next')}</button>}
     </div>}
     {notebook.bundles.filter(bundle => bundle.current_input).map(bundle => <div className="stack" key={bundle.id}>
       <JobStatus bundle={bundle} />

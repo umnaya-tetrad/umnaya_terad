@@ -13,18 +13,23 @@ import { SummaryScreen } from '../screens/SummaryScreen'
 import type { Emit } from '../telemetry/useLifecycle'
 import { reviewQueue, skippable, tasksIn, type Mutate, type Run, type TaskLocation } from './flow'
 import { useCheckPolling } from './useCheckPolling'
+import type { PhotoUploadQueue } from '../uploads/queue'
+import { useUploads } from '../uploads/UploadStatus'
 import { WORKBENCH_ENABLED, type WorkbenchView } from '../dev/workbench'
 
 type NotebookView = { page: 'notebook'; notebook: string; bundle?: string }
 type OriginView = { page: 'check' | 'completion' } | NotebookView
 type View = OriginView | { page: 'summary' } | { page: 'review'; task: string; origin: OriginView }
 
-export function CheckWorkspace({ id, api, intents, setup, done, deleted, emit, initialWorkbenchView, workbenchContext }: {
-  id: string; api: PilotApi; intents: Intents; setup: boolean; done: () => void; deleted: () => void; emit: Emit;
+export function CheckWorkspace({ id, api, intents, uploads, setup, done, deleted, emit, initialWorkbenchView, workbenchContext }: {
+  uploads: PhotoUploadQueue; id: string; api: PilotApi; intents: Intents; setup: boolean; done: () => void; deleted: () => void; emit: Emit;
   initialWorkbenchView?: WorkbenchView;
   workbenchContext?: (notebookId?: string) => void;
 }) {
+  const localUploads = useUploads(uploads)
+  const queueStamp = localUploads.filter(item => item.checkId === id).map(item => item.kind === 'photo' ? item.serverId ?? '' : item.state === 'done' ? item.id : '').join(',')
   const { check, readError, refresh, store } = useCheckPolling(api, id)
+  useEffect(() => { void refresh() }, [refresh, queueStamp])
   const [view, setView] = useState<View>()
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -80,7 +85,16 @@ export function CheckWorkspace({ id, api, intents, setup, done, deleted, emit, i
   const mutate: Mutate = async (action, reload = true) => {
     const expectedRevision = pendingRevision.current
     if (expectedRevision === null) throw new Error('Check mutation outside an active action')
-    const result = await intents.send(action, id, expectedRevision)
+    let result
+    try { result = await intents.send(action, id, expectedRevision) }
+    catch (failure) {
+      const append = action.method === 'POST' && /\/(notebooks|bundles)$/.test(action.path)
+      if (!(failure instanceof ApiError && failure.status === 409 && append)) throw failure
+      const latest = await refresh()
+      if (!latest || latest.phase === 'finalized') throw failure
+      // Known-not-applied additive commands can safely rebase after background append.
+      result = await intents.send(action, id, latest.revision)
+    }
     store.acknowledge(result.check_revision)
     pendingRevision.current = Math.max(expectedRevision, result.check_revision)
     if (reload) await refresh()
@@ -181,6 +195,7 @@ export function CheckWorkspace({ id, api, intents, setup, done, deleted, emit, i
 
   function pickFirst(files: File[]) {
     onEvent.current('photo_selected', id)
+    let target: { checkId: string; notebookId: string; bundleId: string; inputId: string } | undefined
     void run(async () => {
       const existing = store.current?.notebooks[0]
       const notebookId = existing?.id ?? await addNotebook()
@@ -190,8 +205,10 @@ export function CheckWorkspace({ id, api, intents, setup, done, deleted, emit, i
         ?.bundles.find(bundle => bundle.id === bundleId)?.draft
       openNotebook(notebookId, bundleId ?? undefined)
       if (!draft) throw new Error('Missing draft')
-      for (const file of files) await mutate(actions.uploadPhoto(draft.id, file))
-    })
+      target = { checkId: id, notebookId, bundleId: bundleId!, inputId: draft.id }
+    }).then(async ok => {
+      if (ok && target) await uploads.enqueue(target, files)
+    }).catch(failure => setError(failure instanceof Error ? failure.message : errorText(failure)))
   }
 
   let content
@@ -204,17 +221,17 @@ export function CheckWorkspace({ id, api, intents, setup, done, deleted, emit, i
     const unresolvedBook = check.notebooks.find(notebook => notebook.bundles.some(skippable))
     const unsent = check.notebooks.find(notebook => notebook.bundles.some(bundle => bundle.draft?.photos.length))
     const unsentBundle = unsent?.bundles.find(bundle => bundle.draft?.photos.length)
-    content = <CompletionScreen check={check} busy={busy} materials={() => setView({ page: 'check' })}
+    content = <CompletionScreen check={check} busy={busy || uploads.pending(id).length > 0} materials={() => setView({ page: 'check' })}
       ready={first && (() => review(first, { page: 'completion' }))}
       unresolved={unresolvedTask ? () => review(unresolvedTask, { page: 'completion' })
         : unresolvedBook && (() => openNotebook(unresolvedBook.id))}
       draft={unsent && (() => openNotebook(unsent.id, unsentBundle?.id))}
       cameraOpened={() => onEvent.current('capture_opened', id)} photo={pickFirst}
-      finalized={() => void run(async () => { await mutate(actions.finalizeCheck(id)); setView({ page: 'summary' }) })} />
+      finalized={() => { if (uploads.pending(id).length) return; void run(async () => { await mutate(actions.finalizeCheck(id)); setView({ page: 'summary' }) }) }} />
   } else if (activeView.page === 'notebook') {
     const notebook = check.notebooks.find(item => item.id === activeView.notebook)
     content = notebook ? <NotebookScreen key={notebook.id + (activeView.bundle ?? '')} api={api} check={check}
-      notebook={notebook} initialBundle={activeView.bundle} busy={busy} run={run} mutate={mutate}
+      uploads={uploads} notebook={notebook} initialBundle={activeView.bundle} busy={busy} run={run} mutate={mutate}
       back={() => setView({ page: 'check' })} next={() => nextNotebook(notebook)}
       review={entry => review(entry, activeView)} emit={(name, entityId) => onEvent.current(name, id, entityId)} />
       : <Unavailable back={() => setView({ page: 'check' })} />
@@ -236,21 +253,21 @@ export function CheckWorkspace({ id, api, intents, setup, done, deleted, emit, i
       replacement={bundleId => openNotebook(entry.notebook.id, bundleId)} />
       : <Unavailable back={() => setView(activeView.origin)} />
   } else {
-    content = <CheckScreen check={check} busy={busy} back={done}
+    content = <CheckScreen check={check} busy={busy} localCounts={Object.fromEntries(check.notebooks.map(n => [n.id, uploads.pending(id,n.id).filter(x => x.kind === 'photo').length]))} back={done}
       add={() => void run(async () => { await addNotebook(true) })} open={notebook => openNotebook(notebook.id)}
       review={entry => review(entry, { page: 'check' })}
-      finish={() => void run(async () => {
+      finish={() => { if (uploads.pending(id).length) { setError('Дождитесь загрузки фото или отмените загрузку в тетради.'); return }; void run(async () => {
         if (check.phase === 'editing') await mutate(actions.beginCompletion(id))
         setView({ page: 'completion' })
-      })}
+      }) }}
       summary={() => setView({ page: 'summary' })}
-      remove={() => remove(copy('delete.check', { title: check.title }), async () => {
+      remove={() => { if (uploads.pending(id).length) { setError('Сначала завершите или отмените загрузку фото.'); return }; remove(copy('delete.check', { title: check.title }), async () => {
         await mutate(actions.deleteCheck(id), false)
         deleted()
-      })}
-      removeNotebook={notebook => remove(copy('delete.notebook', { number: notebook.number }), async () => {
+      }) }}
+      removeNotebook={notebook => { if (uploads.pending(id, notebook.id).length) { setError('Сначала завершите или отмените загрузку фото этой тетради.'); return }; remove(copy('delete.notebook', { number: notebook.number }), async () => {
         await mutate(actions.deleteNotebook(notebook.id))
-      })} />
+      }) }} />
   }
 
   return <div className="stack" ref={screen}>

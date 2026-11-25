@@ -11,6 +11,8 @@ import { CheckWorkspace } from './state/CheckWorkspace'
 import type { Telemetry } from './telemetry/client'
 import { useLifecycle } from './telemetry/useLifecycle'
 import { WORKBENCH_ENABLED, readWorkbenchView, type WorkbenchView } from './dev/workbench'
+import type { PhotoUploadQueue } from './uploads/queue'
+import { UploadStatus } from './uploads/UploadStatus'
 
 const WorkbenchToolbar = WORKBENCH_ENABLED ? lazy(() => import('./dev/WorkbenchToolbar')) : undefined
 
@@ -19,7 +21,7 @@ function readCheck() {
   return id && /^[\da-f-]{36}$/i.test(id) ? id : null
 }
 
-function TeacherApp({ api, intents, telemetry }: { api: PilotApi; intents: Intents; telemetry: Telemetry }) {
+function TeacherApp({ api, intents, telemetry, uploads }: { api: PilotApi; intents: Intents; telemetry: Telemetry; uploads: PhotoUploadQueue }) {
   const [id, setId] = useState(readCheck)
   const [newCheck, setNewCheck] = useState(false)
   const [setup, setSetup] = useState(false)
@@ -65,12 +67,13 @@ function TeacherApp({ api, intents, telemetry }: { api: PilotApi; intents: Inten
     setSetup(false); setNewCheck(false); setId(checkId); setWorkbenchView(view); setWorkbenchKey(value => value + 1)
   }
 
-  const content = id ? <CheckWorkspace key={id + (WORKBENCH_ENABLED ? `:${workbenchKey}` : '')} id={id} api={api} intents={intents} setup={setup}
+  const content = id ? <CheckWorkspace key={id + (WORKBENCH_ENABLED ? `:${workbenchKey}` : '')} id={id} api={api} intents={intents} uploads={uploads} setup={setup}
     initialWorkbenchView={workbenchView} workbenchContext={WORKBENCH_ENABLED ? setWorkbenchNotebook : undefined}
     done={() => navigate(null)} deleted={() => navigate(null, false, true)} emit={(...args) => telemetry.track(...args)} />
     : newCheck ? <NewCheckScreen intents={intents} open={checkId => navigate(checkId, true)} back={() => setNewCheck(false)} />
       : <ChecksScreen api={api} open={item => navigate(item.id)} create={() => setNewCheck(true)} />
   return <>
+    <UploadStatus queue={uploads} compact open={checkId => navigate(checkId)} />
     {WorkbenchToolbar && <Suspense fallback={null}><WorkbenchToolbar api={api} intents={intents} currentId={id}
       currentNotebookId={workbenchNotebook} selectNotebook={setWorkbenchNotebook}
       open={openWorkbench} history={() => navigate(null)} create={() => { navigate(null); setNewCheck(true) }} /></Suspense>}
@@ -135,8 +138,8 @@ export function PilotApp() {
     <main className="container">
       {auth.session === undefined ? <p role="status">{copy('common.loading')}</p>
         : !auth.session ? <LoginScreen login={auth.login} busy={auth.busy} error={auth.error} />
-        : auth.session.role === 'teacher' && auth.intents && auth.telemetry
-          ? <TeacherApp key={auth.telemetry.sessionId} api={auth.api} intents={auth.intents} telemetry={auth.telemetry} />
+        : auth.session.role === 'teacher' && auth.intents && auth.telemetry && auth.uploads
+          ? <TeacherApp key={auth.telemetry.sessionId} api={auth.api} intents={auth.intents} telemetry={auth.telemetry} uploads={auth.uploads} />
         : auth.session.role === 'staff'
           ? <StaffApp key={auth.session.user_id} api={auth.api} />
           : <p className="sheet" role="status">{copy('common.unavailable')}</p>}

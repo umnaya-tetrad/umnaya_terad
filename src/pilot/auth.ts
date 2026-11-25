@@ -5,6 +5,7 @@ import { ApiError, errorText } from './api/errors'
 import { Intents, resetIntentStorage } from './api/intents'
 import { copy } from './copy'
 import { Telemetry } from './telemetry/client'
+import { PhotoUploadQueue } from './uploads/queue'
 
 const lastAccount = 'smartnote:account'
 const cookieVersionKey = 'smartnote:cookie-version'
@@ -24,6 +25,7 @@ type ActiveSession = {
   intents: Intents
   telemetry: Telemetry
   version: string | null
+  uploads?: PhotoUploadQueue
 }
 
 export function useAuth() {
@@ -37,6 +39,7 @@ export function useAuth() {
   const clear = useCallback(() => {
     current.current?.telemetry.discard()
     current.current?.intents.expire()
+    current.current?.uploads?.stop()
     current.current = null
     setActive(null)
   }, [])
@@ -49,6 +52,7 @@ export function useAuth() {
   const accept = useCallback((next: Session, version: string | null) => {
     current.current?.telemetry.discard()
     current.current?.intents.expire()
+    current.current?.uploads?.stop()
     if (sessionStorage.getItem(lastAccount) !== next.user_id) {
       resetIntentStorage(sessionStorage)
       history.replaceState(null, '', location.pathname)
@@ -59,6 +63,7 @@ export function useAuth() {
       intents: new Intents(api, next.user_id, sessionStorage),
       telemetry: new Telemetry(api, undefined, () => cookieVersion() === version),
       version,
+      uploads: next.role === 'teacher' ? new PhotoUploadQueue(api, next.user_id) : undefined,
     }
     current.current = nextActive
     setActive(nextActive)
@@ -117,6 +122,7 @@ export function useAuth() {
     logoutPending.current = true
     setBusy(true)
     setError('')
+    snapshot.uploads?.stop()
     try {
       await snapshot.telemetry.finish()
       if (current.current !== snapshot || cookieVersion() !== snapshot.version) {
@@ -132,7 +138,7 @@ export function useAuth() {
       history.replaceState(null, '', location.pathname)
     } catch (failure) {
       if (current.current === snapshot && cookieVersion() === snapshot.version) {
-        const next = { ...snapshot, telemetry: new Telemetry(api, undefined, () => cookieVersion() === snapshot.version) }
+        const next = { ...snapshot, uploads: snapshot.session.role === 'teacher' ? new PhotoUploadQueue(api, snapshot.session.user_id) : undefined, telemetry: new Telemetry(api, undefined, () => cookieVersion() === snapshot.version) }
         current.current = next
         setActive(next)
         setError(errorText(failure))
@@ -145,6 +151,6 @@ export function useAuth() {
 
   return {
     api, session: active ? active.session : active, intents: active?.intents, telemetry: active?.telemetry,
-    busy, error, login, logout,
+    uploads: active?.uploads, busy, error, login, logout,
   }
 }

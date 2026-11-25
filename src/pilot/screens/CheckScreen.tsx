@@ -3,8 +3,8 @@ import { bundleStatus } from '../components/JobStatus'
 import { copy } from '../copy'
 import { notebookPhotoCount, reviewQueue, type TaskLocation } from '../state/flow'
 
-export function CheckScreen({ check, busy, back, add, open, review, finish, summary, remove, removeNotebook }: {
-  check: Check; busy: boolean; back: () => void; add: () => void; open: (notebook: Notebook) => void;
+export function CheckScreen({ check, busy, back, add, open, review, finish, summary, remove, removeNotebook, localCounts = {} }: {
+  localCounts?: Record<string, number>; check: Check; busy: boolean; back: () => void; add: () => void; open: (notebook: Notebook) => void;
   review: (task: TaskLocation) => void; finish: () => void; summary: () => void;
   remove: () => void; removeNotebook: (notebook: Notebook) => void
 }) {
@@ -28,12 +28,14 @@ export function CheckScreen({ check, busy, back, add, open, review, finish, summ
     </div>
     <ul className="plain stack">
       {check.notebooks.map(notebook => {
-        const photoCount = notebookPhotoCount(notebook)
+        const localCount = localCounts[notebook.id] ?? 0
+        const photoCount = notebookPhotoCount(notebook) + localCount
         const statuses = [...new Set(notebook.bundles.map(bundleStatus).filter(label => label !== undefined))]
         return <li key={notebook.id} className={`sheet notebook-row notebook-row--${photoCount ? 'uploaded' : 'empty'}`}>
           <button className="row-link" onClick={() => open(notebook)}>
             <strong>{copy('check.notebook', { number: notebook.number })}</strong>
             <span>{copy(photoCount ? 'notebook.photo_count' : 'notebook.no_photos', { count: photoCount })}</span>
+            {localCount > 0 && <span>Ожидает загрузки фото: {localCount}</span>}
             {statuses.map(status => <span key={status}>{copy(status)}</span>)}
           </button>
           {canEdit && <button className="subtle" disabled={busy} onClick={() => removeNotebook(notebook)}>
